@@ -1,7 +1,11 @@
 <template>
   <div>
     <b-container class="outside">
-      <h1> Register Page </h1>
+
+      <div class="titleform">
+        <h1> Halaman Daftar </h1>
+      </div>
+
       <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
         <FormulateInput
             type="text"
@@ -12,7 +16,7 @@
             error-behavior="submit"
             :validation-messages="{
                 required: 'E-mail harus ada',
-                min: 'Username minimal 3 huruf'
+                email:  ({ value }) => `'${value}' bukan e-mail yang valid`
             }"
         />
 
@@ -33,15 +37,15 @@
             name="password_confirm"
             label="Konfirmasi Password (Masukkan password yang sama)"
             placeholder="Konfirmasi Password"
-            validation="required|confirm"
+            validation="^required|confirm"
             error-behavior="submit"
             :validation-messages="{
-                required: 'Password harus ada',
-                confirm: 'Password harus sama dengan Konfirmasi Password'
+                required: 'Konfirmasi Password harus ada',
+                confirm: 'Konfirmasi Password harus sama dengan Password'
             }"
         />
 
-        <FormulateInput type="submit" label="Login" />
+        <FormulateInput type="submit" label="Register" />
 
       </FormulateForm>
       <h1> values: </h1>
@@ -65,6 +69,12 @@ export default {
 <style scoped>
 @import '../assets/LoginRegister.css';
 
+.titleform h1{
+  margin-top: 10%;
+  font-weight: 1000;
+  font-size: 2.7em;
+}
+
 .form {
   border-radius: 15px;
   box-shadow: 0px 0px 8px #1F3DA1;
@@ -77,6 +87,7 @@ export default {
   margin-right: 20%;
   padding-top: 4%;
   padding-bottom: 4%;
+  border: solid 2px #1F3DA1;
 }
 
 </style>

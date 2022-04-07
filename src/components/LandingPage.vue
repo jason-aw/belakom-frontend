@@ -108,7 +108,9 @@ export default {
 }
 
 .mulaibelajarbutton:hover {
-  filter: brightness(80%);
+  filter: brightness(130%);
+  font-family: "Poppins Medium", sans-serif;
+  letter-spacing: 0.5px;
 }
 
 .sayasudahpunyaakunbutton {

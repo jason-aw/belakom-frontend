@@ -1,7 +1,11 @@
 <template>
   <div>
     <b-container class="outside">
-      <h1> Login Page </h1>
+
+      <div class="titleform">
+        <h1> Halaman Masuk </h1>
+      </div>
+
       <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
           <FormulateInput
               type="text"
@@ -28,7 +32,7 @@
             }"
         />
 
-        <FormulateInput type="submit" label="Login" />
+        <FormulateInput type="submit" label="Login" @click="handleSubmit"/>
 
         <p> Atau kalau kamu punya e-mail google, kamu bisa log in dengan klik button dibawah ini </p>
 
@@ -45,19 +49,37 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: "LoginPage",
   data: () => ({
-    formValues: {}
+    formValues: {},
+    url: 'localhost:8080',
+    responseValue: {},
+    errorMessage: ''
   }),
   methods: {
-    handleSubmit() {}
+    handleSubmit() {
+      axios.post(this.url, this.formValues)
+          .then(response => this.responseValue = response.data)
+          .catch(error => {
+            this.errorMessage = error.message;
+            console.error("There was an error!", error);
+          });
+    }
   }
 }
 </script>
 
 <style scoped>
 @import '../assets/LoginRegister.css';
+
+.titleform h1{
+  margin-top: 10%;
+  font-weight: 1000;
+  font-size: 2.7em;
+}
 
 .form {
   border-radius: 15px;
