@@ -52,13 +52,12 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from "vuex"
 
 export default {
   name: "LoginPage",
   data: () => ({
     formValues: {},
-    url: 'http://localhost:8081/api/auth/login',
     responseValue: {},
     errorMessage: ''
   }),

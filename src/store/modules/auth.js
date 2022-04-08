@@ -1,33 +1,40 @@
 import axios from 'axios';
+import { ApiPath } from '../apipath';
+
 const state = {
-    user: null
+    user: null,
+    accessToken: null,
+    refreshToken: null
 };
 const getters = {
     isAuthenticated: state => !!state.user,
     stateUser: state => state.user,
 };
 const actions = {
-    async register({dispatch}, form) {
-        await axios.post('register', form)
-        let userForm = new FormData()
-        userForm.append('email', form.email)
-        userForm.append('password', form.password)
-        await dispatch('logIn', userForm)
+    async register(form) {
+        await axios.post(ApiPath.REGISTER_URL, form)
     },
     async logIn({commit}, user) {
-        await axios.post('login', user)
+        await axios.post(ApiPath.LOGIN_URL, user)
         await commit('setUser', user.get('email'))
     },
     async logOut({commit}){
+        await axios.post(ApiPath.LOGOUT_URL, user)
         let user = null
         commit('logOut', user)
     }
 };
 const mutations = {
-    setUser(state, email){
+    setUser(state, email) {
         state.user = email
     },
-    logOut(state){
+    setAccessToken(state, accessToken) {
+        state.accessToken = accessToken
+    },
+    setRefreshToken(state, refreshToken) {
+        state.refreshToken = refreshToken
+    },
+    logOut(state) {
         state.user = null
         state.posts = null
     },
