@@ -15,10 +15,12 @@ const actions = {
         await axios.post(ApiPath.REGISTER_URL, form)
     },
     async logIn({commit}, user) {
-        await axios.post(ApiPath.LOGIN_URL, user)
-        await commit('setUser', user.get('email'))
+        let res = await axios.post(ApiPath.LOGIN_URL, user)
+        commit('setAccessToken', res.data.accessToken)
+        commit('setRefreshToken', res.data.refreshToken)
+        commit('setUser', user.get('email'))
     },
-    async logOut({commit}){
+    async logOut({commit}) {
         await axios.post(ApiPath.LOGOUT_URL, user)
         let user = null
         commit('logOut', user)
