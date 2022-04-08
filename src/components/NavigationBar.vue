@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <div class="logo">
+  <b-nav>
+    <b-nav-item class="logo">
       <img src="../assets/logo_transparent_background.png" />
       <h1>LOGO</h1>
-    </div>
-    <b-nav>
-      <b-nav-item> test </b-nav-item>
-    </b-nav>
-  </div>
+    </b-nav-item>
+    <b-nav-item> test </b-nav-item>
+  </b-nav>
 </template>
 
 <script>

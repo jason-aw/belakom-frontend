@@ -50,18 +50,36 @@
       </FormulateForm>
       <h1> values: </h1>
       <h2> {{formValues}} </h2>
+
+      <h1>reponse from backend</h1>
+      <h2>{{responseValue}}</h2>
     </b-container>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+import router from '@/router'
 export default {
   name: "RegisterPage",
   data: () => ({
-    formValues: {}
+    formValues: {},
+    responseValue: {},
   }),
   methods: {
-    handleSubmit() {}
+    handleSubmit() {
+      axios.post("http://localhost:8081/api/auth/register", this.formValues)
+        .then(response => {
+          this.responseValue = response.data
+          if (response.data.success) {
+            router.push("/login");
+          }
+        })
+        .catch(error => {
+            this.errorMessage = error.message;
+            console.error("There was an error!", error);
+          })
+    }
   }
 }
 </script>

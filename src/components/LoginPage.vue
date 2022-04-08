@@ -9,14 +9,14 @@
       <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
           <FormulateInput
               type="text"
-              name="username"
-              label="Username"
-              placeholder="Username"
-              validation="^required|min:3,length"
+              name="email"
+              label="Email"
+              placeholder="Email"
+              validation="^required|email"
               error-behavior="submit"
               :validation-messages="{
-                required: 'Username harus ada',
-                min: 'Username minimal 3 huruf'
+                required: 'Email harus ada',
+                email:  ({ value }) => `'${value}' bukan e-mail yang valid`
             }"
           />
 
@@ -44,6 +44,9 @@
       </FormulateForm>
       <h1> values: </h1>
       <h2> {{formValues}} </h2>
+
+      <h1>reponse from backend</h1>
+      <h2>{{responseValue}}</h2>
     </b-container>
   </div>
 </template>
@@ -55,7 +58,7 @@ export default {
   name: "LoginPage",
   data: () => ({
     formValues: {},
-    url: 'localhost:8080',
+    url: 'http://localhost:8081/api/auth/login',
     responseValue: {},
     errorMessage: ''
   }),
@@ -116,7 +119,7 @@ export default {
 }
 
 .googlebutton img{
-  display: inline-block;
+  display: block;
   width: 10%;
   height: auto;
   float: left;

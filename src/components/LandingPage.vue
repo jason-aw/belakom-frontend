@@ -103,14 +103,13 @@ export default {
   background-color: #1f3da1;
   color: white;
   display: inline-block;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   font-size: 20px;
 }
 
 .mulaibelajarbutton:hover {
   filter: brightness(130%);
-  font-family: "Poppins Medium", sans-serif;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.1em;
 }
 
 .sayasudahpunyaakunbutton {
