@@ -58,8 +58,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import router from '@/router'
+import { mapActions } from "vuex"
+
 export default {
   name: "RegisterPage",
   data: () => ({
@@ -67,18 +67,14 @@ export default {
     responseValue: {},
   }),
   methods: {
-    handleSubmit() {
-      axios.post("http://localhost:8081/api/auth/register", this.formValues)
-        .then(response => {
-          this.responseValue = response.data
-          if (response.data.success) {
-            router.push("/login");
-          }
-        })
-        .catch(error => {
-            this.errorMessage = error.message;
-            console.error("There was an error!", error);
-          })
+    ...mapActions(["register"]),
+    async handleSubmit() {
+      try {
+        await this.register(this.formValues);
+        this.$router.push("/login");
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 }
@@ -95,7 +91,7 @@ export default {
 
 .form {
   border-radius: 15px;
-  box-shadow: 0px 0px 8px #1F3DA1;
+  box-shadow: 0 0 8px #1F3DA1;
   display: flex;
   flex-direction: column;
   align-items: center;

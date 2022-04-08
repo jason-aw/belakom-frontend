@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions } from "vuex";
 
 export default {
   name: "LoginPage",
@@ -63,14 +63,15 @@ export default {
     errorMessage: ''
   }),
   methods: {
-    handleSubmit() {
-      axios.post(this.url, this.formValues)
-          .then(response => this.responseValue = response.data)
-          .catch(error => {
-            this.errorMessage = error.message;
-            console.error("There was an error!", error);
-          });
-    }
+    ...mapActions(["logIn"]),
+    async handleSubmit() {
+      try {
+        await this.logIn(this.formValues);
+        this.$router.push("/home");
+      } catch (error) {
+        console.log(error)
+      }
+    },
   }
 }
 </script>

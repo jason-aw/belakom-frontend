@@ -1,10 +1,10 @@
 <template>
-  <img src="" />
+  <img src="../assets/rhknzsvgxlg81.jpg" width="auto" height="50%"/>
 </template>
 
 <script>
 export default {
-  name: "Home"
+  name: "HomePage"
 }
 </script>
 
