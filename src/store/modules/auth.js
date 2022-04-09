@@ -1,49 +1,61 @@
-import axios from 'axios';
-import { ApiPath } from '../apipath';
+import authService from '@/services/auth.service';
 
-const state = {
-    user: null,
-    accessToken: null,
-    refreshToken: null
-};
-const getters = {
-    isAuthenticated: state => !!state.user,
-    stateUser: state => state.user,
-};
-const actions = {
-    async register(form) {
-        await axios.post(ApiPath.REGISTER_URL, form)
-    },
-    async logIn({commit}, user) {
-        let res = await axios.post(ApiPath.LOGIN_URL, user)
-        commit('setAccessToken', res.data.accessToken)
-        commit('setRefreshToken', res.data.refreshToken)
-        commit('setUser', user.get('email'))
-    },
-    async logOut({commit}) {
-        await axios.post(ApiPath.LOGOUT_URL, user)
-        let user = null
-        commit('logOut', user)
-    }
-};
-const mutations = {
-    setUser(state, email) {
-        state.user = email
-    },
-    setAccessToken(state, accessToken) {
-        state.accessToken = accessToken
-    },
-    setRefreshToken(state, refreshToken) {
-        state.refreshToken = refreshToken
-    },
-    logOut(state) {
-        state.user = null
-        state.posts = null
-    },
-};
-export default {
-    state,
-    getters,
-    actions,
-    mutations
-};
+const user = JSON.parse(localStorage.getItem('user'))
+const initialState = user
+	? { status: { loggedIn: true }, user }
+	: { status: {}, user: null }
+
+export const auth = {
+	namespaced: true,
+	state: initialState,
+	actions: {
+		login({ commit }, user) {
+			return authService.login(user).then(
+				user => {
+					commit('loginSuccess', user)
+					return Promise.resolve(user)
+				},
+				error => {
+					commit('loginFailure')
+					return Promise.reject(error)
+				}
+			)
+		},
+		logout({ commit }) {
+			authService.logout()
+			commit('logout')
+		},
+		register({ commit }, user) {
+			authService.register(user).then(
+				response => {
+					commit('registerSuccess')
+					return Promise.resolve(response.data)
+				},
+				error => {
+					commit('registerFailure')
+					return Promise.reject(error)
+				}
+			)
+		}
+	},
+	mutations: {
+		loginSuccess(state, user) {
+			state.status = { loggedIn: true }
+			state.user = user
+		},
+		loginFailure(state) {
+			state.status = {};
+			state.user = null;
+		},
+		logout(state) {
+			state.status = {};
+			state.user = null;
+		},
+		registerSuccess(state) {
+			state.status = {};
+		},
+		registerFailure(state) {
+			state.status = {};
+		}
+	}
+}

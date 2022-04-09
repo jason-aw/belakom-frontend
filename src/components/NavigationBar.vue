@@ -14,18 +14,24 @@
 export default {
   name: "NavigationBar",
   methods: {
-    async logout (){
-      await this.$store.dispatch('logOut')
-      this.$router.push('/login')
-    }
+    logout() {
+      this.$store.dispatch("auth/logout").then(
+        (response) => {
+          console.log(response);
+          this.$router.push("/login");
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
   },
-  computed : {
-    isLoggedIn : function() {
-      return this.$store.getters.isAuthenticated
-    }
+  computed: {
+    isLoggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
   },
 };
-
 </script>
 
 <style scoped>

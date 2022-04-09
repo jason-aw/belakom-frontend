@@ -1,84 +1,92 @@
 <template>
   <div>
     <b-container class="outside">
-
       <div class="titleform">
-        <h1> Halaman Masuk </h1>
+        <h1>Halaman Masuk</h1>
       </div>
 
       <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
-          <FormulateInput
-              type="text"
-              name="email"
-              label="Email"
-              placeholder="Email"
-              validation="^required|email"
-              error-behavior="submit"
-              :validation-messages="{
-                required: 'Email harus ada',
-                email:  ({ value }) => `'${value}' bukan e-mail yang valid`
-            }"
-          />
-
         <FormulateInput
-            type="password"
-            name="password"
-            label="Password"
-            placeholder="Password"
-            validation="required"
-            error-behavior="submit"
-            :validation-messages="{
-                required: 'Password harus ada',
-            }"
+          type="text"
+          name="email"
+          label="Email"
+          placeholder="Email"
+          validation="^required|email"
+          error-behavior="submit"
+          :validation-messages="{
+            required: 'Email harus ada',
+            email: ({ value }) => `'${value}' bukan e-mail yang valid`,
+          }"
         />
 
-        <FormulateInput type="submit" label="Login" @click="handleSubmit"/>
+        <FormulateInput
+          type="password"
+          name="password"
+          label="Password"
+          placeholder="Password"
+          validation="required"
+          error-behavior="submit"
+          :validation-messages="{
+            required: 'Password harus ada',
+          }"
+        />
 
-        <p> Atau kalau kamu punya e-mail google, kamu bisa log in dengan klik button dibawah ini </p>
+        <FormulateInput type="submit" label="Login" @click="handleSubmit" />
+
+        <p>
+          Atau kalau kamu punya e-mail google, kamu bisa log in dengan klik
+          button dibawah ini
+        </p>
 
         <button type="button" class="googlebutton">
           <img src="../assets/google.png" />
           <span> Google </span>
         </button>
-
       </FormulateForm>
-      <h1> values: </h1>
-      <h2> {{formValues}} </h2>
+      <h1>values:</h1>
+      <h2>{{ formValues }}</h2>
 
       <h1>reponse from backend</h1>
-      <h2>{{responseValue}}</h2>
+      <h2>{{ responseValue }}</h2>
     </b-container>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex"
-
 export default {
   name: "LoginPage",
   data: () => ({
     formValues: {},
     responseValue: {},
-    errorMessage: ''
+    errorMessage: "",
   }),
-  methods: {
-    ...mapActions(["logIn"]),
-    async handleSubmit() {
-      try {
-        await this.logIn(this.formValues);
-        this.$router.push("/home");
-      } catch (error) {
-        console.log(error)
-      }
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
     },
-  }
-}
+  },
+  mounted() {
+    this.loggedIn ?? this.$router.push("/home");
+  },
+  methods: {
+    handleSubmit() {
+      this.$store.dispatch("auth/login", this.formValues).then(
+        () => {
+          this.$router.push("/home");
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+  },
+};
 </script>
 
 <style scoped>
-@import '../assets/LoginRegister.css';
+@import "../assets/LoginRegister.css";
 
-.titleform h1{
+.titleform h1 {
   margin-top: 10%;
   font-weight: 1000;
   font-size: 2.7em;
@@ -86,11 +94,11 @@ export default {
 
 .form {
   border-radius: 15px;
-  box-shadow: 0px 0px 8px #1F3DA1;
+  box-shadow: 0px 0px 8px #1f3da1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #FFFFFF;
+  background: #ffffff;
   margin-top: 5%;
   margin-left: 20%;
   margin-right: 20%;
@@ -99,30 +107,29 @@ export default {
 }
 
 .googlebutton {
-  border: 2px solid #1F3DA1;
+  border: 2px solid #1f3da1;
   width: 36%;
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 15px;
   position: relative;
   font-weight: bold;
-  box-shadow: 0px 5px #243B88;
+  box-shadow: 0px 5px #243b88;
   transition: all 0.3s ease;
 }
 
 .googlebutton:hover {
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 .googlebutton:active {
   top: 3px;
 }
 
-.googlebutton img{
+.googlebutton img {
   display: block;
   width: 10%;
   height: auto;
   float: left;
 }
-
 </style>

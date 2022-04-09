@@ -30,10 +30,10 @@
 
             <router-link to="/login" v-slot="{ navigate }">
               <button
-                  @click="navigate"
-                  class="pilihan"
-                  @mouseover="changeImageLearnEmail"
-                  @mouseleave="changeImageToStatic"
+                @click="navigate"
+                class="pilihan"
+                @mouseover="changeImageLearnEmail"
+                @mouseleave="changeImageToStatic"
               >
                 Belum, ajarkan saya membuat e-mail!
               </button>
@@ -77,12 +77,10 @@ export default {
       this.mainImage = this.staticImage;
     },
   },
-  computed: {},
 };
 </script>
 
 <style scoped>
-
 .textandbutton {
   display: flex;
   flex-direction: column;
