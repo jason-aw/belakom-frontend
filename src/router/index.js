@@ -43,26 +43,19 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+	let isLoggedIn = store.state.auth.status.loggedIn
 	if (to.matched.some((record) => record.meta.requiresAuth)) {
-		console.log("checking for auth page, authentication is " + store.state.auth.status.loggedIn)
-		if (store.state.auth.status.loggedIn) {
+		if (isLoggedIn) {
 			next()
-			return
+		} else {
+			next("/login")
 		}
-		next("/login")
-	} else {
-		next()
-	}
-})
-
-router.beforeEach((to, from, next) => {
-	if (to.matched.some((record) => record.meta.guest)) {
-		console.log("checking for guest page, authentication is " + store.state.auth.status.loggedIn)
-		if (store.state.auth.status.loggedIn) {
+	} else if (to.matched.some((record) => record.meta.guest)) {
+		if (isLoggedIn) {
 			next("/home")
-			return
+		} else {
+			next()
 		}
-		next()
 	} else {
 		next()
 	}
