@@ -20,15 +20,16 @@ function login(user) {
 
 function logout() {
   let user = JSON.parse(localStorage.getItem('user'))
-  localStorage.removeItem('user')
   let req = {
     accessToken: user.accessToken,
     refreshToken: user.refreshToken
   }
-  console.log("GET USER FROM LOCAL", req)
   axios.post(ApiPath.LOGOUT_URL, req)
     .then(response => {
-      console.log("LOGOUT", response)
+      console.log("Logout Success", response)
+      localStorage.removeItem('user')
+    }, error => {
+      console.log("Logout Error", error)
     })
 }
 
