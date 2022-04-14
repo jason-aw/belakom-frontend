@@ -17,6 +17,8 @@ function login(user) {
         localStorage.setItem('user', JSON.stringify(user))
       }
       return response.data
+    }).catch(function (error) {
+      return Promise.reject(error.response.data)
     })
 }
 
@@ -40,11 +42,10 @@ function register(user) {
     email: user.email,
     password: user.password
   }
-
   return axios.post(ApiPath.REGISTER_URL, req)
     .then(handleResponse)
-    .then(response => {
-      console.log(response)
+    .catch(function (error) {
+      return Promise.reject(error.response.data)
     })
 }
 
@@ -56,7 +57,6 @@ function handleResponse(response) {
     const error = response.data && response.data.message
     return Promise.reject(error)
   }
-
   return Promise.resolve(response)
 }
 

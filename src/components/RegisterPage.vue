@@ -74,7 +74,7 @@ export default {
           this.responseValue = response;
         },
         (error) => {
-          console.log(error);
+          this.responseValue = error;
         }
       );
     },
