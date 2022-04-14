@@ -78,6 +78,7 @@ export const auth = {
 		},
 		refreshToken(state, user) {
 			state.user = user
+			state.status.loggedIn = true
 		}
 	}
 }
