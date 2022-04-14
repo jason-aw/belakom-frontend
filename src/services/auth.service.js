@@ -8,14 +8,16 @@ function login(user) {
   }
 
   return axios.post(ApiPath.LOGIN_URL, req)
-    .then(handleResponse)
-    .then(response => {
-      if (response.data.accessToken) {
-        console.log(response.data)
-        localStorage.setItem('user', JSON.stringify(response.data))
-      }
-      return response.data
-    })
+      .then(handleResponse)
+      .then(response => {
+        if (response.data.accessToken) {
+          console.log(response.data)
+          localStorage.setItem('user', JSON.stringify(response.data))
+        }
+        return response.data
+      }).catch(function (error) {
+        return Promise.reject(error.response.data)
+      })
 }
 
 function logout() {
@@ -38,12 +40,11 @@ function register(user) {
     email: user.email,
     password: user.password
   }
-
   return axios.post(ApiPath.REGISTER_URL, req)
-    .then(handleResponse)
-    .then(response => {
-      console.log(response)
-    })
+      .then(handleResponse)
+      .catch(function (error) {
+        return Promise.reject(error.response.data)
+      })
 }
 
 function handleResponse(response) {
@@ -54,7 +55,6 @@ function handleResponse(response) {
     const error = response.data && response.data.message
     return Promise.reject(error)
   }
-
   return Promise.resolve(response)
 }
 

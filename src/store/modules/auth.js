@@ -26,9 +26,11 @@ export const auth = {
 			commit('logout')
 		},
 		register({ commit }, user) {
-			authService.register(user).then(
+			return authService.register(user).then(
 				response => {
 					commit('registerSuccess')
+					console.log("run ke2")
+					console.log(response.data)
 					return Promise.resolve(response.data)
 				},
 				error => {
