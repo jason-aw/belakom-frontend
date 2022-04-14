@@ -38,7 +38,8 @@
           button dibawah ini
         </p>
 
-        <button type="button" class="googlebutton">
+        <button type="button" class="googlebutton"
+        @click="handleGoogleLogin">
           <img src="../assets/google.png" />
           <span> Google </span>
         </button>
@@ -53,6 +54,7 @@
 </template>
 
 <script>
+import { ApiPath } from '@/services/apipath';
 export default {
   name: "LoginPage",
   data: () => ({
@@ -79,6 +81,9 @@ export default {
         }
       );
     },
+    handleGoogleLogin() {
+      window.location.href = ApiPath.GOOGLE_AUTH_URL
+    }
   },
 };
 </script>

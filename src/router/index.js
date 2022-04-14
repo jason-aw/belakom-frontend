@@ -5,6 +5,7 @@ import LoginPage from "../components/LoginPage"
 import RegisterPage from "../components/RegisterPage"
 import MauSignUpDuluPage from "../components/MauSignUpDuluPage"
 import HomePage from "../components/HomePage"
+import OAuth2RedirectHandler from "../components/OAuth2RedirectHandler"
 import store from '@/store'
 
 Vue.use(VueRouter)
@@ -33,6 +34,10 @@ const routes = [
 		path: '/home',
 		component: HomePage,
 		meta: { requiresAuth: true }
+	},
+	{
+		path: '/oauth2/redirect',
+		component: OAuth2RedirectHandler
 	}
 ]
 

@@ -36,6 +36,9 @@ export const auth = {
 					return Promise.reject(error)
 				}
 			)
+		},
+		googleLogin({ commit }, user) {
+			commit('loginSuccess', user)
 		}
 	},
 	mutations: {

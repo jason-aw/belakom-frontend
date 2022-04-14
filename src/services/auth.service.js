@@ -12,7 +12,9 @@ function login(user) {
     .then(response => {
       if (response.data.accessToken) {
         console.log(response.data)
-        localStorage.setItem('user', JSON.stringify(response.data))
+        let { accessToken, refreshToken } = response.data
+        let user = { accessToken, refreshToken }
+        localStorage.setItem('user', JSON.stringify(user))
       }
       return response.data
     })
