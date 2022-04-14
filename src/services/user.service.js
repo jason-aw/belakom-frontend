@@ -3,7 +3,7 @@ import authHeader from "./auth-header"
 import { ApiPath } from "@/services/apipath"
 
 function getUser() {
-  return axios.get(ApiPath.ME_URL, { headers: authHeader() })
+  return axios.get(ApiPath.ME_URL, { headers: authHeader('accessToken') })
 }
 
 export default userService = {

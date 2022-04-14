@@ -13,7 +13,6 @@ export default {
       let user = {
         accessToken: token,
       }
-      localStorage.setItem('user', JSON.stringify(user))
       this.$store.dispatch("auth/googleLogin", user)
       this.$router.push("/home")
     } else if (error) {
