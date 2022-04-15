@@ -15,7 +15,7 @@ function login(user) {
       let { accessToken, refreshToken } = response.data
       return Promise.resolve({ accessToken, refreshToken })
     })
-    .catch(error => Promise.reject(error.response.data))
+    .catch(error => Promise.reject(error))
 }
 
 function logout() {

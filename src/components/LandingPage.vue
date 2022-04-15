@@ -127,8 +127,4 @@ export default {
   display: inline-block;
   border: 2px solid #1f3da1;
 }
-
-* {
-  font-family: "Poppins", sans-serif;
-}
 </style>

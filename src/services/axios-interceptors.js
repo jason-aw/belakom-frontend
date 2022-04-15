@@ -14,11 +14,11 @@ export default function setupInterceptors(axios) {
             await store.dispatch('auth/refreshToken')
             return axios(originalConfig)
           } catch (err) {
-            return err
+            return Promise.reject(err)
           }
         }
       }
-      return error
+      return Promise.reject(error)
     }
   )
 }

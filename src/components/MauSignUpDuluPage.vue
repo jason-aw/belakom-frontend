@@ -114,7 +114,6 @@ export default {
   color: #1f3da1;
   display: inline-block;
   font-size: 20px;
-  font-weight: bold;
   border: 2px solid #1f3da1;
   margin-top: 2em;
 }
