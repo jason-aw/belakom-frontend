@@ -1,5 +1,5 @@
 import axios from "axios"
-import { ApiPath } from "@/services/apipath"
+import { ApiPath } from "./api-path"
 import store from "@/store"
 import authHeader from "./auth-header"
 
@@ -10,17 +10,12 @@ function login(user) {
   }
 
   return axios.post(ApiPath.LOGIN_URL, req)
-    .then(handleResponse)
     .then(response => {
-      if (response.data.accessToken) {
-        console.log(response.data)
-        let { accessToken, refreshToken } = response.data
-        return { accessToken, refreshToken }
-      }
-      return response.data
-    }).catch(function (error) {
-      return Promise.reject(error.response.data)
+      console.log(response.data)
+      let { accessToken, refreshToken } = response.data
+      return Promise.resolve({ accessToken, refreshToken })
     })
+    .catch(error => Promise.reject(error.response.data))
 }
 
 function logout() {
@@ -32,8 +27,11 @@ function logout() {
   axios.post(ApiPath.LOGOUT_URL, req)
     .then(response => {
       console.log("Logout Success", response)
-    }, error => {
+      return Promise.resolve(response)
+    })
+    .catch(error => {
       console.log("Logout Error", error)
+      return Promise.reject(error)
     })
 }
 
@@ -43,33 +41,21 @@ function register(user) {
     password: user.password
   }
   return axios.post(ApiPath.REGISTER_URL, req)
-    .then(handleResponse)
-    .catch(function (error) {
-      return Promise.reject(error.response.data)
-    })
+    .then(response => Promise.resolve(response))
+    .catch(error => Promise.reject(error.response.data))
 }
 
 function refreshToken() {
   return axios.get(ApiPath.REFRESH_TOKEN_URL, { headers: authHeader('refreshToken') })
-    .then(handleResponse)
     .then(response => {
-      if (response.data.accessToken) {
-        console.log("token refreshed", response.data)
-        let { accessToken, refreshToken } = response.data
-        return { accessToken, refreshToken }
-      }
+      console.log("token refreshed", response.data)
+      let { accessToken, refreshToken } = response.data
+      return Promise.resolve({ accessToken, refreshToken })
     })
-}
-
-function handleResponse(response) {
-  if (response.status === 401) {
-    this.logout()
-    location.reload(true)
-
-    const error = response.data && response.data.message
-    return Promise.reject(error)
-  }
-  return Promise.resolve(response)
+    .catch(error => {
+      console.log("token refresh fail", error)
+      return Promise.reject(error)
+    })
 }
 
 export default {

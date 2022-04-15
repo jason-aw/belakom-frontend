@@ -1,66 +1,47 @@
 import axios from "axios"
-import { TopicApiPath } from "@/services/topicapipath"
+import { ApiPath } from "./api-path"
 
 function getAllTopics() {
 
-    return axios.get(TopicApiPath.GET_ALL_TOPIC_URL)
-        .then(handleResponse)
-        .catch(function (error) {
-            return Promise.reject(error.response.data)
-        })
+	return axios.get(ApiPath.GET_ALL_TOPIC_URL)
+		.then(response => response)
+		.catch(error => error.response.data)
 }
 
 function createTopic(topic) {
 
-    let topicRec = {
-        topicName: topic.topicName,
-        description: topic.description
-    }
+	let topicReq = {
+		topicName: topic.topicName,
+		description: topic.description
+	}
 
-    return axios.post(TopicApiPath.CREATE_TOPIC, topicRec)
-        .then(handleResponse)
-        .catch(function (error) {
-            return Promise.reject(error.response.data)
-        })
+	return axios.post(ApiPath.CREATE_TOPIC_URL, topicReq)
+		.then(response => response)
+		.catch(error => error.response.data)
 }
 
 function updateTopic(topic) {
 
-    let topicRec = {
-        topicId: topic.id,
-        topicName: topic.topicName,
-        description: topic.description
-    }
+	let topicReq = {
+		topicId: topic.id,
+		topicName: topic.topicName,
+		description: topic.description
+	}
 
-    return axios.put(TopicApiPath.UPDATE_TOPIC, topicRec)
-        .then(handleResponse)
-        .catch(function (error) {
-            return Promise.reject(error.response.data)
-        })
+	return axios.put(ApiPath.UPDATE_TOPIC_URL, topicReq)
+		.then(response => response)
+		.catch(error => error.response.data)
 }
 
 function deleteTopic(id) {
 
-    return axios.put(TopicApiPath.UPDATE_TOPIC, id)
-        .then(handleResponse)
-        .catch(function (error) {
-            return Promise.reject(error.response.data)
-        })
-}
-
-function handleResponse(response) {
-    if (response.status === 401) {
-        this.logout()
-        location.reload(true)
-
-        const error = response.data && response.data.message
-        return Promise.reject(error)
-    }
-    return Promise.resolve(response)
+	return axios.put(ApiPath.DELETE_TOPIC_URL, id)
+		.then(response => response)
+		.catch(error => error.response.data)
 }
 
 export default {
-    getAllTopics, createTopic, updateTopic, deleteTopic
+	getAllTopics, createTopic, updateTopic, deleteTopic
 }
 
 

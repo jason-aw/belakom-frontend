@@ -29,8 +29,6 @@ export const auth = {
 			return authService.register(user).then(
 				response => {
 					commit('registerSuccess')
-					console.log("run ke2")
-					console.log(response.data)
 					return Promise.resolve(response.data)
 				},
 				error => {
@@ -43,7 +41,7 @@ export const auth = {
 			commit('loginSuccess', user)
 		},
 		refreshToken({ commit }) {
-			authService.refreshToken().then(
+			return authService.refreshToken().then(
 				response => {
 					commit('refreshToken', response)
 					return Promise.resolve(response)
@@ -57,7 +55,7 @@ export const auth = {
 	},
 	mutations: {
 		loginSuccess(state, user) {
-			state.status = { loggedIn: true }
+			state.status.loggedIn = true 
 			state.user = user
 			localStorage.setItem('user', JSON.stringify(user))
 		},
@@ -76,8 +74,8 @@ export const auth = {
 		registerFailure(state) {
 			state.status = {}
 		},
-		refreshToken(state, user) {
-			state.user = user
+		refreshToken(state, accessToken) {
+			state.user = {...state.user, accessToken: accessToken}
 			state.status.loggedIn = true
 		}
 	}

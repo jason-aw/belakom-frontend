@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { ApiPath } from '@/services/apipath';
+import { ApiPath } from '@/services/api-path';
 export default {
   name: "LoginPage",
   data: () => ({
