@@ -5,6 +5,7 @@ import LoginPage from "../components/LoginPage"
 import RegisterPage from "../components/RegisterPage"
 import MauSignUpDuluPage from "../components/MauSignUpDuluPage"
 import HomePage from "../components/HomePage"
+import OAuth2RedirectHandler from "../components/OAuth2RedirectHandler"
 import store from '@/store'
 import TopicPage from "../components/TopicPage";
 
@@ -39,6 +40,10 @@ const routes = [
 		path: '/topics',
 		component: TopicPage,
 		meta: { requiresAuth: false }
+	},
+	{
+		path: '/oauth2/redirect',
+		component: OAuth2RedirectHandler
 	}
 ]
 

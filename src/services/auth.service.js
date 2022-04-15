@@ -1,5 +1,7 @@
 import axios from "axios"
 import { ApiPath } from "@/services/apipath"
+import store from "@/store"
+import authHeader from "./auth-header"
 
 function login(user) {
   let req = {
@@ -8,20 +10,21 @@ function login(user) {
   }
 
   return axios.post(ApiPath.LOGIN_URL, req)
-      .then(handleResponse)
-      .then(response => {
-        if (response.data.accessToken) {
-          console.log(response.data)
-          localStorage.setItem('user', JSON.stringify(response.data))
-        }
-        return response.data
-      }).catch(function (error) {
-        return Promise.reject(error.response.data)
-      })
+    .then(handleResponse)
+    .then(response => {
+      if (response.data.accessToken) {
+        console.log(response.data)
+        let { accessToken, refreshToken } = response.data
+        return { accessToken, refreshToken }
+      }
+      return response.data
+    }).catch(function (error) {
+      return Promise.reject(error.response.data)
+    })
 }
 
 function logout() {
-  let user = JSON.parse(localStorage.getItem('user'))
+  let user = store.state.auth.user
   let req = {
     accessToken: user.accessToken,
     refreshToken: user.refreshToken
@@ -29,7 +32,6 @@ function logout() {
   axios.post(ApiPath.LOGOUT_URL, req)
     .then(response => {
       console.log("Logout Success", response)
-      localStorage.removeItem('user')
     }, error => {
       console.log("Logout Error", error)
     })
@@ -41,10 +43,22 @@ function register(user) {
     password: user.password
   }
   return axios.post(ApiPath.REGISTER_URL, req)
-      .then(handleResponse)
-      .catch(function (error) {
-        return Promise.reject(error.response.data)
-      })
+    .then(handleResponse)
+    .catch(function (error) {
+      return Promise.reject(error.response.data)
+    })
+}
+
+function refreshToken() {
+  return axios.get(ApiPath.REFRESH_TOKEN_URL, { headers: authHeader('refreshToken') })
+    .then(handleResponse)
+    .then(response => {
+      if (response.data.accessToken) {
+        console.log("token refreshed", response.data)
+        let { accessToken, refreshToken } = response.data
+        return { accessToken, refreshToken }
+      }
+    })
 }
 
 function handleResponse(response) {
@@ -59,5 +73,5 @@ function handleResponse(response) {
 }
 
 export default {
-  login, logout, register
+  login, logout, register, refreshToken
 }
