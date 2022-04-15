@@ -6,6 +6,7 @@ import RegisterPage from "../components/RegisterPage"
 import MauSignUpDuluPage from "../components/MauSignUpDuluPage"
 import HomePage from "../components/HomePage"
 import store from '@/store'
+import TopicPage from "../components/TopicPage";
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
 		path: '/home',
 		component: HomePage,
 		meta: { requiresAuth: true }
+	},
+	{
+		path: '/topics',
+		component: TopicPage,
+		meta: { requiresAuth: false }
 	}
 ]
 

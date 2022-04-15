@@ -72,6 +72,8 @@ export default {
       this.$store.dispatch("auth/register", this.formValues).then(
         (response) => {
           this.responseValue = response;
+          alert("registered successfully")
+          this.$router.push('/login');
         },
         (error) => {
           this.responseValue = error;
