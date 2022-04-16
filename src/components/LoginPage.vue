@@ -31,7 +31,7 @@
           }"
         />
 
-        <FormulateInput type="submit" label="Login" @click="handleSubmit" />
+        <FormulateInput type="submit" label="Login" />
 
         <p>
           Atau kalau kamu punya e-mail google, kamu bisa log in dengan klik
