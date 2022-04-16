@@ -1,7 +1,9 @@
 <template>
-  <b-container>
-    <NavigationBar />
+<div>
+  <NavigationBar />
 
+  <b-container>
+    
     <div class="title">
       Mau belajar apa hari ini?
     </div>
@@ -49,15 +51,15 @@
           />
 
           <FormulateInput align="center" type="submit" label="Create Topic" />
+          <b-alert :show="success" variant="success">Topic successfully added!</b-alert>
+          <b-alert :show="error" variant="danger">Topic failed to add!</b-alert>
         </FormulateForm>
-
-        <b-alert :show="success" variant="success">Topic successfully added!</b-alert>
-        <b-alert :show="error" variant="danger">Topic failed to add!</b-alert>
       </b-modal>
 
     </div>
 
   </b-container>
+</div>
 </template>
 
 <script>
