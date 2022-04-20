@@ -5,6 +5,11 @@ export const topic = {
     state: {
         topicData: []
     },
+    getters: {
+        topicData(state) {
+            return state.topicData
+        }
+    },
     actions: {
         getAllTopics({commit}) {
             return topicService.getAllTopics().then(

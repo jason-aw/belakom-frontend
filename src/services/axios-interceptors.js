@@ -10,7 +10,7 @@ export default function setupInterceptors(axios) {
       if (error.config.url !== ApiPath.LOGIN_URL && error.response) {
         if (error.response.status === 401 && !originalConfig._retry) {
           originalConfig._retry = true
-          store.dispatch('auth/refreshToken')
+          return store.dispatch('auth/refreshToken')
             .then(() => {
               return axios({ ...originalConfig , headers: authHeader('accessToken') })
             })

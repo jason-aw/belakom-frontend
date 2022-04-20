@@ -10,10 +10,10 @@
 
     <div class="row mt-md-5">
 
-      <div class="col-3 mt-md-5 mb-md-5" v-for="(topic, index) in allTopics" :key="topic.id">
+      <div class="col-3 mt-md-5 mb-md-5" v-for="(topic, index) in topicData" :key="topic.id">
         <b-card>
           <b-card-text>
-            <h4> {{allTopics[index].topicName}} </h4>
+            <h4> {{topicData[index].topicName}} </h4>
           </b-card-text>
         </b-card>
       </div>
@@ -64,21 +64,24 @@
 
 <script>
 import topicServices from '@/services/topic.service'
-import NavigationBar from "./NavigationBar";
+import NavigationBar from "./NavigationBar"
+import { mapGetters } from 'vuex'
 
 export default {
   components: { NavigationBar },
   name: "TopicPage",
 
   data: () => ({
-    allTopics: [],
     createTopicFormValue: {},
     errorMessage: {},
     success: false,
     error: false
   }),
   created() {
-        this.getAllTopics()
+      this.getAllTopics()
+  },
+  computed: {
+    ...mapGetters('topic', ['topicData'])
   },
   methods: {
     getAllTopics() {
