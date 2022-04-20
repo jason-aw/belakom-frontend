@@ -43,7 +43,7 @@ export const auth = {
 		refreshToken({ commit }) {
 			return authService.refreshToken().then(
 				response => {
-					commit('refreshToken', response)
+					commit('refreshToken', response.accessToken)
 					return Promise.resolve(response)
 				},
 				error => {
@@ -77,6 +77,7 @@ export const auth = {
 		refreshToken(state, accessToken) {
 			state.user = {...state.user, accessToken: accessToken}
 			state.status.loggedIn = true
+			localStorage.setItem('user', JSON.stringify(state.user))
 		}
 	}
 }

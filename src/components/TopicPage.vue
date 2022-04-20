@@ -1,6 +1,8 @@
 <template>
+<div>
+  <NavigationBar />
+
   <b-container>
-    <NavigationBar />
 
     <div class="title">
       Mau belajar apa hari ini?
@@ -9,7 +11,7 @@
     <div class="row mt-md-5">
 
       <div class="col-3 mt-md-5 mb-md-5" v-for="(topic, index) in allTopics" :key="topic.id">
-        <b-card >
+        <b-card>
           <b-card-text>
             <h4> {{allTopics[index].topicName}} </h4>
           </b-card-text>
@@ -49,15 +51,15 @@
           />
 
           <FormulateInput align="center" type="submit" label="Create Topic" />
+          <b-alert :show="success" variant="success">Topic successfully added!</b-alert>
+          <b-alert :show="error" variant="danger">Topic failed to add!</b-alert>
         </FormulateForm>
-
-        <b-alert :show="success" variant="success">Topic successfully added!</b-alert>
-        <b-alert :show="error" variant="danger">Topic failed to add!</b-alert>
       </b-modal>
 
     </div>
 
   </b-container>
+</div>
 </template>
 
 <script>
