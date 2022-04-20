@@ -11,7 +11,7 @@
     <div class="row mt-md-5">
 
       <div class="col-3 mt-md-5 mb-md-5" v-for="(topic, index) in allTopics" :key="topic.id">
-        <b-card >
+        <b-card>
           <b-card-text>
             <h4> {{allTopics[index].topicName}} </h4>
           </b-card-text>
@@ -92,24 +92,24 @@ export default {
     getAllTopics() {
       topicServices.getAllTopics()
           .then((response) => {
-                this.allTopics = response.data;
-              },
-              (error) => {
-                this.errorMessage = error;
-              })
+            this.allTopics = response.data
+          })
+          .catch((error) => {
+            this.errorMessage = error
+          })
     },
     handleCreateTopicSubmit() {
       topicServices.createTopic(this.createTopicFormValue)
           .then((response) => {
-                console.log(response)
-                this.success = true;
-                this.getAllTopics();
-                return response;
-              },
-              (error) => {
-                this.false = true;
-                this.errorMessage = error;
-              })
+            console.log(response)
+            this.success = true
+            this.getAllTopics()
+            return response
+          })
+          .catch((error) => {
+            this.false = true;
+            this.errorMessage = error
+          })
     }
   }
 }
