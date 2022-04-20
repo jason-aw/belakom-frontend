@@ -67,9 +67,6 @@ export default {
       return this.$store.state.auth.status.loggedIn;
     },
   },
-  mounted() {
-    this.loggedIn ?? this.$router.push("/home");
-  },
   methods: {
     handleSubmit() {
       this.$store.dispatch("auth/login", this.formValues).then(

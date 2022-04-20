@@ -76,25 +76,18 @@ export default {
     error: false
   }),
   created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
         this.getAllTopics()
-      },
-      // fetch the data when the view is created and the data is
-      // already being observed
-      { immediate: true }
-    )
   },
   methods: {
     getAllTopics() {
-      topicServices.getAllTopics()
-          .then((response) => {
-                this.allTopics = response.data;
-              },
-              (error) => {
-                this.errorMessage = error;
-              })
+        this.$store.dispatch("topic/getAllTopics").then(
+            () => {
+              console.log("mak")
+            },
+            (error) => {
+              console.log(error);
+            }
+        );
     },
     handleCreateTopicSubmit() {
       topicServices.createTopic(this.createTopicFormValue)
@@ -105,6 +98,7 @@ export default {
                 return response;
               },
               (error) => {
+                console.log("kena error")
                 this.false = true;
                 this.errorMessage = error;
               })
