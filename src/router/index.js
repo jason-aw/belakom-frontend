@@ -8,6 +8,7 @@ import HomePage from "../components/HomePage"
 import OAuth2RedirectHandler from "../components/OAuth2RedirectHandler"
 import store from '@/store'
 import TopicPage from "../components/TopicPage";
+import TopicDetailPage from "../components/TopicDetailPage";
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,11 @@ const routes = [
 	{
 		path: '/topics',
 		component: TopicPage,
+		meta: { requiresAuth: false }
+	},
+	{
+		path: '/topics/:topicName',
+		component: TopicDetailPage,
 		meta: { requiresAuth: false }
 	},
 	{

@@ -10,17 +10,22 @@
 
     <div class="row mt-md-5">
 
-      <div class="col-3 mt-md-5 mb-md-5" v-for="(topic, index) in topicData" :key="topic.id">
-        <b-card>
-          <b-card-text>
-            <h4> {{topicData[index].topicName}} </h4>
-          </b-card-text>
+      <div class="col-3 mt-md-5 mb-md-5" v-for="topic in topicData" :key="topic.id">
+        <b-card no-body @mouseover="hovered = true" @mouseleave="hovered = false" class="topicCard" @click="goToTopicDetail(topic.topicName)">
+          <div class="topicCardText">
+            {{topic.topicName}}
+          </div>
+          <div class="deleteButtonArea">
+            <transition name="deleteButtonFade">
+              <b-button class="deleteButton" @click="handleDeleteTopicSubmit(topic.topicName)" v-if="hovered"> delete </b-button>
+            </transition>
+          </div>
         </b-card>
       </div>
 
       <div class="col-3 createNewTopicButton mt-md-5 mb-md-5">
         <b-card>
-          <b-button v-b-modal.createNewTopicModal>Launch demo modal</b-button>
+          <b-button v-b-modal.createNewTopicModal> + </b-button>
         </b-card>
       </div>
 
@@ -51,8 +56,8 @@
           />
 
           <FormulateInput align="center" type="submit" label="Create Topic" />
-          <b-alert :show="success" variant="success">Topic successfully added!</b-alert>
-          <b-alert :show="error" variant="danger">Topic failed to add!</b-alert>
+          <b-alert fade variant="success" v-model="successCreateAlert">Topic successfully added!</b-alert>
+          <b-alert fade variant="danger" v-model="errorCreateAlert">Topic failed to add!</b-alert>
         </FormulateForm>
       </b-modal>
 
@@ -74,8 +79,9 @@ export default {
   data: () => ({
     createTopicFormValue: {},
     errorMessage: {},
-    success: false,
-    error: false
+    successCreateAlert: false,
+    errorCreateAlert: false,
+    hovered: false
   }),
   created() {
       this.getAllTopics()
@@ -98,15 +104,38 @@ export default {
       topicServices.createTopic(this.createTopicFormValue)
           .then((response) => {
                 console.log(response)
-                this.success = true;
+                this.successCreateAlert = true;
+
+                setTimeout(() => {
+                  this.successCreateAlert = false;
+                }, 2000);
+
                 this.getAllTopics();
                 return response;
               },
               (error) => {
-                console.log("kena error")
-                this.false = true;
+                this.errorCreateAlert = true;
+
+                setTimeout(() => {
+                  this.errorCreateAlert = false;
+                }, 2000);
+
                 this.errorMessage = error;
               })
+    },
+    handleDeleteTopicSubmit(id) {
+      topicServices.deleteTopic(id)
+          .then((response) => {
+            this.getAllTopics();
+            return response;
+          },
+          (error) => {
+            this.errorCreateAlert = true;
+            this.errorMessage = error;
+          })
+    },
+    goToTopicDetail(topicName) {
+      this.$router.push('/topics/'+topicName)
     }
   }
 }
@@ -124,6 +153,45 @@ export default {
   flex-direction: column;
   align-items: center;
   padding-bottom: 4%;
+}
+.topicCard {
+  background: #CED4E8;
+  height: 8em;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction: column;
+}
+
+.topicCardText {
+  font-weight: bold;
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.deleteButtonFade-enter-active, .deleteButtonFade-leave-active {
+  transition: opacity .5s;
+}
+.deleteButtonFade-enter, .deleteButtonFade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.deleteButtonArea {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+  justify-self: flex-end;
+}
+
+.deleteButton {
+  border: 0px;
+  width: 100%;
+  background-color: #F51414;
+  color: white;
+  transition: all 0.4s ease;
+  font-size: 12px;
 }
 
 * {

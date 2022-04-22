@@ -15,7 +15,7 @@ const GOOGLE_AUTH_URL = API_BASE_URL + "/oauth2/authorize/google?redirect_uri=ht
 const TOPIC_PATH = API_BASE_URL + "/api/topic"
 
 const GET_ALL_TOPIC_URL = TOPIC_PATH + "/all"
-const DELETE_TOPIC_URL = TOPIC_PATH + "/delete"
+const DELETE_TOPIC_URL = TOPIC_PATH + "/delete/"
 const CREATE_TOPIC_URL = TOPIC_PATH + "/create"
 const UPDATE_TOPIC_URL = TOPIC_PATH + "/topic"
 

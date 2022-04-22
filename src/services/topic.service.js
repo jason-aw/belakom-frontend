@@ -34,9 +34,11 @@ function updateTopic(topic) {
 		.catch(error => Promise.reject(error.response.data))
 }
 
+function getTopic
+
 function deleteTopic(id) {
 
-	return axios.put(ApiPath.DELETE_TOPIC_URL, id, {headers: authHeader('accessToken')})
+	return axios.delete(ApiPath.DELETE_TOPIC_URL+id, {headers: authHeader('accessToken')})
 		.then(response => Promise.resolve(response))
 		.catch(error => Promise.reject(error.response.data))
 }
