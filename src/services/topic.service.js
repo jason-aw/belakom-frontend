@@ -34,7 +34,11 @@ function updateTopic(topic) {
 		.catch(error => Promise.reject(error.response.data))
 }
 
-function getTopic
+function getTopicByName(topicName) {
+	return axios.get(ApiPath.TOPIC_PATH_URL+'/'+topicName, {headers: authHeader('accessToken')})
+		.then(response => Promise.resolve(response))
+		.catch(error => Promise.reject(error.response.data))
+}
 
 function deleteTopic(id) {
 
@@ -44,7 +48,7 @@ function deleteTopic(id) {
 }
 
 export default {
-	getAllTopics, createTopic, updateTopic, deleteTopic
+	getAllTopics, createTopic, updateTopic, deleteTopic, getTopicByName
 }
 
 

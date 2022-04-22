@@ -3,17 +3,21 @@ import topicService from '@/services/topic.service';
 export const topic = {
     namespaced: true,
     state: {
-        topicData: []
+        topicData: [],
+        topicDetail: {}
     },
     getters: {
         topicData(state) {
             return state.topicData
+        },
+        topicDetail(state) {
+            return state.topicDetail
         }
     },
     actions: {
         getAllTopics({commit}) {
-            return topicService.getAllTopics().then(
-                response => {
+            return topicService.getAllTopics()
+                .then(response => {
                     console.log("topic put into state")
                     commit('getAllTopicSuccess', response.data)
                     return Promise.resolve(response)
@@ -21,8 +25,19 @@ export const topic = {
                 error => {
                     commit('getAllTopicError')
                     return Promise.resolve(error)
-                }
-            )
+                })
+        },
+        getTopicByName({commit}, payLoad) {
+            return topicService.getTopicByName(payLoad.topicName)
+                .then(response => {
+                        console.log(response)
+                        commit('getTopicDetailSuccess', response.data)
+                        return Promise.resolve(response)
+                    },
+                    error => {
+                        commit('getTopicDetailError')
+                        return Promise.resolve(error)
+                    })
         }
     },
     mutations: {
@@ -31,6 +46,12 @@ export const topic = {
         },
         getAllTopicError(state){
             state.topicData = []
+        },
+        getTopicDetailSuccess(state, topic) {
+            state.topicDetail = topic
+        },
+        getTopicDetailError(state) {
+            state.topicDetail = {}
         }
     },
 }
