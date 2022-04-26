@@ -1,6 +1,5 @@
 <template>
   <div>
-    <navigation-bar />
     <b-container>
       <!-- <img src="../assets/rhknzsvgxlg81.jpg" width="auto" height="50%" /> -->
       <h2>current user</h2>
@@ -10,9 +9,8 @@
 </template>
 
 <script>
-import NavigationBar from "./NavigationBar.vue";
 export default {
-  components: { NavigationBar },
+  components: {  },
   name: "HomePage",
   computed: {
     currentUser() {

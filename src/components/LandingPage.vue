@@ -1,6 +1,4 @@
 <template>
-  <div>
-    <NavigationBar />
     <b-container>
       <b-row class="maincontent">
         <b-col cols="6" class="textandbutton">
@@ -42,16 +40,13 @@
         </b-col>
       </b-row>
     </b-container>
-  </div>
 </template>
 
 <script>
-import NavigationBar from "./NavigationBar";
 
 export default {
   name: "LandingPage",
   components: {
-    NavigationBar,
   },
 };
 </script>
@@ -63,6 +58,7 @@ export default {
 }
 
 .textandbutton {
+  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -109,7 +105,6 @@ export default {
 
 .mulaibelajarbutton:hover {
   filter: brightness(130%);
-  letter-spacing: 0.1em;
 }
 
 .sayasudahpunyaakunbutton {

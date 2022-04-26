@@ -1,7 +1,5 @@
 <template>
 <div>
-  <NavigationBar />
-
   <b-container>
 
     <div class="title">
@@ -69,11 +67,10 @@
 
 <script>
 import topicServices from '@/services/topic.service'
-import NavigationBar from "./NavigationBar"
 import { mapGetters } from 'vuex'
 
 export default {
-  components: { NavigationBar },
+  components: {  },
   name: "TopicPage",
 
   data: () => ({

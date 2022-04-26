@@ -9,6 +9,7 @@ import OAuth2RedirectHandler from "../components/OAuth2RedirectHandler"
 import store from '@/store'
 import TopicPage from "../components/TopicPage";
 import TopicDetailPage from "../components/TopicDetailPage";
+import CreateArticlePage from "../components/CreateArticlePage"
 
 Vue.use(VueRouter)
 
@@ -18,11 +19,13 @@ const routes = [
 		component: LandingPage
 	},
 	{
+		name: "Login",
 		path: '/login',
 		component: LoginPage,
 		meta: { guest: true }
 	},
 	{
+		name: "Register",
 		path: '/register',
 		component: RegisterPage,
 		meta: { guest: true }
@@ -50,6 +53,10 @@ const routes = [
 	{
 		path: '/oauth2/redirect',
 		component: OAuth2RedirectHandler
+	},
+	{
+		path: '/createArticle',
+		component: CreateArticlePage
 	}
 ]
 
