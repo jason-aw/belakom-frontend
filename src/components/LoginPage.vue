@@ -1,60 +1,57 @@
 <template>
-  <div>
-    <b-container class="outside">
-      <div class="titleform">
-        <h1>Halaman Masuk</h1>
-      </div>
+  <b-container>
+    <div class="titleform">
+      <h1>Halaman Masuk</h1>
+    </div>
 
-      <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
-        <FormulateInput
-          type="text"
-          name="email"
-          label="Email"
-          placeholder="Email"
-          validation="^required|email"
-          error-behavior="submit"
-          :validation-messages="{
-            required: 'Email harus ada',
-            email: ({ value }) => `'${value}' bukan e-mail yang valid`,
-          }"
-        />
+    <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
+      <FormulateInput
+        type="text"
+        name="email"
+        label="Email"
+        placeholder="Email"
+        validation="^required|email"
+        error-behavior="submit"
+        :validation-messages="{
+          required: 'Email harus ada',
+          email: ({ value }) => `'${value}' bukan e-mail yang valid`,
+        }"
+      />
 
-        <FormulateInput
-          type="password"
-          name="password"
-          label="Password"
-          placeholder="Password"
-          validation="required"
-          error-behavior="submit"
-          :validation-messages="{
-            required: 'Password harus ada',
-          }"
-        />
+      <FormulateInput
+        type="password"
+        name="password"
+        label="Password"
+        placeholder="Password"
+        validation="required"
+        error-behavior="submit"
+        :validation-messages="{
+          required: 'Password harus ada',
+        }"
+      />
 
-        <FormulateInput type="submit" label="Login" />
+      <FormulateInput type="submit" label="Login" />
 
-        <p>
-          Atau kalau kamu punya e-mail google, kamu bisa log in dengan klik
-          button dibawah ini
-        </p>
+      <p>
+        Atau kalau kamu punya e-mail google, kamu bisa log in dengan klik button
+        dibawah ini
+      </p>
 
-        <button type="button" class="googlebutton"
-        @click="handleGoogleLogin">
-          <img src="../assets/google.png" />
-          <span> Google </span>
-        </button>
-      </FormulateForm>
-      <h1>values:</h1>
-      <h2>{{ formValues }}</h2>
+      <button type="button" class="googlebutton" @click="handleGoogleLogin">
+        <img src="../assets/google.png" />
+        <span> Google </span>
+      </button>
+    </FormulateForm>
+    <h1>values:</h1>
+    <h2>{{ formValues }}</h2>
 
-      <h1>reponse from backend</h1>
-      <h2>{{ responseValue }}</h2>
-    </b-container>
-  </div>
+    <h1>reponse from backend</h1>
+    <h2>{{ responseValue }}</h2>
+  </b-container>
 </template>
 
 <script>
-import { ApiPath } from '@/services/api-path';
+import { ApiPath } from "@/services/api-path";
 export default {
   name: "LoginPage",
   data: () => ({
@@ -79,14 +76,18 @@ export default {
       );
     },
     handleGoogleLogin() {
-      window.location.href = ApiPath.GOOGLE_AUTH_URL
-    }
+      window.location.href = ApiPath.GOOGLE_AUTH_URL;
+    },
   },
 };
 </script>
 
 <style scoped>
 @import "../assets/LoginRegister.css";
+
+.container {
+  text-align: center;
+}
 
 .titleform h1 {
   margin-top: 10%;

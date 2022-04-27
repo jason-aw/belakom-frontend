@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-container class="outside">
+    <b-container>
       <div class="titleform">
         <h1>Halaman Daftar</h1>
       </div>
@@ -86,6 +86,10 @@ export default {
 
 <style scoped>
 @import "../assets/LoginRegister.css";
+
+.container {
+  text-align: center;
+}
 
 .titleform h1 {
   margin-top: 10%;
