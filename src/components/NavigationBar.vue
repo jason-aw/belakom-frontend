@@ -1,13 +1,12 @@
 <template>
-  <b-nav>
-    <b-nav-item class="logo">
-      <img src="../assets/logo_transparent_background.png" />
-      <h1>LOGO</h1>
-    </b-nav-item>
-    <div v-if="isLoggedIn">
-      <b-nav-item @click="logout"> logout </b-nav-item>
-    </div>
-  </b-nav>
+  <header>
+    <b-nav>
+      <b-nav-item class="logo">
+        Belakom
+      </b-nav-item>
+      <b-nav-item @click="logout" v-if="isLoggedIn"> logout </b-nav-item>
+    </b-nav>
+  </header>
 </template>
 
 <script>
@@ -34,14 +33,21 @@ export default {
 };
 </script>
 
-<style scoped>
-.logo {
-  width: 200px;
-  height: auto;
-}
+<style scoped lang="scss">
+@import "@/assets/main.scss";
 
-.logo img {
-  width: 50%;
-  height: auto;
+.nav {
+  height: 75px;
+  width: 100%;
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+
+  .logo {
+    height: auto;
+    width: 10%;
+    color: $primary-blue;
+    font-size: 20pt;
+  }
 }
 </style>
