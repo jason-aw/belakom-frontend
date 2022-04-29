@@ -7,9 +7,9 @@ import MauSignUpDuluPage from "../components/MauSignUpDuluPage"
 import HomePage from "../components/HomePage"
 import OAuth2RedirectHandler from "../components/OAuth2RedirectHandler"
 import store from '@/store'
-import TopicPage from "../components/TopicPage";
-import TopicDetailPage from "../components/TopicDetailPage";
-import CreateArticlePage from "../components/CreateArticlePage"
+import TopicPage from "../components/TopicPage"
+import TopicDetailPage from "../components/TopicDetailPage"
+import EditChapterDetailPage from "../components/EditChapterDetailPage"
 
 Vue.use(VueRouter)
 
@@ -51,13 +51,14 @@ const routes = [
 		meta: { requiresAuth: false }
 	},
 	{
+		path: '/chapters/:chapterId',
+		component: EditChapterDetailPage,
+		meta: { requiresAuth: true }
+	},
+	{
 		path: '/oauth2/redirect',
 		component: OAuth2RedirectHandler
 	},
-	{
-		path: '/createArticle',
-		component: CreateArticlePage
-	}
 ]
 
 const router = new VueRouter({

@@ -1,5 +1,5 @@
 <template>
-  <div class="chapterCard px-3 py-3">
+  <div class="chapterCard px-3 py-3" @click.stop="goToChapterDetail(chapter.id)">
     <div class="chapterTitle">
       {{chapter.order}}. {{chapter.chapterName}}
     </div>
@@ -30,6 +30,9 @@ export default {
               error => {
                 return error;
               })
+    },
+    goToChapterDetail(id) {
+      this.$router.push('/chapters/' + id)
     }
   }
 }
