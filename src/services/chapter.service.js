@@ -25,6 +25,12 @@ function createChapter(chapter) {
         .catch(error => Promise.reject(error.response.data))
 }
 
+function deleteChapter(id) {
+    return axios.delete(ApiPath.DELETE_CHAPTER_URL+id, {headers: authHeader('accessToken')})
+        .then(response => Promise.resolve(response))
+        .catch(error => Promise.reject(error.response.data))
+}
+
 export default {
-    getAllChapters, createChapter
+    getAllChapters, createChapter, deleteChapter
 }

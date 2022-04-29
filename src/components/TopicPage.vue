@@ -8,22 +8,16 @@
 
     <div class="row mt-md-5">
 
-      <div class="col-3 mt-md-5 mb-md-5" v-for="topic in topicData" :key="topic.id">
-        <b-card no-body @mouseover="hovered = true" @mouseleave="hovered = false" class="topicCard" @click="goToTopicDetail(topic.topicName)">
-          <div class="topicCardText">
-            {{topic.topicName}}
-          </div>
-          <div class="deleteButtonArea">
-            <transition name="deleteButtonFade">
-              <b-button class="deleteButton" @click="handleDeleteTopicSubmit(topic.topicName)" v-if="hovered"> delete </b-button>
-            </transition>
-          </div>
-        </b-card>
+      <div class="col-3 mt-md-5 mb-md-5 px-3" v-for="topic in topicData" :key="topic.id">
+
+        <TopicCard :topic="topic">
+        </TopicCard>
+
       </div>
 
-      <div class="col-3 createNewTopicButton mt-md-5 mb-md-5">
-        <b-card>
-          <b-button v-b-modal.createNewTopicModal> + </b-button>
+      <div class="col-3 mt-md-5 mb-md-5">
+        <b-card no-body class="createNewTopicButton">
+          <b-button class="addButton" v-b-modal.createNewTopicModal> + </b-button>
         </b-card>
       </div>
 
@@ -67,10 +61,11 @@
 
 <script>
 import topicServices from '@/services/topic.service'
+import TopicCard from "./TopicCard";
 import { mapGetters } from 'vuex'
 
 export default {
-  components: {  },
+  components: { TopicCard },
   name: "TopicPage",
 
   data: () => ({
@@ -85,6 +80,11 @@ export default {
   },
   computed: {
     ...mapGetters('topic', ['topicData'])
+  },
+  mounted() {
+    this.$root.$on('deleteTopicEvent', () => {
+      this.getAllTopics()
+    })
   },
   methods: {
     getAllTopics() {
@@ -120,20 +120,6 @@ export default {
                 this.errorMessage = error;
               })
     },
-    handleDeleteTopicSubmit(id) {
-      topicServices.deleteTopic(id)
-          .then((response) => {
-            this.getAllTopics();
-            return response;
-          },
-          (error) => {
-            this.errorCreateAlert = true;
-            this.errorMessage = error;
-          })
-    },
-    goToTopicDetail(topicName) {
-      this.$router.push('/topics/'+topicName)
-    }
   }
 }
 </script>
@@ -151,44 +137,32 @@ export default {
   align-items: center;
   padding-bottom: 4%;
 }
-.topicCard {
-  background: #CED4E8;
-  height: 8em;
-  width: 100%;
-  padding: 0;
+
+.createNewTopicButton {
+  position: relative;
+  cursor: pointer;
   display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: #CED4E8;
+  min-height: 3em;
+  height: 8em;
+  letter-spacing: 1px;
+  transition: .3s ease all;
   align-items:center;
   justify-content:center;
-  flex-direction: column;
 }
 
-.topicCardText {
-  font-weight: bold;
-  font-size: 1.5em;
-  padding: 0;
-}
-
-.deleteButtonFade-enter-active, .deleteButtonFade-leave-active {
-  transition: opacity .5s;
-}
-.deleteButtonFade-enter, .deleteButtonFade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-
-.deleteButtonArea {
-  width: 50%;
-  display: flex;
-  justify-content: flex-end;
-  justify-self: flex-end;
-}
-
-.deleteButton {
-  border: 0px;
+.addButton {
   width: 100%;
-  background-color: #F51414;
-  color: white;
-  transition: all 0.4s ease;
-  font-size: 12px;
+  height: 100%;
+  color: #000000;
+  transition: .3s ease all;
+  background-color: #F3F3F3;
+}
+
+.addButton:hover {
+  background-color: #BFBBBB;
 }
 
 * {

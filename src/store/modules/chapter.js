@@ -30,6 +30,9 @@ export const chapter = {
         },
         getAllChaptersError(state) {
             state.chapters = []
+        },
+        clearAllChapters(state) {
+            state.chapters = []
         }
     }
 }

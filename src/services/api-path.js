@@ -24,7 +24,7 @@ const UPDATE_TOPIC_URL = TOPIC_PATH_URL + "/update"
 const CHAPTER_PATH_URL = API_BASE_URL + "/api/chapter"
 
 const GET_ALL_CHAPTERS_URL = CHAPTER_PATH_URL + "/getAllByTopicId"
-const DELETE_CHAPTER_URL = CHAPTER_PATH_URL + "/delete"
+const DELETE_CHAPTER_URL = CHAPTER_PATH_URL + "/delete/"
 const CREATE_CHAPTER_URL = CHAPTER_PATH_URL + "/create"
 const UPDATE_CHAPTER_URL = CHAPTER_PATH_URL + "/update"
 

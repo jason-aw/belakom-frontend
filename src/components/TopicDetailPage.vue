@@ -1,7 +1,6 @@
 <template>
 
 <div>
-  <NavigationBar />
   <b-container>
 
     <div class="title">
@@ -12,7 +11,14 @@
       {{topicDetail.description}}
     </div>
 
-    <div class="col-3 createNewChapterModal mt-md-5 mb-md-5">
+    <div class="col-12 mt-md-5 mb-md-5 " v-for="chapter in chapters" :key="chapter.id">
+
+      <ChapterCard :chapter="chapter">
+      </ChapterCard>
+
+    </div>
+
+    <div class="col-12 createNewChapterModal mt-md-5 mb-md-5">
       <b-card>
         <b-button v-b-modal.createNewChapterModal> + </b-button>
       </b-card>
@@ -72,11 +78,11 @@
 
 <script>
 import chapterService from '@/services/chapter.service'
-import NavigationBar from "./NavigationBar";
+import ChapterCard from "./ChapterCard";
 import {mapGetters} from "vuex";
 
 export default {
-  components: { NavigationBar },
+  components: { ChapterCard },
   name: "TopicDetailPage",
 
   data: () => ({
@@ -113,14 +119,26 @@ export default {
 
       chapterService.createChapter(this.createChapterFormValue)
           .then(response => {
-            return response
+            this.getAllChapters();
+            return response;
           },
           error => {
-            return error
+            return error;
           })
 
     }
-  }
+  },
+  watch:{
+    $route (){
+      this.$store.commit("chapter/clearAllChapters");
+      this.$store.commit("topic/clearTopicDetail");
+    }
+  },
+  mounted() {
+    this.$root.$on('deleteChapterEvent', () => {
+      this.getAllChapters();
+    })
+  },
 
 }
 </script>

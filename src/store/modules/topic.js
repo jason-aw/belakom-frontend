@@ -52,6 +52,9 @@ export const topic = {
         },
         getTopicDetailError(state) {
             state.topicDetail = {}
+        },
+        clearTopicDetail(state) {
+            state.topicDetail = {}
         }
     },
 }
