@@ -1,53 +1,48 @@
 <template>
-    <b-container>
-      <b-row class="maincontent">
-        <b-col cols="6" class="textandbutton">
-          <b-row>
-            <b-col cols="12">
-              <h1>Belajar komputer menyenangkan bersama kami!</h1>
-            </b-col>
-          </b-row>
+  <b-container>
+    <b-row class="maincontent">
+      <b-col cols="6" class="textandbutton">
+        <b-row>
+          <b-col cols="12">
+            <h1>Belajar komputer menyenangkan bersama kami!</h1>
+          </b-col>
+        </b-row>
 
-          <b-row>
-            <b-col cols="12">
-              <div class="signlog">
-                <router-link to="/mausignupdulu" v-slot="{ navigate }">
-                  <button
-                    @click="navigate"
-                    class="mainbutton mulaibelajarbutton"
-                  >
-                    Mulai belajar
-                  </button>
-                </router-link>
+        <b-row>
+          <b-col cols="12">
+            <div class="signlog">
+              <router-link to="/mausignupdulu" v-slot="{ navigate }">
+                <button @click="navigate" class="mainbutton mulaibelajarbutton">
+                  Mulai belajar
+                </button>
+              </router-link>
 
-                <router-link to="/login" v-slot="{ navigate }">
-                  <button
-                    @click="navigate"
-                    class="mainbutton sayasudahpunyaakunbutton"
-                  >
-                    Saya sudah punya akun
-                  </button>
-                </router-link>
-              </div>
-            </b-col>
-          </b-row>
-        </b-col>
+              <router-link to="/login" v-slot="{ navigate }">
+                <button
+                  @click="navigate"
+                  class="mainbutton sayasudahpunyaakunbutton"
+                >
+                  Saya sudah punya akun
+                </button>
+              </router-link>
+            </div>
+          </b-col>
+        </b-row>
+      </b-col>
 
-        <b-col cols="6">
-          <div class="image">
-            <img src="../assets/landingpagepicture.png" />
-          </div>
-        </b-col>
-      </b-row>
-    </b-container>
+      <b-col cols="6">
+        <div class="image">
+          <img src="../assets/landingpagepicture.png" />
+        </div>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
-
 export default {
   name: "LandingPage",
-  components: {
-  },
+  components: {},
 };
 </script>
 

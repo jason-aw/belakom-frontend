@@ -10,6 +10,7 @@ import store from '@/store'
 import TopicPage from "@/views/TopicPage"
 import TopicDetailPage from "@/views/TopicDetailPage"
 import EditChapterDetailPage from "@/views/EditChapterDetailPage"
+import ChapterDetailPage from "@/views/ChapterDetailPage"
 
 Vue.use(VueRouter)
 
@@ -51,13 +52,18 @@ const routes = [
 		meta: { requiresAuth: false }
 	},
 	{
+		path: '/chapters/:chapterId',
+		component: ChapterDetailPage,
+	},
+	{
 		path: '/chapters/:chapterId/edit',
 		component: EditChapterDetailPage,
 		meta: { requiresAuth: true }
 	},
 	{
 		path: '/oauth2/redirect',
-		component: OAuth2RedirectHandler
+		component: OAuth2RedirectHandler,
+		meta: { guest: true }
 	},
 ]
 

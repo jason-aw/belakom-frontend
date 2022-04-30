@@ -1,9 +1,7 @@
 <template>
   <header>
     <b-nav>
-      <b-nav-item class="logo">
-        Belakom
-      </b-nav-item>
+      <b-nav-item class="logo"> Belakom </b-nav-item>
       <b-nav-item @click="logout" v-if="isLoggedIn"> logout </b-nav-item>
     </b-nav>
   </header>
@@ -34,7 +32,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "@/assets/main.scss";
 
 .nav {
   height: 75px;
@@ -46,7 +43,7 @@ export default {
   .logo {
     height: auto;
     width: 10%;
-    color: $primary-blue;
+    color: #1f3da1;
     font-size: 20pt;
   }
 }

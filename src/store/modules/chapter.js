@@ -48,15 +48,6 @@ export const chapter = {
 			commit('clearChapterDetail')
 			commit('clearAllChapters')
 		},
-		// updateChapter(chapter) {
-		// 	return chapterService.updateChapter(chapter)
-		// 		.then(response => {
-		// 			return Promise.resolve(response)
-		// 		})
-		// 		.catch(error => {
-		// 			return Promise.reject(error)
-		// 		})
-		// }
 	},
 	mutations: {
 		getAllChaptersSuccess(state, chapters) {

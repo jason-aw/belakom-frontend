@@ -19,22 +19,20 @@
       </div>
       <div class="article-actions">
         <button @click="handlePublish">Publish Article</button>
-        <router-link class="router-button" to="#">
-          See Article Preview
-        </router-link>
+        <button @click="handleSeeChapterPreview">See Article Preview</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { VueEditor, Quill } from "vue2-editor"
-import ImageResize from "quill-image-resize-module"
-import fileService from "@/services/files.service"
-import { mapGetters } from 'vuex'
-import chapterService from '@/services/chapter.service'
+import { VueEditor, Quill } from "vue2-editor";
+import ImageResize from "quill-image-resize-module";
+import fileService from "@/services/files.service";
+import { mapGetters } from "vuex";
+import chapterService from "@/services/chapter.service";
 
-Quill.register("modules/imageResize", ImageResize)
+Quill.register("modules/imageResize", ImageResize);
 export default {
   name: "EditChapterDetailPage",
   components: {
@@ -52,54 +50,62 @@ export default {
         },
         bounds: ".editor",
       },
-    }
+    };
   },
   created() {
-    this.getChapterDetail(this.$route.params.chapterId)
+    this.getChapterDetail(this.$route.params.chapterId);
   },
   computed: {
-    ...mapGetters('chapter', ['chapterDetail'])
+    ...mapGetters("chapter", ["chapterDetail"]),
   },
   watch: {
     $route() {
-      this.$store.dispatch("chapter/clearChapterData")
+      this.$store.dispatch("chapter/clearChapterData");
     },
   },
   methods: {
     getChapterDetail(chapterId) {
-      this.$store.dispatch("chapter/getChapterDetailById", chapterId)
-        .then(response => {
-          this.initialChapter = Object.assign({}, response)
-          this.editorContent = response.htmlContent
+      this.$store
+        .dispatch("chapter/getChapterDetailById", chapterId)
+        .then((response) => {
+          this.initialChapter = Object.assign({}, response);
+          this.editorContent = response.htmlContent;
         })
-        .catch(error => this.errorMsg = error)
+        .catch((error) => (this.errorMsg = error));
     },
     imageHandler(file, Editor, cursorLocation, resetUploader) {
       fileService
         .uploadFile(file)
         .then((data) => {
-          Editor.insertEmbed(cursorLocation, "image", data.imageUrl)
-          this.imagesToUpload.push({ url: data.imageUrl, filename: data.filename })
-          resetUploader()
+          Editor.insertEmbed(cursorLocation, "image", data.imageUrl);
+          this.imagesToUpload.push({
+            url: data.imageUrl,
+            filename: data.filename,
+          });
+          resetUploader();
         })
-        .catch((error) => console.log(error))
+        .catch((error) => console.log(error));
     },
     imageRemovedHandler(file) {
-      fileService.deleteFile(file)
+      fileService.deleteFile(file);
     },
     handlePublish() {
-      this.chapterDetail.htmlContent = this.editorContent
+      this.chapterDetail.htmlContent = this.editorContent;
       if (this.initialChapter == this.chapterDetail) {
-        return
+        return;
       }
 
       // this.chapterDetail.htmlContent = this.$sanitize(this.chapterDetail.htmlContent)
-      chapterService.updateChapter(this.chapterDetail)
-        .then(response => console.log(response))
-        .catch(error => this.errorMsg = error)
+      chapterService
+        .updateChapter(this.chapterDetail)
+        .then((response) => console.log(response))
+        .catch((error) => (this.errorMsg = error));
+    },
+    handleSeeChapterPreview() {
+      
     }
   },
-}
+};
 </script>
 
 <style lang="scss">
@@ -175,8 +181,7 @@ export default {
     display: flex;
     flex-direction: row-reverse;
 
-    button,
-    .router-button {
+    button {
       margin: 0;
       transition: 0.3s ease all;
       align-self: center;

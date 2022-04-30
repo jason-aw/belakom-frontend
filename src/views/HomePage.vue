@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  components: {  },
+  components: {},
   name: "HomePage",
   computed: {
     currentUser() {

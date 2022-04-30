@@ -12,7 +12,7 @@ export default function setupInterceptors(axios) {
           originalConfig._retry = true
           return store.dispatch('auth/refreshToken')
             .then(() => {
-              return axios({ ...originalConfig , headers: authHeader('accessToken') })
+              return axios({ ...originalConfig, headers: authHeader('accessToken') })
             })
             .catch(err => Promise.reject(err))
         }
