@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import chapterService from '@/services/chapter.service';
 export default {
   name: "ChapterDetailPage",
   data() {
@@ -19,8 +20,7 @@ export default {
   },
   methods: {
     getChapterDetail(chapterId) {
-      this.$store
-        .dispatch("chapter/getChapterDetailById", chapterId)
+      chapterService.getChapterById(chapterId)
         .then((response) => (this.chapterDetail = Object.assign({}, response)))
         .catch((error) => console.log(error));
     },
