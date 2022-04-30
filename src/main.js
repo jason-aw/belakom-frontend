@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import VueFormulate from '@braid/vue-formulate'
 import setupInterceptors from './services/axios-interceptors'
 import axios from 'axios'
-import VueSanitize from 'vue-sanitize'
+// import VueSanitize from 'vue-sanitize'
 
 Vue.use(VueFormulate)
 Vue.use(BootstrapVue)
@@ -16,7 +16,7 @@ Vue.use(BootstrapVue)
 //   allowedTags: VueSanitize.defaults.allowedTags.concat(['img'])
 // })
 
-console.log("sanitize default config", VueSanitize.defaults)
+// console.log("sanitize default config", VueSanitize.defaults)
 
 Vue.config.productionTip = false
 

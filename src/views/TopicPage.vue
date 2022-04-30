@@ -1,67 +1,65 @@
 <template>
-<div>
-  <b-container>
+<b-container>
 
-    <div class="title">
-      Mau belajar apa hari ini?
-    </div>
+  <div class="title">
+    Mau belajar apa hari ini?
+  </div>
 
-    <div class="row mt-md-5">
+  <div class="row mt-md-5">
 
-      <div class="col-3 mt-md-5 mb-md-5 px-3" v-for="topic in topicData" :key="topic.id">
+    <div class="col-3 mt-md-5 mb-md-5 px-3" v-for="topic in topicData" :key="topic.id">
 
-        <TopicCard :topic="topic">
-        </TopicCard>
-
-      </div>
-
-      <div class="col-3 mt-md-5 mb-md-5">
-        <b-card no-body class="createNewTopicButton">
-          <b-button class="addButton" v-b-modal.createNewTopicModal> + </b-button>
-        </b-card>
-      </div>
-
-      <b-modal id="createNewTopicModal" hide-footer centered size="xl" title="Create New Topic">
-        <FormulateForm v-model="createTopicFormValue" @submit="handleCreateTopicSubmit" class="form">
-          <FormulateInput
-              type="text"
-              name="topicName"
-              label="Topic Name"
-              placeholder="Topic Name"
-              validation="^required"
-              error-behavior="submit"
-              :validation-messages="{
-            required: 'Topic harus ada'
-          }"
-          />
-
-          <FormulateInput
-              type="textarea"
-              name="description"
-              label="Description"
-              placeholder="Description"
-              validation="^required"
-              error-behavior="submit"
-              :validation-messages="{
-            required: 'Deskripsi harus ada'
-          }"
-          />
-
-          <FormulateInput align="center" type="submit" label="Create Topic" />
-          <b-alert fade variant="success" v-model="successCreateAlert">Topic successfully added!</b-alert>
-          <b-alert fade variant="danger" v-model="errorCreateAlert">Topic failed to add!</b-alert>
-        </FormulateForm>
-      </b-modal>
+      <TopicCard :topic="topic">
+      </TopicCard>
 
     </div>
 
-  </b-container>
-</div>
+    <div class="col-3 mt-md-5 mb-md-5">
+      <b-card no-body class="createNewTopicButton">
+        <b-button class="addButton" v-b-modal.createNewTopicModal> + </b-button>
+      </b-card>
+    </div>
+
+    <b-modal id="createNewTopicModal" hide-footer centered size="xl" title="Create New Topic">
+      <FormulateForm v-model="createTopicFormValue" @submit="handleCreateTopicSubmit" class="form">
+        <FormulateInput
+            type="text"
+            name="topicName"
+            label="Topic Name"
+            placeholder="Topic Name"
+            validation="^required"
+            error-behavior="submit"
+            :validation-messages="{
+          required: 'Topic harus ada'
+        }"
+        />
+
+        <FormulateInput
+            type="textarea"
+            name="description"
+            label="Description"
+            placeholder="Description"
+            validation="^required"
+            error-behavior="submit"
+            :validation-messages="{
+          required: 'Deskripsi harus ada'
+        }"
+        />
+
+        <FormulateInput align="center" type="submit" label="Create Topic" />
+        <b-alert fade variant="success" v-model="successCreateAlert">Topic successfully added!</b-alert>
+        <b-alert fade variant="danger" v-model="errorCreateAlert">Topic failed to add!</b-alert>
+      </FormulateForm>
+    </b-modal>
+
+  </div>
+
+</b-container>
 </template>
 
 <script>
 import topicServices from '@/services/topic.service'
-import TopicCard from "./TopicCard";
+import TopicCard from "@/components/TopicCard"
 import { mapGetters } from 'vuex'
 
 export default {
@@ -100,7 +98,6 @@ export default {
     handleCreateTopicSubmit() {
       topicServices.createTopic(this.createTopicFormValue)
           .then((response) => {
-                console.log(response)
                 this.successCreateAlert = true;
 
                 setTimeout(() => {

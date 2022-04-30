@@ -18,7 +18,6 @@ export const topic = {
         getAllTopics({commit}) {
             return topicService.getAllTopics()
                 .then(response => {
-                    console.log("topic put into state")
                     commit('getAllTopicSuccess', response.data)
                     return Promise.resolve(response)
                 },
@@ -30,7 +29,6 @@ export const topic = {
         getTopicByName({commit}, payLoad) {
             return topicService.getTopicByName(payLoad.topicName)
                 .then(response => {
-                        console.log(response)
                         commit('getTopicDetailSuccess', response.data)
                         return Promise.resolve(response)
                     },

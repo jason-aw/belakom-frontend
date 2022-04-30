@@ -3,7 +3,6 @@ import { ApiPath } from "./api-path"
 import authHeader from "./auth-header";
 
 function getAllChapters(id) {
-	console.log(id)
 	return axios.get(ApiPath.GET_ALL_CHAPTERS_URL, { headers: authHeader('accessToken'), params: { id: id } })
 		.then(response => Promise.resolve(response))
 		.catch(error => Promise.reject(error.response.data))

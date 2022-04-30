@@ -76,7 +76,7 @@
 
 <script>
 import chapterService from '@/services/chapter.service'
-import ChapterCard from "./ChapterCard";
+import ChapterCard from "@/components/ChapterCard";
 import {mapGetters} from "vuex";
 
 export default {

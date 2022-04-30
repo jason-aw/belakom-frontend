@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import LandingPage from "../components/LandingPage"
-import LoginPage from "../components/LoginPage"
-import RegisterPage from "../components/RegisterPage"
-import MauSignUpDuluPage from "../components/MauSignUpDuluPage"
-import HomePage from "../components/HomePage"
-import OAuth2RedirectHandler from "../components/OAuth2RedirectHandler"
+import LandingPage from "@/views/LandingPage"
+import LoginPage from "@/views/LoginPage"
+import RegisterPage from "@/views/RegisterPage"
+import MauSignUpDuluPage from "@/views/MauSignUpDuluPage"
+import HomePage from "@/views/HomePage"
+import OAuth2RedirectHandler from "@/components/OAuth2RedirectHandler"
 import store from '@/store'
-import TopicPage from "../components/TopicPage"
-import TopicDetailPage from "../components/TopicDetailPage"
-import EditChapterDetailPage from "../components/EditChapterDetailPage"
+import TopicPage from "@/views/TopicPage"
+import TopicDetailPage from "@/views/TopicDetailPage"
+import EditChapterDetailPage from "@/views/EditChapterDetailPage"
 
 Vue.use(VueRouter)
 
@@ -51,7 +51,7 @@ const routes = [
 		meta: { requiresAuth: false }
 	},
 	{
-		path: '/chapters/:chapterId',
+		path: '/chapters/:chapterId/edit',
 		component: EditChapterDetailPage,
 		meta: { requiresAuth: true }
 	},

@@ -32,7 +32,7 @@ export default {
               })
     },
     goToChapterDetail(id) {
-      this.$router.push('/chapters/' + id)
+      this.$router.push('/chapters/' + id + '/edit')
     }
   }
 }

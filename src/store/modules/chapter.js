@@ -24,7 +24,6 @@ export const chapter = {
 		getAllChapters({ commit }, payLoad) {
 			return chapterService.getAllChapters(payLoad.topicId)
 				.then(response => {
-					console.log("chapter put into state")
 					commit('getAllChaptersSuccess', response.data)
 					return Promise.resolve(response)
 				},
@@ -36,13 +35,11 @@ export const chapter = {
 		getChapterDetailById({ commit }, chapterId) {
 			return chapterService.getChapterById(chapterId)
 				.then(response => {
-					console.log("load chapter detail in state")
 					delete response.success
 					commit('setChapterDetail', response)
 					return Promise.resolve(response)
 				})
 				.catch(error => {
-					console.log("get chapter failed")
 					commit('clearChapterDetail')
 					return Promise.resolve(error)
 				})

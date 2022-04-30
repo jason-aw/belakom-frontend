@@ -11,7 +11,6 @@ function login(user) {
 
   return axios.post(ApiPath.LOGIN_URL, req)
     .then(response => {
-      console.log(response.data)
       let { accessToken, refreshToken } = response.data
       return Promise.resolve({ accessToken, refreshToken })
     })
@@ -25,14 +24,8 @@ function logout() {
     refreshToken: user.refreshToken
   }
   axios.post(ApiPath.LOGOUT_URL, req)
-    .then(response => {
-      console.log("Logout Success", response)
-      return Promise.resolve(response)
-    })
-    .catch(error => {
-      console.log("Logout Error", error)
-      return Promise.reject(error)
-    })
+    .then(response => Promise.resolve(response))
+    .catch(error => Promise.reject(error))
 }
 
 function register(user) {
@@ -48,12 +41,10 @@ function register(user) {
 function refreshToken() {
   return axios.get(ApiPath.REFRESH_TOKEN_URL, { headers: authHeader('refreshToken') })
     .then(response => {
-      console.log("token refreshed", response.data)
       let { accessToken, refreshToken } = response.data
       return Promise.resolve({ accessToken, refreshToken })
     })
     .catch(error => {
-      console.log("token refresh fail", error)
       return Promise.reject(error)
     })
 }
