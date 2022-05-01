@@ -172,7 +172,4 @@ export default {
   background-color: #bfbbbb;
 }
 
-* {
-  font-family: "Poppins", sans-serif;
-}
 </style>

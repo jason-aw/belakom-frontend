@@ -5,8 +5,8 @@
         <p><span>Error: </span>{{ this.errorMsg }}</p>
       </div>
       <div class="article-info">
-        <h1>{{ chapterDetail.chapterName }}</h1>
-        <p>{{ chapterDetail.description }}</p>
+        <h1><click-to-edit v-model="chapterDetail.chapterName" /></h1>
+        <p><click-to-edit v-model="chapterDetail.description" textarea="true" /></p>
       </div>
       <div class="editor" id="my-editor">
         <VueEditor
@@ -14,7 +14,7 @@
           useCustomImageHandler
           @image-added="imageHandler"
           @image-removed="imageRemovedHandler"
-          v-model="editorContent"
+          v-model="chapterDetail.htmlContent"
         />
       </div>
       <div class="article-actions">
@@ -31,18 +31,19 @@ import ImageResize from "quill-image-resize-module";
 import fileService from "@/services/files.service";
 import { mapGetters } from "vuex";
 import chapterService from "@/services/chapter.service";
+import ClickToEdit from "@/components/ClickToEdit.vue";
 
 Quill.register("modules/imageResize", ImageResize);
 export default {
   name: "EditChapterDetailPage",
   components: {
     VueEditor,
+    ClickToEdit
   },
   data() {
     return {
       errorMsg: "test message",
       initialChapter: {},
-      editorContent: "",
       imagesToUpload: [],
       editorSettings: {
         modules: {
@@ -69,7 +70,6 @@ export default {
         .dispatch("chapter/getChapterDetailById", chapterId)
         .then((response) => {
           this.initialChapter = Object.assign({}, response);
-          this.editorContent = response.htmlContent;
         })
         .catch((error) => (this.errorMsg = error));
     },
@@ -90,7 +90,6 @@ export default {
       fileService.deleteFile(file);
     },
     handlePublish() {
-      this.chapterDetail.htmlContent = this.editorContent;
       if (this.initialChapter == this.chapterDetail) {
         return;
       }
