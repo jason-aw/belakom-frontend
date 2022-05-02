@@ -11,6 +11,7 @@ import TopicPage from "@/views/TopicPage"
 import TopicDetailPage from "@/views/TopicDetailPage"
 import EditChapterDetailPage from "@/views/EditChapterDetailPage"
 import ChapterDetailPage from "@/views/ChapterDetailPage"
+import ChapterPreviewPage from "@/views/ChapterPreviewPage"
 
 Vue.use(VueRouter)
 
@@ -65,6 +66,10 @@ const routes = [
 		component: OAuth2RedirectHandler,
 		meta: { guest: true }
 	},
+	{
+		path: '/chapter-preview',
+		component: ChapterPreviewPage
+	}
 ]
 
 const router = new VueRouter({

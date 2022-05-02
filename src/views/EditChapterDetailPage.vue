@@ -19,7 +19,7 @@
       </div>
       <div class="article-actions">
         <button @click="handlePublish">Publish Article</button>
-        <button @click="handleSeeChapterPreview">See Article Preview</button>
+        <router-link to="/chapter-preview">See Article Preview</router-link>
       </div>
     </div>
   </div>
@@ -100,9 +100,6 @@ export default {
         .then((response) => console.log(response))
         .catch((error) => (this.errorMsg = error));
     },
-    handleSeeChapterPreview() {
-      
-    }
   },
 };
 </script>
@@ -180,6 +177,7 @@ export default {
     display: flex;
     flex-direction: row-reverse;
 
+    a,
     button {
       margin: 0;
       transition: 0.3s ease all;
