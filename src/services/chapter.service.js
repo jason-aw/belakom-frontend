@@ -15,6 +15,7 @@ function createChapter(chapter) {
 		order: chapter.order,
 		topicId: chapter.topicId,
 		description: chapter.description,
+		enableQuiz: chapter.enableQuiz
 	}
 
 	console.log(chapterRec)

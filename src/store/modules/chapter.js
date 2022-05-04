@@ -8,6 +8,7 @@ export const chapter = {
 			chapterName: "",
 			description: "",
 			htmlContent: "",
+			topicId: "",
 			id: "",
 			order: null,
 		}

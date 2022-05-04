@@ -54,9 +54,15 @@
           validation="^required|number"
           error-behavior="submit"
           :validation-messages="{
-            required: 'Nama Chapter harus ada',
-            number: 'input harus berupa angka',
+            required: 'Input order harus ada',
+            number: 'Input harus berupa angka',
           }"
+        />
+
+        <FormulateInput
+            type="checkbox"
+            label="Enable Quiz"
+            name="enableQuiz"
         />
 
         <FormulateInput

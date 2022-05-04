@@ -3,6 +3,10 @@
     <h1>{{ chapterDetail.order+'. '+ chapterDetail.chapterName }}</h1>
     <p>{{ chapterDetail.description}}</p>
     <div class="content" v-html="chapterDetail.htmlContent"></div>
+
+    <div v-if="chapterDetail.enableQuiz">
+      <button @click="goToQuizPage(chapterDetail.id)">Access Quiz</button>
+    </div>
   </b-container>
 </template>
 
@@ -23,6 +27,9 @@ export default {
       chapterService.getChapterById(chapterId)
         .then((response) => (this.chapterDetail = Object.assign({}, response)))
         .catch((error) => console.log(error));
+    },
+    goToQuizPage(id) {
+      this.$router.push("/chapters/" + id + "/quiz");
     },
   },
 };

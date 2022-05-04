@@ -8,6 +8,7 @@
         <h1><click-to-edit v-model="chapterDetail.chapterName" /></h1>
         <p><click-to-edit v-model="chapterDetail.description" textarea="true" /></p>
       </div>
+
       <div class="editor" id="my-editor">
         <VueEditor
           :editorOptions="editorSettings"
@@ -21,6 +22,136 @@
         <button @click="handlePublish">Publish Article</button>
         <router-link to="/chapter-preview">See Article Preview</router-link>
       </div>
+
+      <FormulateInput
+          type="checkbox"
+          label="Enable Quiz"
+          v-model="enableQuiz"
+          @click="handleUpdateChapterEnableQuiz()"
+      />
+
+      <div v-if="enableQuiz" class="col-12 editQuestion mt-md-5 mb-md-5">
+        <h1> Add Question </h1>
+
+        <div
+            class="col-12 mt-md-5 mb-md-5"
+            v-for="question in questions"
+            :key="question.id"
+        >
+          {{question}}
+        </div>
+
+        <b-card>
+          <b-button v-b-modal.createNewQuestionModal> + </b-button>
+        </b-card>
+      </div>
+
+      <b-modal
+          id="createNewQuestionModal"
+          hide-footer
+          centered
+          size="xl"
+          title="Create New Question"
+      >
+        <FormulateForm
+            v-model="createQuestionFormValue"
+            @submit="handleCreateQuestionSubmit"
+            class="form"
+        >
+
+          <FormulateInput
+              type="text"
+              name="order"
+              label="Urutan"
+              placeholder=""
+              validation="^required|number"
+              error-behavior="submit"
+              :validation-messages="{
+            required: 'Input order harus ada',
+            number: 'Input harus berupa angka',
+          }"
+          />
+
+          <FormulateInput
+              type="text"
+              name="question"
+              label="Question"
+              placeholder="Question"
+              validation="^required"
+              error-behavior="submit"
+              :validation-messages="{
+            required: 'Soal harus ada',
+          }"
+          />
+
+          <FormulateInput
+              v-model="questionTypeValue"
+              name="questionType"
+              :options="{MPC: 'Multiple Choice', shortAnswer: 'Short Answer Text'}"
+              type="select"
+              placeholder="Select question Type"
+              label="Select Question Type?"
+          />
+
+          <FormulateInput
+              type="text"
+              name="correctAnswer"
+              label="Correct Answer"
+              placeholder=""
+              validation="^required"
+              error-behavior="submit"
+              :validation-messages="{
+            required: 'Jawaban harus ada'
+          }"
+          />
+
+          <div v-if="questionTypeValue === 'MPC'">
+            <FormulateInput
+                type="text"
+                name="fakeAnswer1"
+                label="fakeAnswer1"
+                placeholder="Fake Answer 1"
+                validation="^required"
+                error-behavior="submit"
+                :validation-messages="{
+              required: 'Jawaban palsu 1 harus ada',
+            }"
+            />
+            <FormulateInput
+                type="text"
+                name="fakeAnswer2"
+                label="fakeAnswer2"
+                placeholder="Fake Answer 2"
+                validation="^required"
+                error-behavior="submit"
+                :validation-messages="{
+              required: 'Jawaban palsu 2 harus ada',
+            }"
+            />
+            <FormulateInput
+                type="text"
+                name="fakeAnswer3"
+                label="fakeAnswer3"
+                placeholder="Fake Answer 3"
+                validation="^required"
+                error-behavior="submit"
+                :validation-messages="{
+              required: 'Jawaban palsu 3 harus ada',
+            }"
+            />
+
+          </div>
+
+          <FormulateInput align="center" type="submit" label="Create Question" />
+          <b-alert fade variant="success" v-model="successCreateAlert">
+            Question successfully added!
+          </b-alert>
+          <b-alert fade variant="danger" v-model="errorCreateAlert">
+            Question failed to add!
+          </b-alert>
+        </FormulateForm>
+      </b-modal>
+
     </div>
   </div>
 </template>
@@ -31,6 +162,7 @@ import ImageResize from "quill-image-resize-module";
 import fileService from "@/services/files.service";
 import { mapGetters } from "vuex";
 import chapterService from "@/services/chapter.service";
+import questionService from "@/services/question.service"
 import ClickToEdit from "@/components/ClickToEdit.vue";
 
 Quill.register("modules/imageResize", ImageResize);
@@ -43,7 +175,9 @@ export default {
   data() {
     return {
       errorMsg: "test message",
+      enableQuiz: false,
       initialChapter: {},
+      questionTypeValue: "",
       imagesToUpload: [],
       editorSettings: {
         modules: {
@@ -51,6 +185,7 @@ export default {
         },
         bounds: ".editor",
       },
+      createQuestionFormValue: {}
     };
   },
   created() {
@@ -58,11 +193,25 @@ export default {
   },
   computed: {
     ...mapGetters("chapter", ["chapterDetail"]),
+    ...mapGetters("question", ["questions"]),
   },
   watch: {
     $route() {
       this.$store.dispatch("chapter/clearChapterData");
     },
+    enableQuiz(){
+      //
+      //if enable quiz is false, update to db
+      //if enable quiz is true, update to db and
+      //hit get all question based on chapterId
+
+      //update db
+      if (this.enableQuiz === true) {
+        console.log("hit getQuestion")
+        this.getAllQuestion(this.chapterDetail.id)
+      }
+
+    }
   },
   methods: {
     getChapterDetail(chapterId) {
@@ -70,8 +219,16 @@ export default {
         .dispatch("chapter/getChapterDetailById", chapterId)
         .then((response) => {
           this.initialChapter = Object.assign({}, response);
+          this.enableQuiz = this.chapterDetail.enableQuiz;
         })
         .catch((error) => (this.errorMsg = error));
+    },
+    getAllQuestion(chapterId) {
+      this.$store.dispatch("question/getQuestionsByChapterId", chapterId)
+          .then((response) => {
+            return response
+          })
+          .catch((error) => (this.errorMsg = error));
     },
     imageHandler(file, Editor, cursorLocation, resetUploader) {
       fileService
@@ -100,6 +257,24 @@ export default {
         .then((response) => console.log(response))
         .catch((error) => (this.errorMsg = error));
     },
+    handleUpdateChapterEnableQuiz() {
+      //belum tau setiap hit mau update langusng db apa gak usah
+    },
+    handleCreateQuestionSubmit() {
+
+      this.createQuestionFormValue.chapterId = this.chapterDetail.id;
+      this.createQuestionFormValue.topicId = this.chapterDetail.topicId;
+
+      questionService.createQuestion(this.createQuestionFormValue).then(
+          (response) => {
+            this.getAllQuestion(this.chapterDetail.id);
+            return response;
+          },
+          (error) => {
+            return error;
+          }
+      );
+    }
   },
 };
 </script>
@@ -107,12 +282,16 @@ export default {
 <style lang="scss">
 .create-article {
   position: relative;
-  height: 100%;
+  height: 100vh;
 
   .container {
     position: relative;
     height: 100%;
     padding: 10px 25px 60px;
+
+    .fakeAnswer {
+      padding: .75em;
+    }
   }
 
   .error-message {

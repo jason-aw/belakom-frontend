@@ -12,6 +12,7 @@ import TopicDetailPage from "@/views/TopicDetailPage"
 import EditChapterDetailPage from "@/views/EditChapterDetailPage"
 import ChapterDetailPage from "@/views/ChapterDetailPage"
 import ChapterPreviewPage from "@/views/ChapterPreviewPage"
+import QuizPage from "@/views/QuizPage";
 
 Vue.use(VueRouter)
 
@@ -55,6 +56,10 @@ const routes = [
 	{
 		path: '/chapters/:chapterId',
 		component: ChapterDetailPage,
+	},
+	{
+		path: '/chapters/:chapterId/quiz',
+		component: QuizPage,
 	},
 	{
 		path: '/chapters/:chapterId/edit',
