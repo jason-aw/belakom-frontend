@@ -52,6 +52,7 @@
 
 <script>
 import { ApiPath } from "@/services/api-path";
+import { mapGetters } from 'vuex';
 export default {
   name: "LoginPage",
   data: () => ({
@@ -60,9 +61,7 @@ export default {
     errorMessage: "",
   }),
   computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    },
+    ...mapGetters("auth", ["loggedIn"])
   },
   methods: {
     handleSubmit() {

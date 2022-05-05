@@ -2,12 +2,13 @@
   <header>
     <b-nav>
       <b-nav-item class="logo"> Belakom </b-nav-item>
-      <b-nav-item @click="logout" v-if="isLoggedIn"> logout </b-nav-item>
+      <b-nav-item @click="logout" v-if="loggedIn"> logout </b-nav-item>
     </b-nav>
   </header>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: "NavigationBar",
   methods: {
@@ -24,9 +25,7 @@ export default {
     },
   },
   computed: {
-    isLoggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    },
+    ...mapGetters("auth", ["loggedIn"]),
   },
 };
 </script>

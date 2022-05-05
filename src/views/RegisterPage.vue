@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: "RegisterPage",
   data: () => ({
@@ -63,9 +64,7 @@ export default {
     responseValue: {},
   }),
   computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    },
+    ...mapGetters("auth", ["loggedIn"])
   },
   methods: {
     handleSubmit() {
