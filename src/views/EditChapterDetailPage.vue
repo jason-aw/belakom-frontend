@@ -174,11 +174,10 @@ export default {
   },
   data() {
     return {
-      errorMsg: "test message",
+      errorMsg: "",
       enableQuiz: false,
       initialChapter: {},
       questionTypeValue: "",
-      imagesToUpload: [],
       editorSettings: {
         modules: {
           imageResize: {},
@@ -235,16 +234,17 @@ export default {
         .uploadFile(file)
         .then((data) => {
           Editor.insertEmbed(cursorLocation, "image", data.imageUrl);
-          this.imagesToUpload.push({
-            url: data.imageUrl,
-            filename: data.filename,
-          });
+          this.chapterDetail.imageAttachments.push(data.filename);
           resetUploader();
         })
         .catch((error) => console.log(error));
     },
     imageRemovedHandler(file) {
-      fileService.deleteFile(file);
+      fileService.deleteFile(file)
+        .then(data => {
+          this.chapterDetail.imageAttachments = 
+            this.chapterDetail.imageAttachments.filter(e => e != data.filename);
+        });
     },
     handlePublish() {
       if (this.initialChapter == this.chapterDetail) {

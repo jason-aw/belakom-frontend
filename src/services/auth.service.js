@@ -11,8 +11,8 @@ function login(user) {
 
   return axios.post(ApiPath.LOGIN_URL, req)
     .then(response => {
-      let { accessToken, refreshToken } = response.data
-      return Promise.resolve({ accessToken, refreshToken })
+      let { accessToken, refreshToken, email, roles } = response.data
+      return Promise.resolve({ accessToken, refreshToken, email, roles })
     })
     .catch(error => Promise.reject(error))
 }
