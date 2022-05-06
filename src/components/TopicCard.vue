@@ -69,7 +69,6 @@ export default {
 .topicCard:hover {
   transform: scale(1.05);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
-  letter-spacing: 2px;
   outline: solid 1px #1f3da1;
 }
 
@@ -83,7 +82,7 @@ export default {
 .deleteButtonFade-leave-active {
   transition: opacity 0.5s;
 }
-.deleteButtonFade-enter, .deleteButtonFade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.deleteButtonFade-enter, .deleteButtonFade-leave-to {
   opacity: 0;
 }
 

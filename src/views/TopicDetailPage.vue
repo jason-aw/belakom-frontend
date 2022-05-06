@@ -31,11 +31,16 @@
       centered
       size="xl"
       title="Create New Chapter"
+      content-class="modal-container"
+      header-class="modal-header"
     >
+      <template #modal-header="{ close }">
+        <h5>Create New Topic</h5>
+        <button @click="close">x</button>
+      </template>
       <FormulateForm
         v-model="createChapterFormValue"
         @submit="handleCreateChapterSubmit"
-        class="form"
       >
         <FormulateInput
           type="text"
@@ -169,7 +174,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 .title {
   font-size: 3em;
   font-weight: bold;
@@ -198,5 +203,31 @@ export default {
 
 .chapterCardGhost-drag {
   opacity: 0;
+}
+
+.modal-container {
+  font-family: "Plus Jakarta Sans", Helvetica, Arial, sans-serif;
+  .modal-header {
+    h5 {
+      margin-bottom: 0;
+    }
+    button {
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2em;
+      width: 2em;
+      background: none;
+      transition: all 0.2s ease;
+      &:hover {
+        background-color: #dbdada;
+      }
+      &:active {
+        background-color: #acaaaa;
+      }
+    }
+  }
 }
 </style>

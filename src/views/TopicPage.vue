@@ -25,11 +25,16 @@
         centered
         size="xl"
         title="Create New Topic"
+        content-class="modal-container"
+        header-class="modal-header"
       >
+        <template #modal-header="{ close }">
+          <h5>Create New Topic</h5>
+          <button @click="close">x</button>
+        </template>
         <FormulateForm
           v-model="createTopicFormValue"
           @submit="handleCreateTopicSubmit"
-          class="form"
         >
           <FormulateInput
             type="text"
@@ -133,16 +138,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 .title {
   font-size: 2.5em;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 4%;
 }
 
 .createNewTopicButton {
@@ -170,6 +168,32 @@ export default {
 
 .addButton:hover {
   background-color: #bfbbbb;
+}
+
+.modal-container {
+  font-family: "Plus Jakarta Sans", Helvetica, Arial, sans-serif;
+  .modal-header {
+    h5 {
+      margin-bottom: 0;
+    }
+    button {
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2em;
+      width: 2em;
+      background: none;
+      transition: all 0.2s ease;
+      &:hover {
+        background-color: #dbdada;
+      }
+      &:active {
+        background-color: #acaaaa;
+      }
+    }
+  }
 }
 
 </style>
