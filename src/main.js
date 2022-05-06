@@ -5,6 +5,8 @@ import store from './store'
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'bootstrap/dist/css/bootstrap.css'
+import 'vuetify/dist/vuetify.min.css'
+import Vuetify from 'vuetify'
 import VueFormulate from '@braid/vue-formulate'
 import setupInterceptors from './services/axios-interceptors'
 import axios from 'axios'
@@ -12,6 +14,7 @@ import axios from 'axios'
 
 Vue.use(VueFormulate)
 Vue.use(BootstrapVue)
+Vue.use(Vuetify)
 // Vue.use(VueSanitize, {
 //   allowedTags: VueSanitize.defaults.allowedTags.concat(['img'])
 // })
