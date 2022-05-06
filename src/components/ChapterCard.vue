@@ -4,7 +4,7 @@
     @click.stop="goToChapterDetail(chapter.id)"
   >
     <div class="chapterTitle">
-      {{ chapter.order }}. {{ chapter.chapterName }}
+      {{ index }}. {{ chapter.chapterName }}
     </div>
 
     <div class="chapterDescription">
@@ -34,7 +34,7 @@ import { BIconTrashFill, BIconPencilSquare } from "bootstrap-vue";
 
 export default {
   name: "ChapterCard",
-  props: ["chapter"],
+  props: ["chapter", "index"],
   components: {
     BIconTrashFill,
     BIconPencilSquare,
@@ -61,7 +61,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .chapterCard {
   position: relative;
   display: flex;

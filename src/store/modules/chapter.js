@@ -57,6 +57,9 @@ export const chapter = {
 		clearAllChapters(state) {
 			state.chapters = []
 		},
+		setChapters(state, chapters) {
+			state.chapters = chapters
+		},
 		setChapterDetail(state, chapterDetail) {
 			state.chapterDetail = chapterDetail
 		},

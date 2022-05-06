@@ -34,6 +34,24 @@ function updateTopic(topic) {
 		.catch(error => Promise.reject(error.response.data))
 }
 
+function updateTopicChapterOrder(chapters) {
+
+	console.log(chapters)
+	let chapterOrder = []
+	chapters.forEach(chapter => chapterOrder.push(chapter.id));
+
+	console.log(chapterOrder)
+
+	let updateChapterOrderRec = {
+		chapterOrder: chapterOrder,
+		topicId: chapters[0].topicId
+	}
+
+	return axios.post(ApiPath.UPDATE_TOPIC_CHAPTER_ORDER, updateChapterOrderRec, {headers: authHeader('accessToken')})
+		.then(response => Promise.resolve(response))
+		.catch(error => Promise.reject(error.response.data))
+}
+
 function getTopicByName(topicName) {
 	return axios.get(ApiPath.TOPIC_PATH_URL+'/'+topicName, {headers: authHeader('accessToken')})
 		.then(response => Promise.resolve(response))
@@ -48,7 +66,7 @@ function deleteTopic(id) {
 }
 
 export default {
-	getAllTopics, createTopic, updateTopic, deleteTopic, getTopicByName
+	getAllTopics, createTopic, updateTopic, deleteTopic, getTopicByName, updateTopicChapterOrder
 }
 
 

@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <h1>{{ chapterDetail.order+'. '+ chapterDetail.chapterName }}</h1>
+    <h1>{{ chapterDetail.chapterName }}</h1>
     <p>{{ chapterDetail.description}}</p>
     <div class="content" v-html="chapterDetail.htmlContent"></div>
 
@@ -17,10 +17,12 @@ export default {
   data() {
     return {
       chapterDetail: {},
+      chapterIndex: "",
     };
   },
   created() {
     this.getChapterDetail(this.$route.params.chapterId);
+    this.chapterIndex = this.$route.params.chapterIndex
   },
   methods: {
     getChapterDetail(chapterId) {

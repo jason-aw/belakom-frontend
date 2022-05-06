@@ -7,14 +7,17 @@
     <div class="description">
       {{ topicDetail.description }}
     </div>
-
-    <div
-      class="col-12 mt-md-5 mb-md-5"
-      v-for="chapter in chapters"
-      :key="chapter.id"
-    >
-      <ChapterCard :chapter="chapter" />
-    </div>
+    <draggable :list="chapters" ghost-class="ghost" @end="onEnd">
+      <transition-group type="transition" name="list">
+        <div
+          class="col-12 mt-md-5 mb-md-5 chapterCardGhost"
+          v-for="(chapter, index) in chapters"
+          :key="chapter.id"
+        >
+            <ChapterCard :chapter="chapter" :index="index+1"/>
+        </div>
+      </transition-group>
+    </draggable>
 
     <div class="col-12 createNewChapterModal mt-md-5 mb-md-5">
       <b-card>
@@ -43,19 +46,6 @@
           error-behavior="submit"
           :validation-messages="{
             required: 'Nama Chapter harus ada',
-          }"
-        />
-
-        <FormulateInput
-          type="text"
-          name="order"
-          label="Urutan"
-          placeholder=""
-          validation="^required|number"
-          error-behavior="submit"
-          :validation-messages="{
-            required: 'Input order harus ada',
-            number: 'Input harus berupa angka',
           }"
         />
 
@@ -91,11 +81,13 @@
 
 <script>
 import chapterService from "@/services/chapter.service";
+import topicService from "@/services/topic.service";
 import ChapterCard from "@/components/ChapterCard";
 import { mapGetters } from "vuex";
+import draggable from "vuedraggable";
 
 export default {
-  components: { ChapterCard },
+  components: { ChapterCard, draggable },
   name: "TopicDetailPage",
 
   data: () => ({
@@ -110,7 +102,15 @@ export default {
   },
   computed: {
     ...mapGetters("topic", ["topicDetail"]),
-    ...mapGetters("chapter", ["chapters"]),
+    // ...mapGetters("chapter", ["chapters"]),
+    chapters: {
+      get() {
+        return this.$store.state.chapter.chapters
+      },
+      set(value) {
+        this.$store.commit('chapter/setChapters', value)
+      }
+    }
   },
   methods: {
     getTopicDetail(topicName) {
@@ -143,6 +143,17 @@ export default {
         }
       );
     },
+    onEnd() {
+      topicService.updateTopicChapterOrder(this.$store.state.chapter.chapters).then(
+          (response) => {
+            console.log("updated")
+            return response;
+          },
+          (error) => {
+            return error;
+          }
+      );
+    },
   },
   watch: {
     $route() {
@@ -167,10 +178,25 @@ export default {
   padding-bottom: 0.75em;
 }
 
+.ghost {
+  border-left: 6px solid #1F3DA1;
+  box-shadow: 10px 10px 5px -1px rgba(0,0,0,0.14);
+  opacity: 0.7;
+  border-radius: 8px;
+}
+
+.list-move {
+  transition: transform 0.5s
+}
+
 .description {
   font-size: 1.5em;
   display: flex;
   justify-content: flex-start;
   padding-bottom: 0.75em;
+}
+
+.chapterCardGhost-drag {
+  opacity: 0;
 }
 </style>

@@ -12,7 +12,6 @@ function createChapter(chapter) {
 
 	let chapterRec = {
 		chapterName: chapter.chapterName,
-		order: chapter.order,
 		topicId: chapter.topicId,
 		description: chapter.description,
 		enableQuiz: chapter.enableQuiz
