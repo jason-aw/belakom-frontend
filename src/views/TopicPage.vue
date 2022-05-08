@@ -1,6 +1,6 @@
 <template>
-  <b-container>
-    <div class="title">Mau belajar apa hari ini?</div>
+  <v-container class="mt-3">
+    <div class="text-h4">Mau belajar apa hari ini?</div>
 
     <div class="row mt-md-5">
       <div
@@ -11,66 +11,86 @@
         <TopicCard :topic="topic" />
       </div>
 
-      <div class="col-3 mt-md-5 mb-md-5">
-        <b-card no-body class="createNewTopicButton">
-          <b-button class="addButton" v-b-modal.createNewTopicModal>
-            +
-          </b-button>
-        </b-card>
-      </div>
-
-      <b-modal
-        id="createNewTopicModal"
-        hide-footer
-        centered
-        size="xl"
-        title="Create New Topic"
-        content-class="modal-container"
-        header-class="modal-header"
-      >
-        <template #modal-header="{ close }">
-          <h5>Create New Topic</h5>
-          <button @click="close">x</button>
+      <v-dialog v-model="dialog" width="70%">
+        <template #activator="{ on, attrs }">
+          <div class="col-3 mt-md-5 mb-md-5">
+            <v-card class="createNewTopicButton">
+              <v-btn height="100%" width="100%" v-bind="attrs" v-on="on">
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </v-card>
+          </div>
         </template>
-        <FormulateForm
-          v-model="createTopicFormValue"
-          @submit="handleCreateTopicSubmit"
-        >
-          <FormulateInput
-            type="text"
-            name="topicName"
-            label="Topic Name"
-            placeholder="Topic Name"
-            validation="^required"
-            error-behavior="submit"
-            :validation-messages="{
-              required: 'Topic harus ada',
-            }"
-          />
+        <v-card>
+          <v-card-title class="text-h5"> Create New Topic </v-card-title>
+          <v-divider />
+          <v-card-text class="black--text">
+            <v-container>
+              <FormulateForm
+                v-model="createTopicFormValue"
+                @submit="handleCreateTopicSubmit"
+              >
+                <FormulateInput
+                  type="text"
+                  name="topicName"
+                  label="Topic Name"
+                  placeholder="Topic Name"
+                  validation="^required"
+                  error-behavior="submit"
+                  :validation-messages="{
+                    required: 'Topic harus ada',
+                  }"
+                />
 
-          <FormulateInput
-            type="textarea"
-            name="description"
-            label="Description"
-            placeholder="Description"
-            validation="^required"
-            error-behavior="submit"
-            :validation-messages="{
-              required: 'Deskripsi harus ada',
-            }"
-          />
+                <FormulateInput
+                  type="textarea"
+                  name="description"
+                  label="Description"
+                  placeholder="Description"
+                  validation="^required"
+                  error-behavior="submit"
+                  :validation-messages="{
+                    required: 'Deskripsi harus ada',
+                  }"
+                />
 
-          <FormulateInput align="center" type="submit" label="Create Topic" />
-          <b-alert fade variant="success" v-model="successCreateAlert"
-            >Topic successfully added!</b-alert
-          >
-          <b-alert fade variant="danger" v-model="errorCreateAlert"
-            >Topic failed to add!</b-alert
-          >
-        </FormulateForm>
-      </b-modal>
+                <FormulateInput
+                  align="center"
+                  type="submit"
+                  label="Create Topic"
+                />
+                <v-alert
+                  transition="fade-transition"
+                  type="success"
+                  v-model="successCreateAlert"
+                  text
+                >
+                  Topic successfully added!
+                </v-alert>
+                <v-alert
+                  transition="fade-transition"
+                  type="error"
+                  v-model="errorCreateAlert"
+                  text
+                >
+                  Topic failed to add!
+                </v-alert>
+              </FormulateForm>
+            </v-container>
+          </v-card-text>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="dialog = false">
+              I accept
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
-  </b-container>
+  </v-container>
 </template>
 
 <script>
@@ -83,6 +103,7 @@ export default {
   name: "TopicPage",
 
   data: () => ({
+    dialog: false,
     createTopicFormValue: {},
     errorMessage: {},
     successCreateAlert: false,
@@ -103,9 +124,7 @@ export default {
   methods: {
     getAllTopics() {
       this.$store.dispatch("topic/getAllTopics").then(
-        () => {
-          console.log("mak");
-        },
+        () => {},
         (error) => {
           console.log(error);
         }
@@ -139,10 +158,6 @@ export default {
 </script>
 
 <style lang="scss">
-.title {
-  font-size: 2.5em;
-}
-
 .createNewTopicButton {
   position: relative;
   cursor: pointer;
@@ -156,18 +171,6 @@ export default {
   transition: 0.3s ease all;
   align-items: center;
   justify-content: center;
-}
-
-.addButton {
-  width: 100%;
-  height: 100%;
-  color: #000000;
-  transition: 0.3s ease all;
-  background-color: #f3f3f3;
-}
-
-.addButton:hover {
-  background-color: #bfbbbb;
 }
 
 .modal-container {
@@ -195,5 +198,4 @@ export default {
     }
   }
 }
-
 </style>

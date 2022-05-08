@@ -11,13 +11,15 @@
 
     <div class="deleteButtonArea">
       <transition name="deleteButtonFade">
-        <b-button
-          class="deleteButton"
+        <v-btn
+          width="100%"
+          color="error"
           @click.stop="handleDeleteTopicSubmit(topic.id)"
           v-if="hovered"
         >
+          <v-icon> mdi-trash-can </v-icon>
           delete
-        </b-button>
+        </v-btn>
       </transition>
     </div>
   </div>
@@ -82,7 +84,8 @@ export default {
 .deleteButtonFade-leave-active {
   transition: opacity 0.5s;
 }
-.deleteButtonFade-enter, .deleteButtonFade-leave-to {
+.deleteButtonFade-enter,
+.deleteButtonFade-leave-to {
   opacity: 0;
 }
 
@@ -93,14 +96,5 @@ export default {
   justify-content: flex-end;
   justify-self: flex-end;
   z-index: 99;
-}
-
-.deleteButton {
-  border: 0px;
-  width: 100%;
-  background-color: #f51414;
-  color: white;
-  transition: all 0.4s ease;
-  font-size: 12px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-container>
+    <v-container class="text-center">
       <div class="titleform">
         <h1>Halaman Daftar</h1>
       </div>
@@ -34,7 +34,7 @@
         <FormulateInput
           type="password"
           name="password_confirm"
-          label="Konfirmasi Password (Masukkan password yang sama)"
+          label="Konfirmasi Password"
           placeholder="Konfirmasi Password"
           validation="^required|confirm"
           error-behavior="submit"
@@ -51,12 +51,12 @@
 
       <h1>reponse from backend</h1>
       <h2>{{ responseValue }}</h2>
-    </b-container>
+    </v-container>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   name: "RegisterPage",
   data: () => ({
@@ -64,7 +64,7 @@ export default {
     responseValue: {},
   }),
   computed: {
-    ...mapGetters("auth", ["loggedIn"])
+    ...mapGetters("auth", ["loggedIn"]),
   },
   methods: {
     handleSubmit() {
@@ -85,10 +85,6 @@ export default {
 
 <style scoped>
 @import "../assets/LoginRegister.css";
-
-.container {
-  text-align: center;
-}
 
 .titleform h1 {
   margin-top: 10%;

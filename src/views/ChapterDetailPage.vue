@@ -1,17 +1,17 @@
 <template>
-  <b-container>
+  <v-container>
     <h1>{{ chapterDetail.chapterName }}</h1>
-    <p>{{ chapterDetail.description}}</p>
+    <p>{{ chapterDetail.description }}</p>
     <div class="content" v-html="chapterDetail.htmlContent"></div>
 
     <div v-if="chapterDetail.enableQuiz">
       <button @click="goToQuizPage(chapterDetail.id)">Access Quiz</button>
     </div>
-  </b-container>
+  </v-container>
 </template>
 
 <script>
-import chapterService from '@/services/chapter.service';
+import chapterService from "@/services/chapter.service";
 export default {
   name: "ChapterDetailPage",
   data() {
@@ -22,11 +22,12 @@ export default {
   },
   created() {
     this.getChapterDetail(this.$route.params.chapterId);
-    this.chapterIndex = this.$route.params.chapterIndex
+    this.chapterIndex = this.$route.params.chapterIndex;
   },
   methods: {
     getChapterDetail(chapterId) {
-      chapterService.getChapterById(chapterId)
+      chapterService
+        .getChapterById(chapterId)
         .then((response) => (this.chapterDetail = Object.assign({}, response)))
         .catch((error) => console.log(error));
     },
@@ -37,5 +38,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

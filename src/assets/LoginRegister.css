@@ -222,7 +222,6 @@
     box-sizing: border-box;
     background-color: transparent;
     font-size: .9em;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     padding: .75em;
     display: block;
     width: 100%;
@@ -781,7 +780,6 @@
     box-sizing: border-box;
     background-color: transparent;
     font-size: .9em;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     padding: .75em;
     width: 100%;
     font-weight: 400;

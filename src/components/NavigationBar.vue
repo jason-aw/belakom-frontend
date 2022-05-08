@@ -1,14 +1,22 @@
 <template>
-  <header>
-    <b-nav>
-      <b-nav-item class="logo"> Belakom </b-nav-item>
-      <b-nav-item @click="logout" v-if="loggedIn"> logout </b-nav-item>
-    </b-nav>
-  </header>
+  <v-app-bar app>
+    <div class="d-flex align-center">
+      <router-link class="font-weight-light text-decoration-none" to="/">
+        <h2>Belakom</h2>
+      </router-link>
+    </div>
+
+    <v-spacer></v-spacer>
+
+    <v-btn text @click="logout" v-if="loggedIn">
+      <span class="mr-2">Logout</span>
+      <v-icon small>mdi-logout</v-icon>
+    </v-btn>
+  </v-app-bar>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   name: "NavigationBar",
   methods: {
@@ -31,7 +39,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .nav {
   height: 75px;
   width: 100%;

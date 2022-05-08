@@ -6,7 +6,7 @@
     @mouseleave="showIcon = false"
   >
     <div v-if="edit" class="editable">
-      <b-form-textarea
+      <v-textarea
         rows="5"
         v-if="textarea"
         v-model="valueLocal"
@@ -23,20 +23,20 @@
         v-else
       />
       <div class="edit-actions" v-if="textarea">
-        <b-icon-check
-          class="confirm-icon"
-          @click.stop="handleSave"
-        ></b-icon-check>
-        <b-icon-x class="cancel-icon" @click.stop="handleCancel"></b-icon-x>
+        <v-btn @click.stop="handleSave">
+          <v-icon>mdi-check</v-icon>
+        </v-btn>
+        <v-btn @click.stop="handleCancel">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </div>
     </div>
     <div v-else>
       {{ valueLocal }}
     </div>
-    <b-icon-pencil-square
-      class="edit-icon"
-      v-if="showIcon && !edit"
-    ></b-icon-pencil-square>
+    <v-icon v-if="showIcon && !edit" color="grey darken-3" dense
+      >mdi-pencil-box</v-icon
+    >
     <div class="error-msg">
       {{ errorMsg }}
     </div>
@@ -44,15 +44,10 @@
 </template>
 
 <script>
-import { BIconPencilSquare, BIconCheck, BIconX } from "bootstrap-vue";
 export default {
   props: ["value", "textarea"],
   name: "ClickToEdit",
-  components: {
-    BIconPencilSquare,
-    BIconCheck,
-    BIconX,
-  },
+  components: {},
   data() {
     return {
       edit: false,
@@ -103,7 +98,7 @@ export default {
   watch: {
     value() {
       this.valueLocal = this.value;
-      if(this.value && this.value.trim()) {
+      if (this.value && this.value.trim()) {
         this.oldValue = `${this.value}`;
       }
     },
@@ -138,30 +133,6 @@ export default {
   }
   div {
     max-width: 100%;
-  }
-  .edit-actions {
-    display: flex;
-    justify-content: flex-end;
-    height: auto;
-    .confirm-icon,
-    .cancel-icon {
-      height: 28px;
-      width: auto;
-      transition: 0.3s ease all;
-      &:hover {
-        color: white;
-      }
-    }
-    .confirm-icon:hover {
-      background-color: rgb(31, 61, 161);
-    }
-    .cancel-icon:hover {
-      background-color: rgb(230, 0, 0);
-    }
-  }
-  .edit-icon {
-    height: 16px;
-    width: auto;
   }
   .error-msg {
     font-size: 12px;

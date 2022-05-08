@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <v-container>
     <div class="title">
       {{ topicDetail.topicName }}
     </div>
@@ -14,74 +14,94 @@
           v-for="(chapter, index) in chapters"
           :key="chapter.id"
         >
-            <ChapterCard :chapter="chapter" :index="index+1"/>
+          <ChapterCard :chapter="chapter" :index="index + 1" />
         </div>
       </transition-group>
     </draggable>
 
-    <div class="col-12 createNewChapterModal mt-md-5 mb-md-5">
-      <b-card>
-        <b-button v-b-modal.createNewChapterModal> + </b-button>
-      </b-card>
-    </div>
-
-    <b-modal
-      id="createNewChapterModal"
-      hide-footer
-      centered
-      size="xl"
-      title="Create New Chapter"
-      content-class="modal-container"
-      header-class="modal-header"
-    >
-      <template #modal-header="{ close }">
-        <h5>Create New Topic</h5>
-        <button @click="close">x</button>
+    <v-dialog v-model="dialog" width="70%">
+      <template #activator="{ on, attrs }">
+        <div class="col-12 mt-md-5 mb-md-5">
+          <v-card class="createNewTopicButton">
+            <v-btn height="100%" width="100%" v-bind="attrs" v-on="on">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </v-card>
+        </div>
       </template>
-      <FormulateForm
-        v-model="createChapterFormValue"
-        @submit="handleCreateChapterSubmit"
-      >
-        <FormulateInput
-          type="text"
-          name="chapterName"
-          label="Chapter Name"
-          placeholder="Chapter Name"
-          validation="^required"
-          error-behavior="submit"
-          :validation-messages="{
-            required: 'Nama Chapter harus ada',
-          }"
-        />
+      <v-card>
+        <v-card-title class="text-h5"> Create New Chapter </v-card-title>
+        <v-divider />
+        <v-card-text class="black--text">
+          <v-container>
+            <FormulateForm
+              v-model="createChapterFormValue"
+              @submit="handleCreateChapterSubmit"
+            >
+              <FormulateInput
+                type="text"
+                name="chapterName"
+                label="Chapter Name"
+                placeholder="Chapter Name"
+                validation="^required"
+                error-behavior="submit"
+                :validation-messages="{
+                  required: 'Nama Chapter harus ada',
+                }"
+              />
 
-        <FormulateInput
-            type="checkbox"
-            label="Enable Quiz"
-            name="enableQuiz"
-        />
+              <FormulateInput
+                type="checkbox"
+                label="Enable Quiz"
+                name="enableQuiz"
+              />
 
-        <FormulateInput
-          type="textarea"
-          name="description"
-          label="Description"
-          placeholder="Description"
-          validation="^required"
-          error-behavior="submit"
-          :validation-messages="{
-            required: 'Deskripsi harus ada',
-          }"
-        />
+              <FormulateInput
+                type="textarea"
+                name="description"
+                label="Description"
+                placeholder="Description"
+                validation="^required"
+                error-behavior="submit"
+                :validation-messages="{
+                  required: 'Deskripsi harus ada',
+                }"
+              />
 
-        <FormulateInput align="center" type="submit" label="Create Chapter" />
-        <b-alert fade variant="success" v-model="successCreateAlert">
-          Chapter successfully added!
-        </b-alert>
-        <b-alert fade variant="danger" v-model="errorCreateAlert">
-          Chapter failed to add!
-        </b-alert>
-      </FormulateForm>
-    </b-modal>
-  </b-container>
+              <FormulateInput
+                align="center"
+                type="submit"
+                label="Create Chapter"
+              />
+              <v-alert
+                transition="fade-transition"
+                text
+                type="success"
+                v-model="successCreateAlert"
+              >
+                Chapter successfully added!
+              </v-alert>
+              <v-alert
+                transition="fade-transition"
+                text
+                type="error"
+                v-model="errorCreateAlert"
+              >
+                Chapter failed to add!
+              </v-alert>
+            </FormulateForm>
+          </v-container>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="dialog = false"> I accept </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
@@ -98,6 +118,7 @@ export default {
   data: () => ({
     createChapterFormValue: {},
     errorMessage: {},
+    dialog: false,
     successCreateAlert: false,
     errorCreateAlert: false,
     hovered: false,
@@ -110,12 +131,12 @@ export default {
     // ...mapGetters("chapter", ["chapters"]),
     chapters: {
       get() {
-        return this.$store.state.chapter.chapters
+        return this.$store.state.chapter.chapters;
       },
       set(value) {
-        this.$store.commit('chapter/setChapters', value)
-      }
-    }
+        this.$store.commit("chapter/setChapters", value);
+      },
+    },
   },
   methods: {
     getTopicDetail(topicName) {
@@ -149,15 +170,17 @@ export default {
       );
     },
     onEnd() {
-      topicService.updateTopicChapterOrder(this.$store.state.chapter.chapters).then(
+      topicService
+        .updateTopicChapterOrder(this.$store.state.chapter.chapters)
+        .then(
           (response) => {
-            console.log("updated")
+            console.log("updated");
             return response;
           },
           (error) => {
             return error;
           }
-      );
+        );
     },
   },
   watch: {
@@ -184,14 +207,14 @@ export default {
 }
 
 .ghost {
-  border-left: 6px solid #1F3DA1;
-  box-shadow: 10px 10px 5px -1px rgba(0,0,0,0.14);
+  border-left: 6px solid #1f3da1;
+  box-shadow: 10px 10px 5px -1px rgba(0, 0, 0, 0.14);
   opacity: 0.7;
   border-radius: 8px;
 }
 
 .list-move {
-  transition: transform 0.5s
+  transition: transform 0.5s;
 }
 
 .description {

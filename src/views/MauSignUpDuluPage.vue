@@ -1,54 +1,52 @@
 <template>
-  <div>
-    <b-container>
-      <b-row class="maincontent">
-        <b-col cols="6" class="textandbutton">
-          <h1>Apakah kamu sudah punya e-mail untuk daftar?</h1>
+  <v-container>
+    <v-row class="maincontent">
+      <v-col cols="6" class="d-flex flex-column justify-center text-center">
+        <h1>Apakah kamu sudah punya e-mail untuk daftar?</h1>
 
-          <div class="buttonpilihan">
-            <router-link to="/register" v-slot="{ navigate }">
-              <button
-                @click="navigate"
-                class="pilihan"
-                @mouseover="changeImageToSignUp"
-                @mouseleave="changeImageToStatic"
-              >
-                Sudah, ayo daftar!
-              </button>
-            </router-link>
+        <div class="d-flex flex-column">
+          <router-link to="/register" v-slot="{ navigate }">
+            <button
+              @click="navigate"
+              class="pilihan"
+              @mouseover="changeImageToSignUp"
+              @mouseleave="changeImageToStatic"
+            >
+              Sudah, ayo daftar!
+            </button>
+          </router-link>
 
-            <router-link to="/login" v-slot="{ navigate }">
-              <button
-                @click="navigate"
-                class="pilihan"
-                @mouseover="changeImageToNoSignUp"
-                @mouseleave="changeImageToStatic"
-              >
-                Sudah, tapi saya belum mau daftar!
-              </button>
-            </router-link>
+          <router-link to="/login" v-slot="{ navigate }">
+            <button
+              @click="navigate"
+              class="pilihan"
+              @mouseover="changeImageToNoSignUp"
+              @mouseleave="changeImageToStatic"
+            >
+              Sudah, tapi saya belum mau daftar!
+            </button>
+          </router-link>
 
-            <router-link to="/login" v-slot="{ navigate }">
-              <button
-                @click="navigate"
-                class="pilihan"
-                @mouseover="changeImageLearnEmail"
-                @mouseleave="changeImageToStatic"
-              >
-                Belum, ajarkan saya membuat e-mail!
-              </button>
-            </router-link>
-          </div>
-        </b-col>
+          <router-link to="/login" v-slot="{ navigate }">
+            <button
+              @click="navigate"
+              class="pilihan"
+              @mouseover="changeImageLearnEmail"
+              @mouseleave="changeImageToStatic"
+            >
+              Belum, ajarkan saya membuat e-mail!
+            </button>
+          </router-link>
+        </div>
+      </v-col>
 
-        <b-col cols="6">
-          <div class="image">
-            <img :src="mainImage" />
-          </div>
-        </b-col>
-      </b-row>
-    </b-container>
-  </div>
+      <v-col cols="6">
+        <div class="image">
+          <img :src="mainImage" />
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -81,18 +79,6 @@ export default {
 </script>
 
 <style scoped>
-.textandbutton {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.buttonpilihan {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
 .image img {
   width: 80vh;
   height: auto;
@@ -115,7 +101,7 @@ export default {
   display: inline-block;
   font-size: 20px;
   border: 2px solid #1f3da1;
-  margin-top: 2em;
+  margin: 1em 0;
 }
 
 .pilihan:hover {

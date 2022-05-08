@@ -1,9 +1,8 @@
 <template>
-  <b-container>
+  <v-container>
     <div class="titleform">
       <h1>Halaman Masuk</h1>
     </div>
-
     <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
       <FormulateInput
         type="text"
@@ -47,12 +46,12 @@
 
     <h1>reponse from backend</h1>
     <h2>{{ responseValue }}</h2>
-  </b-container>
+  </v-container>
 </template>
 
 <script>
 import { ApiPath } from "@/services/api-path";
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   name: "LoginPage",
   data: () => ({
@@ -61,7 +60,7 @@ export default {
     errorMessage: "",
   }),
   computed: {
-    ...mapGetters("auth", ["loggedIn"])
+    ...mapGetters("auth", ["loggedIn"]),
   },
   methods: {
     handleSubmit() {

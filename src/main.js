@@ -1,32 +1,20 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from "./router"
-import store from './store'
-import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'vuetify/dist/vuetify.min.css'
-import Vuetify from 'vuetify'
-import VueFormulate from '@braid/vue-formulate'
-import setupInterceptors from './services/axios-interceptors'
-import axios from 'axios'
-// import VueSanitize from 'vue-sanitize'
+import Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
+import vuetify from "./plugins/vuetify";
+import setupInterceptors from "./services/axios-interceptors";
+import axios from "axios";
+import VueFormulate from "@braid/vue-formulate";
 
-Vue.use(VueFormulate)
-Vue.use(BootstrapVue)
-Vue.use(Vuetify)
-// Vue.use(VueSanitize, {
-//   allowedTags: VueSanitize.defaults.allowedTags.concat(['img'])
-// })
+Vue.config.productionTip = false;
 
-// console.log("sanitize default config", VueSanitize.defaults)
-
-Vue.config.productionTip = false
-
-setupInterceptors(axios)
+Vue.use(VueFormulate);
+setupInterceptors(axios);
 
 new Vue({
-  store,
   router,
-  render: h => h(App),
-}).$mount('#app')
+  store,
+  vuetify,
+  render: (h) => h(App),
+}).$mount("#app");

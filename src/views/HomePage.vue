@@ -1,10 +1,10 @@
 <template>
   <div>
-    <b-container>
+    <v-container>
       <!-- <img src="../assets/rhknzsvgxlg81.jpg" width="auto" height="50%" /> -->
       <h2>current user</h2>
       <p>{{ currentUser }}</p>
-    </b-container>
+    </v-container>
   </div>
 </template>
 
@@ -20,5 +20,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

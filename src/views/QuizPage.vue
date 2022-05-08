@@ -1,68 +1,65 @@
 <template>
-  <b-container>
-    <h1>{{chapterDetail.chapterName}} Quiz</h1>
+  <v-container>
+    <h1>{{ chapterDetail.chapterName }} Quiz</h1>
     <!-- div#correctAnswers -->
     <hr class="divider" />
     <!-- question div -->
 
-    <b-progress
-        variant="primary"
-        :max="this.questions.length"
-        :value="this.progressBarValue"
-        height="4px"
-    ></b-progress>
+    <v-progress
+      color="primary"
+      :max="this.questions.length"
+      :value="this.progressBarValue"
+      height="4px"
+    ></v-progress>
 
     <div v-if="showScore">
-      <b-card
-          title="Results"
-          style="max-width: 20rem;"
-      >
-        You Scored {{score}} of {{questions.length}}
-      </b-card>
+      <v-card title="Results" style="max-width: 20rem">
+        You Scored {{ score }} of {{ questions.length }}
+      </v-card>
     </div>
 
-    <b-card-text>
-      {{questions[currentQuestion].question}}
-    </b-card-text>
+    <v-card-text>
+      {{ questions[currentQuestion].question }}
+    </v-card-text>
 
     <div class="answer-section">
-
       <div v-if="questions[currentQuestion].type === 'MPC'">
-        <b-button :key="index" v-for="(option, index) in questions[currentQuestion].allanswers"
-                  @click="handleAnswerClick(option)" class="ans-option-btn"
-                  variant="primary">{{ option }}
-        </b-button>
+        <v-btn
+          :key="index"
+          v-for="(option, index) in questions[currentQuestion].allanswers"
+          @click="handleAnswerClick(option)"
+          class="ans-option-btn"
+          variant="primary"
+          >{{ option }}
+        </v-btn>
       </div>
 
       <div v-if="questions[currentQuestion].type === 'shortAnswer'">
         <FormulateForm
-            v-model="formValue"
-            @submit="handleAnswerClick(formValue.shortAnswerValue)"
-            class="form"
+          v-model="formValue"
+          @submit="handleAnswerClick(formValue.shortAnswerValue)"
+          class="form"
         >
-
           <FormulateInput
-              type="text"
-              name="shortAnswerValue"
-              placeholder="Jawaban"
-              validation="^required"
-              error-behavior="submit"
-              :validation-messages="{
-            required: 'Jawaban harus ada',
-          }"
+            type="text"
+            name="shortAnswerValue"
+            placeholder="Jawaban"
+            validation="^required"
+            error-behavior="submit"
+            :validation-messages="{
+              required: 'Jawaban harus ada',
+            }"
           />
-
         </FormulateForm>
       </div>
-
     </div>
 
     <hr class="divider" />
-  </b-container>
+  </v-container>
 </template>
 
 <script>
-import chapterService from '@/services/chapter.service';
+import chapterService from "@/services/chapter.service";
 export default {
   name: "QuizPage",
   data() {
@@ -74,43 +71,43 @@ export default {
       formValue: {},
       loading: true,
       showScore: false,
-      score:0,
-    }
+      score: 0,
+    };
   },
   created() {
     this.getChapterDetail(this.$route.params.chapterId);
     this.getAllQuestion(this.$route.params.chapterId);
   },
-  computed: {
-
-  },
+  computed: {},
   methods: {
     getChapterDetail(chapterId) {
-      chapterService.getChapterById(chapterId)
-          .then((response) => (this.chapterDetail = Object.assign({}, response)))
-          .catch((error) => console.log(error));
+      chapterService
+        .getChapterById(chapterId)
+        .then((response) => (this.chapterDetail = Object.assign({}, response)))
+        .catch((error) => console.log(error));
     },
     getAllQuestion(chapterId) {
-      this.$store.dispatch("question/getQuestionsByChapterId", chapterId)
-          .then((response) => {
+      this.$store
+        .dispatch("question/getQuestionsByChapterId", chapterId)
+        .then((response) => {
+          let data = response.data.map((question) => {
+            // put answers on question into single array
+            question.allanswers = [
+              question.correctAnswer,
+              ...question.fakeAnswers,
+            ];
 
-            let data = response.data.map((question) => {
-              // put answers on question into single array
-              question.allanswers = [
-                question.correctAnswer,
-                ...question.fakeAnswers];
+            console.log(question);
+            this.shuffleArray(question.allanswers);
 
-              console.log(question)
-              this.shuffleArray(question.allanswers)
+            return question;
+          });
 
-              return question;
-            });
-
-            this.questions = data
-            console.log(this.questions)
-            return this.questions;
-          })
-          .catch((error) => (this.errorMsg = error));
+          this.questions = data;
+          console.log(this.questions);
+          return this.questions;
+        })
+        .catch((error) => (this.errorMsg = error));
     },
     //Durstenfeld shuffle
     shuffleArray(array) {
@@ -120,33 +117,32 @@ export default {
       }
     },
     handleAnswerClick(answer) {
-
       let nextQuestion = this.currentQuestion + 1;
 
-      let isCorrect = (answer === this.questions[this.currentQuestion].correctAnswer)
+      let isCorrect =
+        answer === this.questions[this.currentQuestion].correctAnswer;
 
-      if(isCorrect){
-        console.log("benar")
+      if (isCorrect) {
+        console.log("benar");
         this.score = this.score + 1;
       }
 
-      console.log('panjang ' +this.questions.length)
-      console.log('currently at ' +this.currentQuestion)
+      console.log("panjang " + this.questions.length);
+      console.log("currently at " + this.currentQuestion);
 
       this.progressBarValue = nextQuestion;
 
-      if(nextQuestion < this.questions.length) {
+      if (nextQuestion < this.questions.length) {
         this.currentQuestion = nextQuestion;
       } else {
         this.showScore = true;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 button {
   font-size: 1.1rem;
   box-sizing: border-box;
@@ -162,11 +158,10 @@ button {
 button:hover:enabled {
   transform: scale(1.02);
   box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-  0 3px 1px -1px rgba(0, 0, 0, 0.2);
+    0 3px 1px -1px rgba(0, 0, 0, 0.2);
 }
 
 button:active:enabled {
   transform: scale(1.05);
 }
-
 </style>
