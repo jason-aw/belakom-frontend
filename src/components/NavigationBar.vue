@@ -1,8 +1,14 @@
 <template>
   <v-app-bar app>
     <div class="d-flex align-center">
-      <router-link class="font-weight-light text-decoration-none" to="/">
-        <h2>Belakom</h2>
+      <router-link to="/">
+        <v-img
+          class="mx-2"
+          src="../assets/Navbar/logo-01.png"
+          max-height="50"
+          max-width="50"
+          contain
+        ></v-img>
       </router-link>
     </div>
 
@@ -39,18 +45,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.nav {
-  height: 75px;
-  width: 100%;
-  padding: 0 30px;
-  display: flex;
-  align-items: center;
-
-  .logo {
-    height: auto;
-    width: 10%;
-    color: #1f3da1;
-    font-size: 20pt;
-  }
+.logo {
+  width: 20%;
+  height: 20%;
 }
 </style>
