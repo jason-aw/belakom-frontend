@@ -13,17 +13,15 @@ function getAllChapters(id) {
 }
 
 function createChapter(chapter) {
-  let chapterRec = {
+  let chapterReq = {
     chapterName: chapter.chapterName,
     topicId: chapter.topicId,
     description: chapter.description,
     enableQuiz: chapter.enableQuiz,
   };
 
-  console.log(chapterRec);
-
   return axios
-    .post(ApiPath.CREATE_CHAPTER_URL, chapterRec, {
+    .post(ApiPath.CREATE_CHAPTER_URL, chapterReq, {
       headers: authHeader("accessToken"),
     })
     .then((response) => Promise.resolve(response))

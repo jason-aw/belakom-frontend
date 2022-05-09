@@ -7,7 +7,7 @@
   >
     <div v-if="edit" class="editable">
       <v-textarea
-        rows="5"
+        auto-grow
         v-if="textarea"
         v-model="valueLocal"
         @keyup.esc="cancel"

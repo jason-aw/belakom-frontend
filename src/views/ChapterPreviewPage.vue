@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>PREVIEW</h1>
-    <h1>{{ chapterDetail.order + ". " + chapterDetail.chapterName }}</h1>
+    <h1>{{ chapterDetail.chapterName }}</h1>
     <p>{{ chapterDetail.description }}</p>
     <div class="content" v-html="chapterDetail.htmlContent"></div>
   </v-container>
