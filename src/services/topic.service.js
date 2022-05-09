@@ -45,13 +45,13 @@ function updateTopicChapterOrder(chapters) {
 
   console.log(chapterOrder);
 
-  let updateChapterOrderRec = {
+  let updateChapterOrderReq = {
     chapterOrder: chapterOrder,
     topicId: chapters[0].topicId,
   };
 
   return axios
-    .post(ApiPath.UPDATE_TOPIC_CHAPTER_ORDER, updateChapterOrderRec, {
+    .post(ApiPath.UPDATE_TOPIC_CHAPTER_ORDER, updateChapterOrderReq, {
       headers: authHeader("accessToken"),
     })
     .then((response) => Promise.resolve(response))

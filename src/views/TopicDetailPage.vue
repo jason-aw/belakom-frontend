@@ -128,7 +128,6 @@ export default {
   },
   computed: {
     ...mapGetters("topic", ["topicDetail"]),
-    // ...mapGetters("chapter", ["chapters"]),
     chapters: {
       get() {
         return this.$store.state.chapter.chapters;
