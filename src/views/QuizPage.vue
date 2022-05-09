@@ -1,60 +1,77 @@
 <template>
   <v-container>
-    <h1>{{ chapterDetail.chapterName }} Quiz</h1>
-    <!-- div#correctAnswers -->
-    <hr class="divider" />
-    <!-- question div -->
+    <v-row
+      v-if="loading"
+      no-gutters
+      justify="center"
+      align="center"
+      class="mt-8"
+    >
+      <v-progress-circular color="#1f3da1" indeterminate size="100" width="6" />
+    </v-row>
+    <div v-else>
+      <div class="text-h2">{{ chapterDetail.chapterName }} Quiz</div>
+      <v-divider />
 
-    <v-progress
-      color="primary"
-      :max="this.questions.length"
-      :value="this.progressBarValue"
-      height="4px"
-    ></v-progress>
+      <v-progress-linear color="#1f3da1" :value="progressBarValue" height="10px"
+        >defeat is tragic</v-progress-linear
+      >
 
-    <div v-if="showScore">
-      <v-card title="Results" style="max-width: 20rem">
-        You Scored {{ score }} of {{ questions.length }}
-      </v-card>
-    </div>
+      <v-row v-if="showScore" justify="center" no-gutters>
+        <v-card title="Results" style="max-width: 20rem">
+          You Scored {{ score }} of {{ chapterDetail.questions.length }}
+        </v-card>
+      </v-row>
+      <div v-else>
+        <h1>
+          {{ chapterDetail.questions[currentQuestion].questionPrompt }}
+        </h1>
 
-    <v-card-text>
-      {{ questions[currentQuestion].question }}
-    </v-card-text>
+        <div class="answer-section">
+          <div
+            v-if="
+              chapterDetail.questions[currentQuestion].questionType ===
+              'MULTIPLE_CHOICE'
+            "
+          >
+            <v-btn
+              :key="index"
+              v-for="(answer, index) in chapterDetail.questions[currentQuestion]
+                .answers"
+              @click="handleAnswerClick(answer)"
+              class="ans-option-btn"
+              variant="primary"
+            >
+              {{ answer.answer }}
+            </v-btn>
+          </div>
 
-    <div class="answer-section">
-      <div v-if="questions[currentQuestion].type === 'MPC'">
-        <v-btn
-          :key="index"
-          v-for="(option, index) in questions[currentQuestion].allanswers"
-          @click="handleAnswerClick(option)"
-          class="ans-option-btn"
-          variant="primary"
-          >{{ option }}
-        </v-btn>
+          <div
+            v-if="
+              chapterDetail.questions[currentQuestion].questionType ===
+              'SHORT_ANSWER'
+            "
+          >
+            <FormulateForm
+              v-model="formValue"
+              @submit="handleAnswerClick(formValue.shortAnswerValue)"
+              class="form"
+            >
+              <FormulateInput
+                type="text"
+                name="shortAnswerValue"
+                placeholder="Jawaban"
+                validation="^required"
+                error-behavior="submit"
+                :validation-messages="{
+                  required: 'Jawaban harus ada',
+                }"
+              />
+            </FormulateForm>
+          </div>
+        </div>
       </div>
-
-      <div v-if="questions[currentQuestion].type === 'shortAnswer'">
-        <FormulateForm
-          v-model="formValue"
-          @submit="handleAnswerClick(formValue.shortAnswerValue)"
-          class="form"
-        >
-          <FormulateInput
-            type="text"
-            name="shortAnswerValue"
-            placeholder="Jawaban"
-            validation="^required"
-            error-behavior="submit"
-            :validation-messages="{
-              required: 'Jawaban harus ada',
-            }"
-          />
-        </FormulateForm>
-      </div>
     </div>
-
-    <hr class="divider" />
   </v-container>
 </template>
 
@@ -64,52 +81,33 @@ export default {
   name: "QuizPage",
   data() {
     return {
-      chapterDetail: {},
       currentQuestion: 0,
       progressBarValue: 0,
-      questions: [],
       formValue: {},
       loading: true,
       showScore: false,
       score: 0,
+      chapterDetail: {},
     };
   },
   created() {
-    this.getChapterDetail(this.$route.params.chapterId);
-    this.getAllQuestion(this.$route.params.chapterId);
+    this.init(this.$route.params.chapterId);
   },
-  computed: {},
   methods: {
-    getChapterDetail(chapterId) {
+    init(chapterId) {
       chapterService
         .getChapterById(chapterId)
-        .then((response) => (this.chapterDetail = Object.assign({}, response)))
-        .catch((error) => console.log(error));
-    },
-    getAllQuestion(chapterId) {
-      this.$store
-        .dispatch("question/getQuestionsByChapterId", chapterId)
         .then((response) => {
-          let data = response.data.map((question) => {
-            // put answers on question into single array
-            question.allanswers = [
-              question.correctAnswer,
-              ...question.fakeAnswers,
-            ];
-
-            console.log(question);
-            this.shuffleArray(question.allanswers);
-
-            return question;
+          this.chapterDetail = response;
+          this.chapterDetail.questions.forEach((question) => {
+            this.shuffleArray(question.answers);
           });
-
-          this.questions = data;
-          console.log(this.questions);
-          return this.questions;
+          this.loading = false;
         })
-        .catch((error) => (this.errorMsg = error));
+        .catch((error) => console.log(error));
+      return;
     },
-    //Durstenfeld shuffle
+    // Durstenfeld shuffle
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -119,49 +117,20 @@ export default {
     handleAnswerClick(answer) {
       let nextQuestion = this.currentQuestion + 1;
 
-      let isCorrect =
-        answer === this.questions[this.currentQuestion].correctAnswer;
-
-      if (isCorrect) {
-        console.log("benar");
+      if (answer.correct) {
         this.score = this.score + 1;
       }
 
-      console.log("panjang " + this.questions.length);
-      console.log("currently at " + this.currentQuestion);
+      this.progressBarValue =
+        (nextQuestion / this.chapterDetail.questions.length) * 100;
 
-      this.progressBarValue = nextQuestion;
-
-      if (nextQuestion < this.questions.length) {
+      if (nextQuestion < this.chapterDetail.questions.length) {
         this.currentQuestion = nextQuestion;
       } else {
         this.showScore = true;
       }
+      console.log(this.progressBarValue);
     },
   },
 };
 </script>
-
-<style scoped>
-button {
-  font-size: 1.1rem;
-  box-sizing: border-box;
-  padding: 1rem;
-  margin: 0.3rem;
-  width: 47%;
-  background-color: rgba(100, 100, 100, 0.3);
-  border: none;
-  border-radius: 0.4rem;
-  box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.2);
-}
-
-button:hover:enabled {
-  transform: scale(1.02);
-  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12),
-    0 3px 1px -1px rgba(0, 0, 0, 0.2);
-}
-
-button:active:enabled {
-  transform: scale(1.05);
-}
-</style>

@@ -10,7 +10,7 @@ export const chapter = {
       htmlContent: "",
       topicId: "",
       id: "",
-      questions: [],
+      questions: [{}],
     },
   },
   getters: {

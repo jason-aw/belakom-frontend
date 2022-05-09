@@ -157,32 +157,4 @@ export default {
     overflow: auto;
   }
 }
-
-.article-actions {
-  display: flex;
-  flex-direction: row-reverse;
-
-  a,
-  button {
-    margin: 0;
-    transition: 0.3s ease all;
-    align-self: center;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 20px;
-    padding: 12px 24px;
-    color: #fff;
-    background-color: #1f3da1;
-    text-decoration: none;
-
-    &:hover {
-      filter: brightness(130%);
-    }
-  }
-
-  button {
-    border: none;
-    margin-left: 12px;
-  }
-}
 </style>
