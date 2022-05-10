@@ -1,19 +1,16 @@
 <template>
   <v-container>
-    <v-row
-      v-if="loading"
-      no-gutters
-      justify="center"
-      align="center"
-      class="mt-8"
-    >
-      <v-progress-circular color="#1f3da1" indeterminate size="100" width="6" />
-    </v-row>
-    <div v-else>
+    <v-overlay :value="loading">
+      <v-progress-circular color="#1f3da1" indeterminate size="64" width="6" />
+    </v-overlay>
+    <div v-if="!loading">
       <div class="text-h2">{{ chapterDetail.chapterName }} Quiz</div>
-      <v-divider />
 
-      <v-progress-linear color="#1f3da1" :value="progressBarValue" height="10px"
+      <v-progress-linear
+        color="#1f3da1"
+        :value="progressBarValue"
+        height="10px"
+        class="mt-6 rounded-pill"
         >defeat is tragic</v-progress-linear
       >
 
@@ -22,55 +19,66 @@
           You Scored {{ score }} of {{ chapterDetail.questions.length }}
         </v-card>
       </v-row>
-      <div v-else>
-        <h1>
-          {{ chapterDetail.questions[currentQuestion].questionPrompt }}
-        </h1>
-
-        <div class="answer-section">
-          <div
-            v-if="
-              chapterDetail.questions[currentQuestion].questionType ===
-              'MULTIPLE_CHOICE'
-            "
-          >
-            <v-btn
-              :key="index"
-              v-for="(answer, index) in chapterDetail.questions[currentQuestion]
-                .answers"
-              @click="handleAnswerClick(answer)"
-              class="ans-option-btn"
-              variant="primary"
+      <v-card v-else class="mt-6 mx-auto" width="60%">
+        <v-card-text class="black--text">
+          <v-row class="text-h5" no-gutters>
+            {{ chapterDetail.questions[currentQuestion].questionPrompt }}
+          </v-row>
+          <v-divider class="my-4" />
+          <div>
+            <v-row
+              no-gutters
+              v-if="
+                chapterDetail.questions[currentQuestion].questionType ===
+                'MULTIPLE_CHOICE'
+              "
+              class="justify-center"
             >
-              {{ answer.answer }}
-            </v-btn>
-          </div>
+              <v-btn
+                :key="index"
+                v-for="(answer, index) in chapterDetail.questions[
+                  currentQuestion
+                ].answers"
+                @click="handleAnswerClick(answer)"
+                class="mx-2"
+                variant="primary"
+              >
+                {{ answer.answer }}
+              </v-btn>
+            </v-row>
 
-          <div
-            v-if="
-              chapterDetail.questions[currentQuestion].questionType ===
-              'SHORT_ANSWER'
-            "
-          >
-            <FormulateForm
-              v-model="formValue"
-              @submit="handleAnswerClick(formValue.shortAnswerValue)"
-              class="form"
+            <v-row
+              no-gutters
+              v-if="
+                chapterDetail.questions[currentQuestion].questionType ===
+                'SHORT_ANSWER'
+              "
             >
-              <FormulateInput
-                type="text"
-                name="shortAnswerValue"
-                placeholder="Jawaban"
-                validation="^required"
-                error-behavior="submit"
-                :validation-messages="{
-                  required: 'Jawaban harus ada',
-                }"
-              />
-            </FormulateForm>
+              <FormulateForm
+                v-model="formValue"
+                @submit="handleAnswerClick(formValue.shortAnswerValue)"
+                class="form"
+              >
+                <FormulateInput
+                  type="text"
+                  name="shortAnswerValue"
+                  placeholder="Jawaban"
+                  validation="^required"
+                  error-behavior="submit"
+                  :validation-messages="{
+                    required: 'Jawaban harus ada',
+                  }"
+                />
+              </FormulateForm>
+            </v-row>
           </div>
-        </div>
-      </div>
+          <v-row no-gutters class="mt-4">
+            <v-btn text>skip</v-btn>
+            <v-spacer />
+            <v-btn color="#1f3da1" dark>next</v-btn>
+          </v-row>
+        </v-card-text>
+      </v-card>
     </div>
   </v-container>
 </template>
