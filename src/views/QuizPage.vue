@@ -17,6 +17,7 @@
       <v-row v-if="showScore" justify="center" no-gutters>
         <v-card title="Results" style="max-width: 20rem">
           You Scored {{ score }} of {{ chapterDetail.questions.length }}
+          <v-btn @click="restartQuiz"> Restart Quiz </v-btn>
         </v-card>
       </v-row>
       <v-card v-else class="mt-6 mx-auto" width="60%">
@@ -32,19 +33,25 @@
                 chapterDetail.questions[currentQuestion].questionType ===
                 'MULTIPLE_CHOICE'
               "
-              class="justify-center"
+              class="justify-center py-5"
             >
-              <v-btn
-                :key="index"
-                v-for="(answer, index) in chapterDetail.questions[
-                  currentQuestion
-                ].answers"
-                @click="handleAnswerClick(answer)"
-                class="mx-2"
-                variant="primary"
-              >
-                {{ answer.answer }}
-              </v-btn>
+              <v-btn-toggle v-model="toggledAnswer">
+                <v-row>
+                  <v-col cols="6" class="px-5 justify-center py-3" :key="index"
+                         v-for="(answer, index) in chapterDetail.questions[
+                        currentQuestion
+                      ].answers">
+                    <v-btn
+                        block
+                        outlined
+                        class="mx-2"
+                        variant="primary"
+                    >
+                      {{ answer.answer }}
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-btn-toggle>
             </v-row>
 
             <v-row
@@ -56,7 +63,7 @@
             >
               <FormulateForm
                 v-model="formValue"
-                @submit="handleAnswerClick(formValue.shortAnswerValue)"
+                @submit="handleAnswerClick()"
                 class="form"
               >
                 <FormulateInput
@@ -75,7 +82,7 @@
           <v-row no-gutters class="mt-4">
             <v-btn text>skip</v-btn>
             <v-spacer />
-            <v-btn color="#1f3da1" dark>next</v-btn>
+            <v-btn color="#1f3da1" dark @click="handleAnswerClick">Check Question</v-btn>
           </v-row>
         </v-card-text>
       </v-card>
@@ -89,6 +96,7 @@ export default {
   name: "QuizPage",
   data() {
     return {
+      toggledAnswer: null,
       currentQuestion: 0,
       progressBarValue: 0,
       formValue: {},
@@ -122,12 +130,31 @@ export default {
         [array[i], array[j]] = [array[j], array[i]];
       }
     },
-    handleAnswerClick(answer) {
+    restartQuiz() {
+      this.currentQuestion = 0;
+      this.progressBarValue = 0;
+      this.score = 0;
+      this.showScore = false;
+    },
+    handleAnswerClick() {
       let nextQuestion = this.currentQuestion + 1;
+      let question = this.chapterDetail.questions[this.currentQuestion];
+      console.log(this.chapterDetail.questions[this.currentQuestion].answers[this.toggledAnswer].correct)
 
-      if (answer.correct) {
-        this.score = this.score + 1;
+      let answer;
+      switch (question.questionType) {
+        case "MULTIPLE_CHOICE":
+          answer = question.answers[this.toggledAnswer]
+          if (answer.correct) {
+            this.score = this.score + 1;
+          }
+          break;
+        case "SHORT_ANSWER":
+          if (answer.loop)
+
+          break;
       }
+
 
       this.progressBarValue =
         (nextQuestion / this.chapterDetail.questions.length) * 100;
@@ -137,8 +164,19 @@ export default {
       } else {
         this.showScore = true;
       }
+      this.toggledAnswer = null;
       console.log(this.progressBarValue);
     },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+
+.v-btn-toggle .v-btn--active::before, .v-btn-toggle .v-btn--active {
+  background-color: #ced4e8;
+}
+
+</style>
+
+

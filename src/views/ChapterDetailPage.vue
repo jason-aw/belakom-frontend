@@ -1,11 +1,16 @@
 <template>
   <v-container>
-    <h1>{{ chapterDetail.chapterName }}</h1>
-    <p>{{ chapterDetail.description }}</p>
-    <div class="content" v-html="chapterDetail.htmlContent"></div>
+    <v-overlay :value="loading">
+      <v-progress-circular color="#1f3da1" indeterminate size="64" width="6" />
+    </v-overlay>
+    <div v-if="!loading">
+      <h1>{{ chapterDetail.chapterName }}</h1>
+      <p>{{ chapterDetail.description }}</p>
+      <div class="content" v-html="chapterDetail.htmlContent"></div>
 
-    <div v-if="chapterDetail.enableQuiz">
-      <button @click="goToQuizPage(chapterDetail.id)">Access Quiz</button>
+      <div v-if="chapterDetail.enableQuiz">
+        <v-btn color="#1f3da1" dark @click="goToQuizPage(chapterDetail.id)">Access Quiz</v-btn>
+      </div>
     </div>
   </v-container>
 </template>
@@ -18,6 +23,7 @@ export default {
     return {
       chapterDetail: {},
       chapterIndex: "",
+      loading: true
     };
   },
   created() {
@@ -28,8 +34,11 @@ export default {
     getChapterDetail(chapterId) {
       chapterService
         .getChapterById(chapterId)
-        .then((response) => (this.chapterDetail = Object.assign({}, response)))
-        .catch((error) => console.log(error));
+          .then((response) => {
+            (this.chapterDetail = Object.assign({}, response));
+            this.loading = false;
+          })
+          .catch((error) => console.log(error));
     },
     goToQuizPage(id) {
       this.$router.push("/chapters/" + id + "/quiz");

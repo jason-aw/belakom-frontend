@@ -30,7 +30,7 @@ export const chapter = {
         },
         (error) => {
           commit("clearAllChapters");
-          return Promise.resolve(error);
+          return Promise.reject(error);
         }
       );
     },
@@ -44,7 +44,11 @@ export const chapter = {
         })
         .catch((error) => {
           commit("clearChapterDetail");
-          return Promise.resolve(error);
+          if (!error){
+            console.log("Network Error")
+            return Promise.reject("Network Error");
+          }
+          return Promise.reject(error);
         });
     },
     clearChapterData({ commit }) {

@@ -1,106 +1,111 @@
 <template>
   <v-container>
-    <div class="title">
-      {{ topicDetail.topicName }}
-    </div>
+    <v-overlay :value="loading">
+      <v-progress-circular color="#1f3da1" indeterminate size="64" width="6" />
+    </v-overlay>
+    <div v-if="!loading">
+      <div class="title">
+        {{ topicDetail.topicName }}
+      </div>
 
-    <div class="description">
-      {{ topicDetail.description }}
-    </div>
-    <draggable :list="chapters" ghost-class="ghost" @end="onEnd">
-      <transition-group type="transition" name="list">
-        <div
-          class="col-12 mt-md-5 mb-md-5 chapterCardGhost"
-          v-for="(chapter, index) in chapters"
-          :key="chapter.id"
-        >
-          <ChapterCard :chapter="chapter" :index="index + 1" />
-        </div>
-      </transition-group>
-    </draggable>
+      <div class="description">
+        {{ topicDetail.description }}
+      </div>
+      <draggable :list="chapters" ghost-class="ghost" @end="onEnd">
+        <transition-group type="transition" name="list">
+          <div
+              class="col-12 mt-md-5 mb-md-5 chapterCardGhost"
+              v-for="(chapter, index) in chapters"
+              :key="chapter.id"
+          >
+            <ChapterCard :chapter="chapter" :index="index + 1" />
+          </div>
+        </transition-group>
+      </draggable>
 
-    <v-dialog v-model="dialog" width="70%">
-      <template #activator="{ on, attrs }">
-        <div class="col-12 mt-md-5 mb-md-5">
-          <v-card class="createNewTopicButton">
-            <v-btn height="100%" width="100%" v-bind="attrs" v-on="on">
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-          </v-card>
-        </div>
-      </template>
-      <v-card>
-        <v-card-title class="text-h5"> Create New Chapter </v-card-title>
-        <v-divider />
-        <v-card-text class="black--text">
-          <v-container>
-            <FormulateForm
-              v-model="createChapterFormValue"
-              @submit="handleCreateChapterSubmit"
-            >
-              <FormulateInput
-                type="text"
-                name="chapterName"
-                label="Chapter Name"
-                placeholder="Chapter Name"
-                validation="^required"
-                error-behavior="submit"
-                :validation-messages="{
+      <v-dialog v-model="dialog" width="70%">
+        <template #activator="{ on, attrs }">
+          <div class="col-12 mt-md-5 mb-md-5">
+            <v-card class="createNewTopicButton">
+              <v-btn height="100%" width="100%" v-bind="attrs" v-on="on">
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </v-card>
+          </div>
+        </template>
+        <v-card>
+          <v-card-title class="text-h5"> Create New Chapter </v-card-title>
+          <v-divider />
+          <v-card-text class="black--text">
+            <v-container>
+              <FormulateForm
+                  v-model="createChapterFormValue"
+                  @submit="handleCreateChapterSubmit"
+              >
+                <FormulateInput
+                    type="text"
+                    name="chapterName"
+                    label="Chapter Name"
+                    placeholder="Chapter Name"
+                    validation="^required"
+                    error-behavior="submit"
+                    :validation-messages="{
                   required: 'Nama Chapter harus ada',
                 }"
-              />
+                />
 
-              <FormulateInput
-                type="checkbox"
-                label="Enable Quiz"
-                name="enableQuiz"
-              />
+                <FormulateInput
+                    type="checkbox"
+                    label="Enable Quiz"
+                    name="enableQuiz"
+                />
 
-              <FormulateInput
-                type="textarea"
-                name="description"
-                label="Description"
-                placeholder="Description"
-                validation="^required"
-                error-behavior="submit"
-                :validation-messages="{
+                <FormulateInput
+                    type="textarea"
+                    name="description"
+                    label="Description"
+                    placeholder="Description"
+                    validation="^required"
+                    error-behavior="submit"
+                    :validation-messages="{
                   required: 'Deskripsi harus ada',
                 }"
-              />
+                />
 
-              <FormulateInput
-                align="center"
-                type="submit"
-                label="Create Chapter"
-              />
-              <v-alert
-                transition="fade-transition"
-                text
-                type="success"
-                v-model="successCreateAlert"
-              >
-                Chapter successfully added!
-              </v-alert>
-              <v-alert
-                transition="fade-transition"
-                text
-                type="error"
-                v-model="errorCreateAlert"
-              >
-                Chapter failed to add!
-              </v-alert>
-            </FormulateForm>
-          </v-container>
-        </v-card-text>
+                <FormulateInput
+                    align="center"
+                    type="submit"
+                    label="Create Chapter"
+                />
+                <v-alert
+                    transition="fade-transition"
+                    text
+                    type="success"
+                    v-model="successCreateAlert"
+                >
+                  Chapter successfully added!
+                </v-alert>
+                <v-alert
+                    transition="fade-transition"
+                    text
+                    type="error"
+                    v-model="errorCreateAlert"
+                >
+                  Chapter failed to add!
+                </v-alert>
+              </FormulateForm>
+            </v-container>
+          </v-card-text>
 
-        <v-divider></v-divider>
+          <v-divider></v-divider>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="dialog = false"> I accept </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="dialog = false"> I accept </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
   </v-container>
 </template>
 
@@ -122,6 +127,7 @@ export default {
     successCreateAlert: false,
     errorCreateAlert: false,
     hovered: false,
+    loading: true
   }),
   created() {
     this.getTopicDetail(this.$route.params.topicName);
@@ -139,11 +145,13 @@ export default {
   },
   methods: {
     getTopicDetail(topicName) {
+      this.loading = true;
       this.$store
         .dispatch("topic/getTopicByName", { topicName: topicName })
         .then(
           () => {
             this.getAllChapters();
+            this.loading = false;
           },
           (error) => {
             console.log(error);

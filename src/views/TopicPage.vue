@@ -1,94 +1,99 @@
 <template>
   <v-container class="mt-3">
-    <div class="text-h4">Mau belajar apa hari ini?</div>
+    <v-overlay :value="loading">
+      <v-progress-circular color="#1f3da1" indeterminate size="64" width="6" />
+    </v-overlay>
+    <div v-if="!loading">
+      <div class="text-h4">Mau belajar apa hari ini?</div>
 
-    <div class="row mt-md-5">
-      <div
-        class="col-3 mt-md-5 mb-md-5 px-3"
-        v-for="topic in topicData"
-        :key="topic.id"
-      >
-        <TopicCard :topic="topic" />
-      </div>
+      <div class="row mt-md-5">
+        <div
+            class="col-3 mt-md-5 mb-md-5 px-3"
+            v-for="topic in topicData"
+            :key="topic.id"
+        >
+          <TopicCard :topic="topic" />
+        </div>
 
-      <v-dialog v-model="dialog" width="70%">
-        <template #activator="{ on, attrs }">
-          <div class="col-3 mt-md-5 mb-md-5">
-            <v-card class="createNewTopicButton">
-              <v-btn height="100%" width="100%" v-bind="attrs" v-on="on">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </v-card>
-          </div>
-        </template>
-        <v-card>
-          <v-card-title class="text-h5"> Create New Topic </v-card-title>
-          <v-divider />
-          <v-card-text class="black--text">
-            <v-container>
-              <FormulateForm
-                v-model="createTopicFormValue"
-                @submit="handleCreateTopicSubmit"
-              >
-                <FormulateInput
-                  type="text"
-                  name="topicName"
-                  label="Topic Name"
-                  placeholder="Topic Name"
-                  validation="^required"
-                  error-behavior="submit"
-                  :validation-messages="{
+        <v-dialog v-model="dialog" width="70%">
+          <template #activator="{ on, attrs }">
+            <div class="col-3 mt-md-5 mb-md-5">
+              <v-card class="createNewTopicButton">
+                <v-btn height="100%" width="100%" v-bind="attrs" v-on="on">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </v-card>
+            </div>
+          </template>
+          <v-card>
+            <v-card-title class="text-h5"> Create New Topic </v-card-title>
+            <v-divider />
+            <v-card-text class="black--text">
+              <v-container>
+                <FormulateForm
+                    v-model="createTopicFormValue"
+                    @submit="handleCreateTopicSubmit"
+                >
+                  <FormulateInput
+                      type="text"
+                      name="topicName"
+                      label="Topic Name"
+                      placeholder="Topic Name"
+                      validation="^required"
+                      error-behavior="submit"
+                      :validation-messages="{
                     required: 'Topic harus ada',
                   }"
-                />
+                  />
 
-                <FormulateInput
-                  type="textarea"
-                  name="description"
-                  label="Description"
-                  placeholder="Description"
-                  validation="^required"
-                  error-behavior="submit"
-                  :validation-messages="{
+                  <FormulateInput
+                      type="textarea"
+                      name="description"
+                      label="Description"
+                      placeholder="Description"
+                      validation="^required"
+                      error-behavior="submit"
+                      :validation-messages="{
                     required: 'Deskripsi harus ada',
                   }"
-                />
+                  />
 
-                <FormulateInput
-                  align="center"
-                  type="submit"
-                  label="Create Topic"
-                />
-                <v-alert
-                  transition="fade-transition"
-                  type="success"
-                  v-model="successCreateAlert"
-                  text
-                >
-                  Topic successfully added!
-                </v-alert>
-                <v-alert
-                  transition="fade-transition"
-                  type="error"
-                  v-model="errorCreateAlert"
-                  text
-                >
-                  Topic failed to add!
-                </v-alert>
-              </FormulateForm>
-            </v-container>
-          </v-card-text>
+                  <FormulateInput
+                      align="center"
+                      type="submit"
+                      label="Create Topic"
+                  />
+                  <v-alert
+                      transition="fade-transition"
+                      type="success"
+                      v-model="successCreateAlert"
+                      text
+                  >
+                    Topic successfully added!
+                  </v-alert>
+                  <v-alert
+                      transition="fade-transition"
+                      type="error"
+                      v-model="errorCreateAlert"
+                      text
+                  >
+                    Topic failed to add!
+                  </v-alert>
+                </FormulateForm>
+              </v-container>
+            </v-card-text>
 
-          <v-divider></v-divider>
+            <v-divider></v-divider>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="dialog = false">
-              I accept
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="dialog = false">
+                I accept
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
     </div>
   </v-container>
 </template>
@@ -109,6 +114,7 @@ export default {
     successCreateAlert: false,
     errorCreateAlert: false,
     hovered: false,
+    loading: true
   }),
   created() {
     this.getAllTopics();
@@ -124,7 +130,9 @@ export default {
   methods: {
     getAllTopics() {
       this.$store.dispatch("topic/getAllTopics").then(
-        () => {},
+        () => {
+          this.loading = false
+        },
         (error) => {
           console.log(error);
         }
