@@ -63,7 +63,7 @@
             >
               <FormulateForm
                 v-model="formValue"
-                @submit="handleAnswerClick()"
+                @submit="handleAnswerClick"
                 class="form"
               >
                 <FormulateInput
@@ -102,6 +102,7 @@ export default {
       formValue: {},
       loading: true,
       showScore: false,
+      questionAnswers: null,
       score: 0,
       chapterDetail: {},
     };
@@ -139,7 +140,8 @@ export default {
     handleAnswerClick() {
       let nextQuestion = this.currentQuestion + 1;
       let question = this.chapterDetail.questions[this.currentQuestion];
-      console.log(this.chapterDetail.questions[this.currentQuestion].answers[this.toggledAnswer].correct)
+
+      console.log("masuk")
 
       let answer;
       switch (question.questionType) {
@@ -150,7 +152,16 @@ export default {
           }
           break;
         case "SHORT_ANSWER":
-          if (answer.loop)
+          console.log(question.answers)
+          // eslint-disable-next-line no-case-declarations
+          let answers = Array.from(question.answers).map(answer => {
+            return answer.answer
+          });
+          for (let answer of answers) {
+            if (answer === this.formValue.shortAnswerValue.toString()) {
+              this.score = this.score + 1;
+            }
+          }
 
           break;
       }
@@ -165,7 +176,6 @@ export default {
         this.showScore = true;
       }
       this.toggledAnswer = null;
-      console.log(this.progressBarValue);
     },
   },
 };
