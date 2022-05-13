@@ -37,6 +37,12 @@ const FILES_PATH_URL = API_BASE_URL + "/api/files";
 const UPLOAD_FILE_URL = FILES_PATH_URL + "/upload";
 const DELETE_FILE_URL = API_BASE_URL + "/";
 
+// USER DETAIL CONTROLLER
+const USER_DETAIL_PATH_URL = API_BASE_URL + "/api/user";
+
+const GET_CURRENT_USER_DETAIL = USER_DETAIL_PATH_URL + "/currentUser";
+const UPDATE_CURRENT_LEARNING_TOPIC = USER_DETAIL_PATH_URL + "/updateCurrentlyLearningTopic/"
+
 export const ApiPath = {
   LOGIN_URL,
   REGISTER_URL,
@@ -56,4 +62,6 @@ export const ApiPath = {
   GET_CHAPTER_BY_ID_URL,
   UPLOAD_FILE_URL,
   DELETE_FILE_URL,
+  GET_CURRENT_USER_DETAIL,
+  UPDATE_CURRENT_LEARNING_TOPIC
 };

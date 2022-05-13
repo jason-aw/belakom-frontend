@@ -162,7 +162,6 @@ export default {
               this.score = this.score + 1;
             }
           }
-
           break;
       }
 

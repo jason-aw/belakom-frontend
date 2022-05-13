@@ -6,6 +6,10 @@
     <div v-if="!loading">
       <div class="text-h4">Mau belajar apa hari ini?</div>
 
+      <div v-if="currentLearnTopic">
+        <CurrentlyLearningTopicCard :topic="currentLearnTopic" />
+      </div>
+
       <div class="row mt-md-5">
         <div
             class="col-3 mt-md-5 mb-md-5 px-3"
@@ -100,15 +104,18 @@
 
 <script>
 import topicServices from "@/services/topic.service";
+import userDetailService from "@/services/userDetail.service"
 import TopicCard from "@/components/TopicCard";
 import { mapGetters } from "vuex";
+import CurrentlyLearningTopicCard from "../components/CurrentlyLearningTopicCard";
 
 export default {
-  components: { TopicCard },
+  components: {CurrentlyLearningTopicCard, TopicCard },
   name: "TopicPage",
 
   data: () => ({
     dialog: false,
+    currentLearnTopic: null,
     createTopicFormValue: {},
     errorMessage: {},
     successCreateAlert: false,
@@ -117,7 +124,7 @@ export default {
     loading: true
   }),
   created() {
-    this.getAllTopics();
+    this.init();
   },
   computed: {
     ...mapGetters("topic", ["topicData"]),
@@ -128,6 +135,10 @@ export default {
     });
   },
   methods: {
+    init() {
+      this.getAllTopics();
+      this.getCurrentUserDetail();
+    },
     getAllTopics() {
       this.$store.dispatch("topic/getAllTopics").then(
         () => {
@@ -136,6 +147,38 @@ export default {
         (error) => {
           console.log(error);
         }
+      );
+    },
+    getCurrentLearnTopicById(topicId) {
+      let topics = Array.from(this.topicData).map(topic => {
+        return Object.assign({}, topic);
+      });
+
+      for (let topic of topics) {
+        console.log(topic.id)
+        if (topicId === topic.id) {
+          console.log(topic.id)
+          console.log(topicId)
+          console.log("sama")
+          console.log(Object.assign({}, topic))
+
+          this.currentLearnTopic = Object.assign({}, topic)
+          console.log(this.currentLearnTopic)
+          break;
+        }
+      }
+
+      return null;
+    },
+    getCurrentUserDetail() {
+      userDetailService.getCurrentUserDetail().then(
+          (response) => {
+            this.getCurrentLearnTopicById(response.data.currentlyLearningTopic)
+          },
+          (error) => {
+            console.log("this is error")
+            console.log(error);
+          }
       );
     },
     handleCreateTopicSubmit() {

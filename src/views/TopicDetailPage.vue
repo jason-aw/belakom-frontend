@@ -113,6 +113,7 @@
 import chapterService from "@/services/chapter.service";
 import topicService from "@/services/topic.service";
 import ChapterCard from "@/components/ChapterCard";
+import userDetailService from "@/services/userDetail.service";
 import { mapGetters } from "vuex";
 import draggable from "vuedraggable";
 
@@ -131,6 +132,7 @@ export default {
   }),
   created() {
     this.getTopicDetail(this.$route.params.topicName);
+    this.updateCurrentlyLearningTopic()
   },
   computed: {
     ...mapGetters("topic", ["topicDetail"]),
@@ -189,6 +191,16 @@ export default {
           }
         );
     },
+    updateCurrentlyLearningTopic() {
+      userDetailService.updateCurrentlyLearningTopic(this.topicDetail.id)
+          .then(
+              (response) => {
+                console.log(response)
+              },
+              (error) => {
+                return error;
+              })
+    }
   },
   watch: {
     $route() {
