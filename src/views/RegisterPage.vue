@@ -57,6 +57,8 @@
 
 <script>
 import { mapGetters } from "vuex";
+import authService from "@/services/auth.service";
+
 export default {
   name: "RegisterPage",
   data: () => ({
@@ -68,7 +70,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      this.$store.dispatch("auth/register", this.formValues).then(
+      authService.register(this.formValues).then(
         (response) => {
           this.responseValue = response;
           alert("registered successfully");

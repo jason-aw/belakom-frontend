@@ -28,16 +28,6 @@ export const auth = {
       authService.logout();
       commit("logout");
     },
-    register(user) {
-      return authService.register(user).then(
-        (response) => {
-          return Promise.resolve(response.data);
-        },
-        (error) => {
-          return Promise.reject(error);
-        }
-      );
-    },
     googleLogin({ commit }, user) {
       commit("loginSuccess", user);
     },

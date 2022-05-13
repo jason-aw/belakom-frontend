@@ -36,7 +36,7 @@
       </v-row>
 
       <div>
-        <v-checkbox label="Enable Quiz" v-model="enableQuiz" />
+        <v-checkbox label="Enable Quiz" v-model="enableQuiz" @click="handleEnableQuiz()"/>
       </div>
 
       <div v-if="enableQuiz">
@@ -92,7 +92,6 @@ export default {
   },
   computed: {
     ...mapGetters("chapter", ["chapterDetail"]),
-    ...mapGetters("question", ["questions"]),
   },
   watch: {
     $route() {
@@ -141,6 +140,7 @@ export default {
       }
 
       // this.chapterDetail.htmlContent = this.$sanitize(this.chapterDetail.htmlContent)
+      console.log(this.chapterDetail)
       chapterService
         .updateChapter(this.chapterDetail)
         .then((response) => console.log(response))
@@ -149,6 +149,10 @@ export default {
     handleAddQuestion() {
       this.$store.commit("chapter/addQuestion");
     },
+    handleEnableQuiz() {
+      console.log(this.enableQuiz)
+      this.$store.commit("chapter/updateEnableQuiz", this.enableQuiz);
+    }
   },
 };
 </script>

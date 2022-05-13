@@ -72,6 +72,9 @@ export const chapter = {
     clearChapterDetail(state) {
       state.chapterDetail = {};
     },
+    updateEnableQuiz(state, value) {
+      state.chapterDetail.enableQuiz = value;
+    },
     addQuestion(state) {
       state.chapterDetail.questions.push({
         questionPrompt: "Question...",

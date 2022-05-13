@@ -5,7 +5,7 @@
     </v-overlay>
     <div v-if="!loading">
       <div class="title">
-        {{ topicDetail.topicName }}
+        <h1>{{ topicDetail.topicName }}</h1>
       </div>
 
       <div class="description">
