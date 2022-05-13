@@ -13,6 +13,7 @@ import EditChapterDetailPage from "@/views/EditChapterDetailPage";
 import ChapterDetailPage from "@/views/ChapterDetailPage";
 import ChapterPreviewPage from "@/views/ChapterPreviewPage";
 import QuizPage from "@/views/QuizPage";
+import CommentSection from "@/components/CommentSection";
 
 Vue.use(VueRouter);
 
@@ -75,6 +76,10 @@ const routes = [
     path: "/chapter-preview",
     component: ChapterPreviewPage,
   },
+  {
+    path: "/comment",
+    component: CommentSection,
+  }
 ];
 
 const router = new VueRouter({
