@@ -12,9 +12,9 @@
 
       <div class="row mt-md-5">
         <div
-            class="col-3 mt-md-5 mb-md-5 px-3"
-            v-for="topic in topicData"
-            :key="topic.id"
+          class="col-3 mt-md-5 mb-md-5 px-3"
+          v-for="topic in topicData"
+          :key="topic.id"
         >
           <TopicCard :topic="topic" />
         </div>
@@ -35,66 +35,57 @@
             <v-card-text class="black--text">
               <v-container>
                 <FormulateForm
-                    v-model="createTopicFormValue"
-                    @submit="handleCreateTopicSubmit"
+                  v-model="createTopicFormValue"
+                  @submit="handleCreateTopicSubmit"
                 >
                   <FormulateInput
-                      type="text"
-                      name="topicName"
-                      label="Topic Name"
-                      placeholder="Topic Name"
-                      validation="^required"
-                      error-behavior="submit"
-                      :validation-messages="{
-                    required: 'Topic harus ada',
-                  }"
+                    type="text"
+                    name="topicName"
+                    label="Topic Name"
+                    placeholder="Topic Name"
+                    validation="^required"
+                    error-behavior="submit"
+                    :validation-messages="{
+                      required: 'Topic harus ada',
+                    }"
                   />
 
                   <FormulateInput
-                      type="textarea"
-                      name="description"
-                      label="Description"
-                      placeholder="Description"
-                      validation="^required"
-                      error-behavior="submit"
-                      :validation-messages="{
-                    required: 'Deskripsi harus ada',
-                  }"
+                    type="textarea"
+                    name="description"
+                    label="Description"
+                    placeholder="Description"
+                    validation="^required"
+                    error-behavior="submit"
+                    :validation-messages="{
+                      required: 'Deskripsi harus ada',
+                    }"
                   />
 
                   <FormulateInput
-                      align="center"
-                      type="submit"
-                      label="Create Topic"
+                    align="center"
+                    type="submit"
+                    label="Create Topic"
                   />
                   <v-alert
-                      transition="fade-transition"
-                      type="success"
-                      v-model="successCreateAlert"
-                      text
+                    transition="fade-transition"
+                    type="success"
+                    v-model="successCreateAlert"
+                    text
                   >
                     Topic successfully added!
                   </v-alert>
                   <v-alert
-                      transition="fade-transition"
-                      type="error"
-                      v-model="errorCreateAlert"
-                      text
+                    transition="fade-transition"
+                    type="error"
+                    v-model="errorCreateAlert"
+                    text
                   >
                     Topic failed to add!
                   </v-alert>
                 </FormulateForm>
               </v-container>
             </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="dialog = false">
-                I accept
-              </v-btn>
-            </v-card-actions>
           </v-card>
         </v-dialog>
       </div>
@@ -104,13 +95,13 @@
 
 <script>
 import topicServices from "@/services/topic.service";
-import userDetailService from "@/services/userDetail.service"
+import userService from "@/services/user.service";
 import TopicCard from "@/components/TopicCard";
 import { mapGetters } from "vuex";
-import CurrentlyLearningTopicCard from "../components/CurrentlyLearningTopicCard";
+import CurrentlyLearningTopicCard from "@/components/CurrentlyLearningTopicCard";
 
 export default {
-  components: {CurrentlyLearningTopicCard, TopicCard },
+  components: { CurrentlyLearningTopicCard, TopicCard },
   name: "TopicPage",
 
   data: () => ({
@@ -121,10 +112,11 @@ export default {
     successCreateAlert: false,
     errorCreateAlert: false,
     hovered: false,
-    loading: true
+    loading: true,
   }),
-  created() {
-    this.init();
+  async created() {
+    await this.getAllTopics();
+    await this.getCurrentUserDetail();
   },
   computed: {
     ...mapGetters("topic", ["topicData"]),
@@ -135,50 +127,34 @@ export default {
     });
   },
   methods: {
-    init() {
-      this.getAllTopics();
-      this.getCurrentUserDetail();
-    },
-    getAllTopics() {
-      this.$store.dispatch("topic/getAllTopics").then(
-        () => {
-          this.loading = false
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    async getAllTopics() {
+      return this.$store
+        .dispatch("topic/getAllTopics")
+        .then(() => Promise.resolve())
+        .catch((error) => Promise.reject(error));
     },
     getCurrentLearnTopicById(topicId) {
-      let topics = Array.from(this.topicData).map(topic => {
-        return Object.assign({}, topic);
-      });
+      let topics = Array.from(this.topicData).map((topic) =>
+        Object.assign({}, topic)
+      );
 
       for (let topic of topics) {
-        console.log(topic.id)
         if (topicId === topic.id) {
-          console.log(topic.id)
-          console.log(topicId)
-          console.log("sama")
-          console.log(Object.assign({}, topic))
-
-          this.currentLearnTopic = Object.assign({}, topic)
-          console.log(this.currentLearnTopic)
-          break;
+          this.currentLearnTopic = Object.assign({}, topic);
+          console.log(this.currentLearnTopic);
         }
       }
-
-      return null;
     },
-    getCurrentUserDetail() {
-      userDetailService.getCurrentUserDetail().then(
-          (response) => {
-            this.getCurrentLearnTopicById(response.data.currentlyLearningTopic)
-          },
-          (error) => {
-            console.log("this is error")
-            console.log(error);
-          }
+    async getCurrentUserDetail() {
+      return userService.getCurrentUserDetail().then(
+        (response) => {
+          this.getCurrentLearnTopicById(response.data.currentlyLearningTopic);
+          this.loading = false;
+          return Promise.resolve();
+        },
+        (error) => {
+          return Promise.reject(error);
+        }
       );
     },
     handleCreateTopicSubmit() {

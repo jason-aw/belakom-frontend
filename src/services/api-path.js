@@ -41,7 +41,7 @@ const DELETE_FILE_URL = API_BASE_URL + "/";
 const USER_DETAIL_PATH_URL = API_BASE_URL + "/api/user";
 
 const GET_CURRENT_USER_DETAIL = USER_DETAIL_PATH_URL + "/currentUser";
-const UPDATE_CURRENT_LEARNING_TOPIC = USER_DETAIL_PATH_URL + "/updateCurrentlyLearningTopic/"
+const UPDATE_USER_DATA_URL = USER_DETAIL_PATH_URL + "/updateUserData"
 
 export const ApiPath = {
   LOGIN_URL,
@@ -63,5 +63,5 @@ export const ApiPath = {
   UPLOAD_FILE_URL,
   DELETE_FILE_URL,
   GET_CURRENT_USER_DETAIL,
-  UPDATE_CURRENT_LEARNING_TOPIC
+  UPDATE_USER_DATA_URL
 };

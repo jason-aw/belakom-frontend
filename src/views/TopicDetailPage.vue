@@ -14,9 +14,9 @@
       <draggable :list="chapters" ghost-class="ghost" @end="onEnd">
         <transition-group type="transition" name="list">
           <div
-              class="col-12 mt-md-5 mb-md-5 chapterCardGhost"
-              v-for="(chapter, index) in chapters"
-              :key="chapter.id"
+            class="col-12 mt-md-5 mb-md-5 chapterCardGhost"
+            v-for="(chapter, index) in chapters"
+            :key="chapter.id"
           >
             <ChapterCard :chapter="chapter" :index="index + 1" />
           </div>
@@ -39,70 +39,63 @@
           <v-card-text class="black--text">
             <v-container>
               <FormulateForm
-                  v-model="createChapterFormValue"
-                  @submit="handleCreateChapterSubmit"
+                v-model="createChapterFormValue"
+                @submit="handleCreateChapterSubmit"
               >
                 <FormulateInput
-                    type="text"
-                    name="chapterName"
-                    label="Chapter Name"
-                    placeholder="Chapter Name"
-                    validation="^required"
-                    error-behavior="submit"
-                    :validation-messages="{
-                  required: 'Nama Chapter harus ada',
-                }"
+                  type="text"
+                  name="chapterName"
+                  label="Chapter Name"
+                  placeholder="Chapter Name"
+                  validation="^required"
+                  error-behavior="submit"
+                  :validation-messages="{
+                    required: 'Nama Chapter harus ada',
+                  }"
                 />
 
                 <FormulateInput
-                    type="checkbox"
-                    label="Enable Quiz"
-                    name="enableQuiz"
+                  type="checkbox"
+                  label="Enable Quiz"
+                  name="enableQuiz"
                 />
 
                 <FormulateInput
-                    type="textarea"
-                    name="description"
-                    label="Description"
-                    placeholder="Description"
-                    validation="^required"
-                    error-behavior="submit"
-                    :validation-messages="{
-                  required: 'Deskripsi harus ada',
-                }"
+                  type="textarea"
+                  name="description"
+                  label="Description"
+                  placeholder="Description"
+                  validation="^required"
+                  error-behavior="submit"
+                  :validation-messages="{
+                    required: 'Deskripsi harus ada',
+                  }"
                 />
 
                 <FormulateInput
-                    align="center"
-                    type="submit"
-                    label="Create Chapter"
+                  align="center"
+                  type="submit"
+                  label="Create Chapter"
                 />
                 <v-alert
-                    transition="fade-transition"
-                    text
-                    type="success"
-                    v-model="successCreateAlert"
+                  transition="fade-transition"
+                  text
+                  type="success"
+                  v-model="successCreateAlert"
                 >
                   Chapter successfully added!
                 </v-alert>
                 <v-alert
-                    transition="fade-transition"
-                    text
-                    type="error"
-                    v-model="errorCreateAlert"
+                  transition="fade-transition"
+                  text
+                  type="error"
+                  v-model="errorCreateAlert"
                 >
                   Chapter failed to add!
                 </v-alert>
               </FormulateForm>
             </v-container>
           </v-card-text>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="dialog = false"> I accept </v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </div>
@@ -113,7 +106,7 @@
 import chapterService from "@/services/chapter.service";
 import topicService from "@/services/topic.service";
 import ChapterCard from "@/components/ChapterCard";
-import userDetailService from "@/services/userDetail.service";
+import userService from "@/services/user.service";
 import { mapGetters } from "vuex";
 import draggable from "vuedraggable";
 
@@ -128,11 +121,11 @@ export default {
     successCreateAlert: false,
     errorCreateAlert: false,
     hovered: false,
-    loading: true
+    loading: true,
   }),
-  created() {
-    this.getTopicDetail(this.$route.params.topicName);
-    this.updateCurrentlyLearningTopic()
+  async created() {
+    await this.getTopicDetail(this.$route.params.topicName);
+    this.updateCurrentlyLearningTopic();
   },
   computed: {
     ...mapGetters("topic", ["topicDetail"]),
@@ -146,17 +139,19 @@ export default {
     },
   },
   methods: {
-    getTopicDetail(topicName) {
+    async getTopicDetail(topicName) {
       this.loading = true;
-      this.$store
+      return this.$store
         .dispatch("topic/getTopicByName", { topicName: topicName })
         .then(
           () => {
             this.getAllChapters();
             this.loading = false;
+            return Promise.resolve();
           },
           (error) => {
             console.log(error);
+            return Promise.reject(error);
           }
         );
     },
@@ -192,15 +187,18 @@ export default {
         );
     },
     updateCurrentlyLearningTopic() {
-      userDetailService.updateCurrentlyLearningTopic(this.topicDetail.id)
-          .then(
-              (response) => {
-                console.log(response)
-              },
-              (error) => {
-                return error;
-              })
-    }
+      let req = {
+        currentlyLearningTopic: this.topicDetail.id,
+      };
+      userService.updateUserData(req).then(
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
   },
   watch: {
     $route() {
