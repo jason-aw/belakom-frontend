@@ -92,6 +92,8 @@
 
 <script>
 import chapterService from "@/services/chapter.service";
+import progressService from "@/services/progress.service";
+
 export default {
   name: "QuizPage",
   data() {
@@ -137,11 +139,19 @@ export default {
       this.score = 0;
       this.showScore = false;
     },
+    handleUpdateChapterProgress() {
+      let req = {
+        quizCompleted: true,
+        chapterId: this.chapterDetail.id,
+        articleCompleted: null,
+        correct: this.score
+      }
+
+      progressService.updateChapterProgress(req)
+    },
     handleAnswerClick() {
       let nextQuestion = this.currentQuestion + 1;
       let question = this.chapterDetail.questions[this.currentQuestion];
-
-      console.log("masuk")
 
       let answer;
       switch (question.questionType) {
@@ -152,7 +162,6 @@ export default {
           }
           break;
         case "SHORT_ANSWER":
-          console.log(question.answers)
           // eslint-disable-next-line no-case-declarations
           let answers = Array.from(question.answers).map(answer => {
             return answer.answer
@@ -172,6 +181,7 @@ export default {
       if (nextQuestion < this.chapterDetail.questions.length) {
         this.currentQuestion = nextQuestion;
       } else {
+        this.handleUpdateChapterProgress()
         this.showScore = true;
       }
       this.toggledAnswer = null;

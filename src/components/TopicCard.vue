@@ -9,7 +9,25 @@
       {{ topic.topicName }}
     </div>
 
-    <div class="deleteButtonArea">
+    <div class="progressBarArea" v-if="this.role[0] === this.user_role">
+      <v-slide-x-transition>
+        <v-progress-linear
+            width="1000px"
+            color="#1f3da1"
+            v-model="this.progressValue"
+            height="25"
+            dark
+            class="mt-6 rounded-pill"
+            background-color="none"
+        >
+          <template v-slot:default="{ value }">
+            <strong>{{ Math.ceil(value) }}%</strong>
+          </template>
+        </v-progress-linear>
+      </v-slide-x-transition>
+    </div>
+
+    <div class="deleteButtonArea" v-else>
       <transition name="deleteButtonFade">
         <v-btn
           width="100%"
@@ -22,18 +40,42 @@
         </v-btn>
       </transition>
     </div>
+
+
   </div>
 </template>
 
 <script>
 import topicServices from "@/services/topic.service";
+import {mapGetters} from "vuex";
 export default {
   name: "TopicCard",
   props: ["topic"],
+  created() {
+    // this.setProgressValue();
+  },
   data: () => ({
     hovered: false,
+    current_user_role: this,
+    user_role : "ROLE_USER",
+    progressValue : 0,
   }),
+  computed: {
+    ...mapGetters("auth", ["role"]),
+  },
+  watch: {
+    hovered(value) {
+      if (value === true) {
+        this.progressValue = this.topic.topicCompletion !== 0 ? (this.topic.topicCompletion / 1) * 100 : 0
+      } else {
+        this.progressValue = 0
+      }
+    }
+  },
   methods: {
+    setProgressValue() {
+      this.progressValue = this.topic.topicCompletion !== 0 ? (this.topic.topicCompletion / 1) * 100 : 0
+    },
     handleDeleteTopicSubmit(id) {
       topicServices.deleteTopic(id).then(
         (response) => {
@@ -95,6 +137,13 @@ export default {
   display: flex;
   justify-content: flex-end;
   justify-self: flex-end;
-  z-index: 99;
+}
+
+.progressBarArea {
+  width: 50%;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  justify-self: flex-end;
 }
 </style>

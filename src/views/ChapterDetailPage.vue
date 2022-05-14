@@ -17,33 +17,69 @@
 
 <script>
 import chapterService from "@/services/chapter.service";
+import progressService from "@/services/progress.service";
+
 export default {
   name: "ChapterDetailPage",
   data() {
     return {
       chapterDetail: {},
-      chapterIndex: "",
       loading: true
     };
   },
+  mounted() {
+    setTimeout(this.endScroll, 250)
+  },
   created() {
     this.getChapterDetail(this.$route.params.chapterId);
-    this.chapterIndex = this.$route.params.chapterIndex;
   },
   methods: {
     getChapterDetail(chapterId) {
-      chapterService
+      return chapterService
         .getChapterById(chapterId)
           .then((response) => {
             (this.chapterDetail = Object.assign({}, response));
             this.loading = false;
+            return Promise.resolve()
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            console.log(error)
+            return Promise.reject()
+          });
     },
     goToQuizPage(id) {
       this.$router.push("/chapters/" + id + "/quiz");
     },
+    handleUpdateChapterProgress() {
+      let req = {
+        quizCompleted: null,
+        chapterId: this.chapterDetail.id,
+        articleCompleted: true,
+        score: null
+      }
+
+      progressService.updateChapterProgress(req)
+    },
+    endScroll() {
+      //full page vs current height
+      let unscrollablePage = (document.documentElement.scrollHeight === Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight);
+      if (unscrollablePage) {
+        this.handleUpdateChapterProgress()
+      } else {
+        window.addEventListener('scroll', this.checkEndOfScroll);
+      }
+    },
+    checkEndOfScroll() {
+      let bottomOfWindow =
+          (Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight)
+      if (bottomOfWindow) {
+        this.handleUpdateChapterProgress()
+      }
+    }
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.checkEndOfScroll);
+  }
 };
 </script>
 

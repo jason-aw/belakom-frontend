@@ -18,7 +18,7 @@ export const topic = {
     getAllTopics({ commit }) {
       return topicService.getAllTopics().then(
         (response) => {
-          commit("getAllTopicSuccess", response.data);
+          commit("getAllTopicSuccess", response.data.topicData);
           return Promise.resolve(response);
         },
         (error) => {

@@ -96,6 +96,7 @@
 <script>
 import topicServices from "@/services/topic.service";
 import userService from "@/services/user.service";
+import progressService from "@/services/progress.service";
 import TopicCard from "@/components/TopicCard";
 import { mapGetters } from "vuex";
 import CurrentlyLearningTopicCard from "@/components/CurrentlyLearningTopicCard";
@@ -111,12 +112,14 @@ export default {
     errorMessage: {},
     successCreateAlert: false,
     errorCreateAlert: false,
+    topicProgress: null,
     hovered: false,
     loading: true,
   }),
   async created() {
     await this.getAllTopics();
     await this.getCurrentUserDetail();
+    // await this.getTopicProgressByUserId();
   },
   computed: {
     ...mapGetters("topic", ["topicData"]),
@@ -132,6 +135,14 @@ export default {
         .dispatch("topic/getAllTopics")
         .then(() => Promise.resolve())
         .catch((error) => Promise.reject(error));
+    },
+    async getTopicProgressByUserId() {
+      progressService.getTopicProgressByUserId()
+          .then((response) => {
+            console.log(response)
+            Promise.resolve();
+          })
+          .catch((error) => Promise.reject(error));
     },
     getCurrentLearnTopicById(topicId) {
       let topics = Array.from(this.topicData).map((topic) =>

@@ -147,6 +147,8 @@ export default {
           () => {
             this.getAllChapters();
             this.loading = false;
+            console.log("ini response")
+            console.log(this.chapters)
             return Promise.resolve();
           },
           (error) => {
@@ -156,7 +158,7 @@ export default {
         );
     },
     getAllChapters() {
-      this.$store.dispatch("chapter/getAllChapters", {
+      this.$store.dispatch("chapter/getAllChaptersAndCompletion", {
         topicId: this.topicDetail.id,
       });
     },

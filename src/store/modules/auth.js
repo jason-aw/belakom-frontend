@@ -10,6 +10,9 @@ export const auth = {
     loggedIn(state) {
       return state.user ? true : false;
     },
+    role(state) {
+      return state.user.roles
+    }
   },
   actions: {
     login({ commit }, user) {

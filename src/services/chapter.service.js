@@ -12,6 +12,16 @@ function getAllChapters(id) {
     .catch((error) => Promise.reject(error.response.data));
 }
 
+function getAllChaptersByTopicIdUserId(topicId) {
+  return axios
+      .get(ApiPath.GET_ALL_CHAPTERS_AND_USER_ID_URL, {
+        headers: authHeader("accessToken"),
+        params: { topicId: topicId },
+      })
+      .then((response) => Promise.resolve(response))
+      .catch((error) => Promise.reject(error.response.data));
+}
+
 function createChapter(chapter) {
   let chapterReq = {
     chapterName: chapter.chapterName,
@@ -60,4 +70,5 @@ export default {
   deleteChapter,
   getChapterById,
   updateChapter,
+  getAllChaptersByTopicIdUserId
 };

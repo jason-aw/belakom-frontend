@@ -34,6 +34,18 @@ export const chapter = {
         }
       );
     },
+    getAllChaptersAndCompletion({ commit }, payLoad) {
+      return chapterService.getAllChaptersByTopicIdUserId(payLoad.topicId).then(
+          (response) => {
+            commit("getAllChaptersSuccess", response.data);
+            return Promise.resolve(response);
+          },
+          (error) => {
+            commit("clearAllChapters");
+            return Promise.reject(error);
+          }
+      );
+    },
     getChapterDetailById({ commit }, chapterId) {
       return chapterService
         .getChapterById(chapterId)
