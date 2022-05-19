@@ -12,8 +12,9 @@ export default {
     if (token) {
       let user = {
         accessToken: token,
+        role: ["ROLE_USER"],
       };
-      this.$store.dispatch("auth/googleLogin", user);
+      this.$store.commit("auth/loginSuccess", user);
       this.$router.push("/home");
     } else if (error) {
       this.$store.commit("auth/loginFailure");

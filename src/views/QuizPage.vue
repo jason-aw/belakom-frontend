@@ -37,16 +37,15 @@
             >
               <v-btn-toggle v-model="toggledAnswer">
                 <v-row>
-                  <v-col cols="6" class="px-5 justify-center py-3" :key="index"
-                         v-for="(answer, index) in chapterDetail.questions[
-                        currentQuestion
-                      ].answers">
-                    <v-btn
-                        block
-                        outlined
-                        class="mx-2"
-                        variant="primary"
-                    >
+                  <v-col
+                    cols="6"
+                    class="px-5 justify-center py-3"
+                    :key="index"
+                    v-for="(answer, index) in chapterDetail.questions[
+                      currentQuestion
+                    ].answers"
+                  >
+                    <v-btn block outlined class="mx-2" variant="primary">
                       {{ answer.answer }}
                     </v-btn>
                   </v-col>
@@ -82,7 +81,9 @@
           <v-row no-gutters class="mt-4">
             <v-btn text>skip</v-btn>
             <v-spacer />
-            <v-btn color="#1f3da1" dark @click="handleAnswerClick">Check Question</v-btn>
+            <v-btn color="#1f3da1" dark @click="handleAnswerClick"
+              >Check Question</v-btn
+            >
           </v-row>
         </v-card-text>
       </v-card>
@@ -93,6 +94,7 @@
 <script>
 import chapterService from "@/services/chapter.service";
 import progressService from "@/services/progress.service";
+import { mapGetters } from "vuex";
 
 export default {
   name: "QuizPage",
@@ -108,6 +110,9 @@ export default {
       score: 0,
       chapterDetail: {},
     };
+  },
+  computed: {
+    ...mapGetters("auth", ["role"]),
   },
   created() {
     this.init(this.$route.params.chapterId);
@@ -140,14 +145,17 @@ export default {
       this.showScore = false;
     },
     handleUpdateChapterProgress() {
+      if (!this.role?.includes("ROLE_USER")) {
+        return;
+      }
       let req = {
         quizCompleted: true,
         chapterId: this.chapterDetail.id,
         articleCompleted: null,
-        correct: this.score
-      }
+        correct: this.score,
+      };
 
-      progressService.updateChapterProgress(req)
+      progressService.updateChapterProgress(req);
     },
     handleAnswerClick() {
       let nextQuestion = this.currentQuestion + 1;
@@ -156,15 +164,15 @@ export default {
       let answer;
       switch (question.questionType) {
         case "MULTIPLE_CHOICE":
-          answer = question.answers[this.toggledAnswer]
+          answer = question.answers[this.toggledAnswer];
           if (answer.correct) {
             this.score = this.score + 1;
           }
           break;
         case "SHORT_ANSWER":
           // eslint-disable-next-line no-case-declarations
-          let answers = Array.from(question.answers).map(answer => {
-            return answer.answer
+          let answers = Array.from(question.answers).map((answer) => {
+            return answer.answer;
           });
           for (let answer of answers) {
             if (answer === this.formValue.shortAnswerValue.toString()) {
@@ -174,14 +182,13 @@ export default {
           break;
       }
 
-
       this.progressBarValue =
         (nextQuestion / this.chapterDetail.questions.length) * 100;
 
       if (nextQuestion < this.chapterDetail.questions.length) {
         this.currentQuestion = nextQuestion;
       } else {
-        this.handleUpdateChapterProgress()
+        this.handleUpdateChapterProgress();
         this.showScore = true;
       }
       this.toggledAnswer = null;
@@ -191,11 +198,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.v-btn-toggle .v-btn--active::before, .v-btn-toggle .v-btn--active {
+.v-btn-toggle .v-btn--active::before,
+.v-btn-toggle .v-btn--active {
   background-color: #ced4e8;
 }
-
 </style>
 
 

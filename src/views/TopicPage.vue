@@ -96,7 +96,6 @@
 <script>
 import topicServices from "@/services/topic.service";
 import userService from "@/services/user.service";
-import progressService from "@/services/progress.service";
 import TopicCard from "@/components/TopicCard";
 import { mapGetters } from "vuex";
 import CurrentlyLearningTopicCard from "@/components/CurrentlyLearningTopicCard";
@@ -117,12 +116,16 @@ export default {
     loading: true,
   }),
   async created() {
-    await this.getAllTopics();
-    await this.getCurrentUserDetail();
-    // await this.getTopicProgressByUserId();
+    try {
+      await Promise.all([this.getAllTopics(), this.getCurrentUserDetail()]);
+    } catch (error) {
+      // console.log(error);
+    }
+    this.loading = false;
   },
   computed: {
     ...mapGetters("topic", ["topicData"]),
+    ...mapGetters("auth", ["role"]),
   },
   mounted() {
     this.$root.$on("deleteTopicEvent", () => {
@@ -134,15 +137,10 @@ export default {
       return this.$store
         .dispatch("topic/getAllTopics")
         .then(() => Promise.resolve())
-        .catch((error) => Promise.reject(error));
-    },
-    async getTopicProgressByUserId() {
-      progressService.getTopicProgressByUserId()
-          .then((response) => {
-            console.log(response)
-            Promise.resolve();
-          })
-          .catch((error) => Promise.reject(error));
+        .catch((error) => {
+          console.log("getAllTopics", error);
+          Promise.reject(error);
+        });
     },
     getCurrentLearnTopicById(topicId) {
       let topics = Array.from(this.topicData).map((topic) =>
@@ -157,10 +155,12 @@ export default {
       }
     },
     async getCurrentUserDetail() {
+      if (!this.role?.includes("ROLE_USER")) {
+        return Promise.resolve();
+      }
       return userService.getCurrentUserDetail().then(
         (response) => {
           this.getCurrentLearnTopicById(response.data.currentlyLearningTopic);
-          this.loading = false;
           return Promise.resolve();
         },
         (error) => {

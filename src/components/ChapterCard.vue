@@ -3,7 +3,10 @@
     class="chapterCard px-3 py-3"
     @click.stop="goToChapterDetail(chapter.id)"
   >
-    <div class="chapterTitle">{{ index }}. {{ chapter.chapterName }} {{(chapter.chapterCompletion/1) * 100}}%</div>
+    <div class="chapterTitle">
+      {{ index }}. {{ chapter.chapterName }}
+      {{ chapter.chapterCompletion * 100 }}%
+    </div>
 
     <div class="chapterDescription">
       {{ chapter.description }}

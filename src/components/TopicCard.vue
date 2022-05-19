@@ -9,16 +9,16 @@
       {{ topic.topicName }}
     </div>
 
-    <div class="progressBarArea" v-if="this.role[0] === this.user_role">
+    <div class="progressBarArea" v-if="showProgressBar">
       <v-slide-x-transition>
         <v-progress-linear
-            width="1000px"
-            color="#1f3da1"
-            v-model="this.progressValue"
-            height="25"
-            dark
-            class="mt-6 rounded-pill"
-            background-color="none"
+          width="1000px"
+          color="#1f3da1"
+          v-model="this.progressValue"
+          height="25"
+          dark
+          class="mt-6 rounded-pill"
+          background-color="none"
         >
           <template v-slot:default="{ value }">
             <strong>{{ Math.ceil(value) }}%</strong>
@@ -40,42 +40,40 @@
         </v-btn>
       </transition>
     </div>
-
-
   </div>
 </template>
 
 <script>
 import topicServices from "@/services/topic.service";
-import {mapGetters} from "vuex";
+import { mapGetters } from "vuex";
 export default {
   name: "TopicCard",
   props: ["topic"],
-  created() {
-    // this.setProgressValue();
-  },
   data: () => ({
     hovered: false,
-    current_user_role: this,
-    user_role : "ROLE_USER",
-    progressValue : 0,
+    user_role: "ROLE_USER",
+    progressValue: 0,
+    showProgressBar: false,
   }),
+  created() {
+    this.showProgressBar = this.role?.includes(this.user_role);
+  },
   computed: {
     ...mapGetters("auth", ["role"]),
   },
   watch: {
     hovered(value) {
       if (value === true) {
-        this.progressValue = this.topic.topicCompletion !== 0 ? (this.topic.topicCompletion / 1) * 100 : 0
+        this.progressValue =
+          this.topic.topicCompletion !== 0
+            ? this.topic.topicCompletion * 100
+            : 0;
       } else {
-        this.progressValue = 0
+        this.progressValue = 0;
       }
-    }
+    },
   },
   methods: {
-    setProgressValue() {
-      this.progressValue = this.topic.topicCompletion !== 0 ? (this.topic.topicCompletion / 1) * 100 : 0
-    },
     handleDeleteTopicSubmit(id) {
       topicServices.deleteTopic(id).then(
         (response) => {

@@ -1,17 +1,17 @@
 import authService from "@/services/auth.service";
 
 const user = JSON.parse(localStorage.getItem("user"));
-const initialState = user ? { user } : null;
+const initialState = user ? { user } : { user: null };
 
 export const auth = {
   namespaced: true,
   state: initialState,
   getters: {
     loggedIn(state) {
-      return state.user ? true : false;
+      return state.user !== null;
     },
     role(state) {
-      return state.user.roles
+      return state.user?.role;
     }
   },
   actions: {
@@ -30,9 +30,6 @@ export const auth = {
     logout({ commit }) {
       authService.logout();
       commit("logout");
-    },
-    googleLogin({ commit }, user) {
-      commit("loginSuccess", user);
     },
     refreshToken({ commit }) {
       return authService.refreshToken().then(

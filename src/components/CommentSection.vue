@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mt-4">
+  <div class="mt-4">
     <h1>Comments</h1>
     <v-row no-gutters>
       <v-textarea
@@ -11,55 +11,67 @@
     </v-row>
     <v-row no-gutters>
       <v-spacer />
-      <v-btn plain :disabled="commentContent ? false : true">cancel</v-btn>
+      <v-btn
+        plain
+        :disabled="commentContent ? false : true"
+        @click="commentContent = ''"
+        >cancel</v-btn
+      >
       <v-btn
         color="#1f3da1"
         :disabled="commentContent ? false : true"
         class="white--text"
+        @click="handleComment"
         >comment</v-btn
       >
     </v-row>
     <v-divider class="my-4" />
     <div>
-      <v-row no-gutters v-for="comment in mainComments" :key="comment.id">
-        <div>{{ comment.userId }}</div>
-        <div>
-          <p>{{ comment.content }}</p>
+      <div v-for="comment in comments.mainComments" :key="comment.id">
+        <div class="mb-4">
+          <comment-card :comment="comment" />
+          <reply-section :replies="comments.commentRepliesMap[comment.id]" />
         </div>
-      </v-row>
+      </div>
     </div>
-  </v-container>
+  </div>
 </template>
 
 <script>
+import CommentCard from "./CommentCard.vue";
+import ReplySection from "./ReplySection.vue";
+import commentService from "@/services/comment.service";
+import { mapGetters } from "vuex";
+
 export default {
   name: "CommentSection",
+  components: {
+    CommentCard,
+    ReplySection,
+  },
+  props: ["chapterId"],
   data() {
     return {
       commentContent: "",
-      mainComments: [
-        {
-          id: "1",
-          userId: "user1",
-          content: "comment1 comment1",
-        },
-        {
-          id: "2",
-          userId: "user1",
-          content: "comment1 comment1",
-        },
-        {
-          id: "3",
-          userId: "user2",
-          content: "comment2 comment2",
-        },
-        {
-          id: "4",
-          userId: "user3",
-          content: "comment3 comment3",
-        },
-      ],
     };
+  },
+  computed: {
+    ...mapGetters("comment", ["comments"]),
+  },
+  methods: {
+    async handleComment() {
+      let req = {
+        chapterId: this.chapterId,
+        content: this.commentContent,
+      };
+      try {
+        await commentService.createComment(req);
+        await this.$store.dispatch("comment/getComments", this.chapterId);
+        this.commentContent = "";
+      } catch (error) {
+        console.log("createComment error", error);
+      }
+    },
   },
 };
 </script>

@@ -9,8 +9,12 @@
       <div class="content" v-html="chapterDetail.htmlContent"></div>
 
       <div v-if="chapterDetail.enableQuiz">
-        <v-btn color="#1f3da1" dark @click="goToQuizPage(chapterDetail.id)">Access Quiz</v-btn>
+        <v-btn color="#1f3da1" dark @click="goToQuizPage(chapterDetail.id)"
+          >Access Quiz</v-btn
+        >
       </div>
+
+      <comment-section :chapterId="chapterDetail.id" />
     </div>
   </v-container>
 </template>
@@ -18,68 +22,107 @@
 <script>
 import chapterService from "@/services/chapter.service";
 import progressService from "@/services/progress.service";
+import CommentSection from "@/components/CommentSection.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "ChapterDetailPage",
+  components: {
+    CommentSection,
+  },
   data() {
     return {
       chapterDetail: {},
-      loading: true
+      loading: true,
     };
   },
-  mounted() {
-    setTimeout(this.endScroll, 250)
+  computed: {
+    ...mapGetters("auth", ["role"]),
   },
-  created() {
-    this.getChapterDetail(this.$route.params.chapterId);
+  mounted() {
+    setTimeout(this.endScroll, 500);
+  },
+  async created() {
+    try {
+      await Promise.all([
+        this.getChapterDetail(this.$route.params.chapterId),
+        this.getComments(this.$route.params.chapterId),
+      ]);
+    } catch (error) {
+      // console.log(error);
+    }
+    this.loading = false;
   },
   methods: {
-    getChapterDetail(chapterId) {
+    async getChapterDetail(chapterId) {
       return chapterService
         .getChapterById(chapterId)
-          .then((response) => {
-            (this.chapterDetail = Object.assign({}, response));
-            this.loading = false;
-            return Promise.resolve()
-          })
-          .catch((error) => {
-            console.log(error)
-            return Promise.reject()
-          });
+        .then((response) => {
+          this.chapterDetail = Object.assign({}, response);
+          return Promise.resolve(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          return Promise.reject(error);
+        });
     },
     goToQuizPage(id) {
       this.$router.push("/chapters/" + id + "/quiz");
     },
     handleUpdateChapterProgress() {
+      if (!this.role?.includes("ROLE_USER")) {
+        return;
+      }
       let req = {
         quizCompleted: null,
         chapterId: this.chapterDetail.id,
         articleCompleted: true,
-        score: null
-      }
-
-      progressService.updateChapterProgress(req)
+        score: null,
+      };
+      console.log(this.chapterDetail);
+      console.log(req);
+      progressService.updateChapterProgress(req);
     },
     endScroll() {
       //full page vs current height
-      let unscrollablePage = (document.documentElement.scrollHeight === Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight);
+      let unscrollablePage =
+        document.documentElement.scrollHeight ===
+        Math.max(
+          window.pageYOffset,
+          document.documentElement.scrollTop,
+          document.body.scrollTop
+        ) +
+          window.innerHeight;
       if (unscrollablePage) {
-        this.handleUpdateChapterProgress()
+        this.handleUpdateChapterProgress();
       } else {
-        window.addEventListener('scroll', this.checkEndOfScroll);
+        window.addEventListener("scroll", this.checkEndOfScroll);
       }
     },
     checkEndOfScroll() {
       let bottomOfWindow =
-          (Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight)
+        Math.max(
+          window.pageYOffset,
+          document.documentElement.scrollTop,
+          document.body.scrollTop
+        ) +
+          window.innerHeight ===
+        document.documentElement.offsetHeight;
       if (bottomOfWindow) {
-        this.handleUpdateChapterProgress()
+        this.handleUpdateChapterProgress();
       }
-    }
+    },
+    async getComments(id) {
+      try {
+        await this.$store.dispatch("comment/getComments", id);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   beforeDestroy() {
-    window.removeEventListener('scroll', this.checkEndOfScroll);
-  }
+    window.removeEventListener("scroll", this.checkEndOfScroll);
+  },
 };
 </script>
 

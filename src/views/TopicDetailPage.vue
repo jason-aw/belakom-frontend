@@ -126,9 +126,11 @@ export default {
   async created() {
     await this.getTopicDetail(this.$route.params.topicName);
     this.updateCurrentlyLearningTopic();
+    this.loading = false;
   },
   computed: {
     ...mapGetters("topic", ["topicDetail"]),
+    ...mapGetters("auth", ["role"]),
     chapters: {
       get() {
         return this.$store.state.chapter.chapters;
@@ -146,9 +148,6 @@ export default {
         .then(
           () => {
             this.getAllChapters();
-            this.loading = false;
-            console.log("ini response")
-            console.log(this.chapters)
             return Promise.resolve();
           },
           (error) => {
@@ -158,7 +157,7 @@ export default {
         );
     },
     getAllChapters() {
-      this.$store.dispatch("chapter/getAllChaptersAndCompletion", {
+      this.$store.dispatch("chapter/getAllChapters", {
         topicId: this.topicDetail.id,
       });
     },
@@ -189,6 +188,9 @@ export default {
         );
     },
     updateCurrentlyLearningTopic() {
+      if (!this.role?.includes("ROLE_USER")) {
+        return;
+      }
       let req = {
         currentlyLearningTopic: this.topicDetail.id,
       };

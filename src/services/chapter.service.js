@@ -2,24 +2,14 @@ import axios from "axios";
 import { ApiPath } from "./api-path";
 import authHeader from "./auth-header";
 
-function getAllChapters(id) {
+function getAllChapters(topicId) {
   return axios
     .get(ApiPath.GET_ALL_CHAPTERS_URL, {
       headers: authHeader("accessToken"),
-      params: { id: id },
+      params: { topicId: topicId },
     })
     .then((response) => Promise.resolve(response))
     .catch((error) => Promise.reject(error.response.data));
-}
-
-function getAllChaptersByTopicIdUserId(topicId) {
-  return axios
-      .get(ApiPath.GET_ALL_CHAPTERS_AND_USER_ID_URL, {
-        headers: authHeader("accessToken"),
-        params: { topicId: topicId },
-      })
-      .then((response) => Promise.resolve(response))
-      .catch((error) => Promise.reject(error.response.data));
 }
 
 function createChapter(chapter) {
@@ -51,7 +41,7 @@ function getChapterById(id) {
   let path = ApiPath.GET_CHAPTER_BY_ID_URL + id;
   return axios
     .get(path)
-    .then((response) => Promise.resolve(response.data))
+    .then((response) => Promise.resolve(response.data.value))
     .catch((error) => Promise.reject(error.response.data));
 }
 
@@ -70,5 +60,4 @@ export default {
   deleteChapter,
   getChapterById,
   updateChapter,
-  getAllChaptersByTopicIdUserId
 };

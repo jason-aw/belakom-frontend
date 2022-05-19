@@ -18,7 +18,7 @@ export const topic = {
     getAllTopics({ commit }) {
       return topicService.getAllTopics().then(
         (response) => {
-          commit("getAllTopicSuccess", response.data.topicData);
+          commit("getAllTopicSuccess", response.data.value);
           return Promise.resolve(response);
         },
         (error) => {
@@ -30,11 +30,11 @@ export const topic = {
     getTopicByName({ commit }, payLoad) {
       return topicService.getTopicByName(payLoad.topicName).then(
         (response) => {
-          commit("getTopicDetailSuccess", response.data);
+          commit("getTopicDetailSuccess", response.data.value);
           return Promise.resolve(response);
         },
         (error) => {
-          commit("getTopicDetailError");
+          commit("clearTopicDetail");
           return Promise.resolve(error);
         }
       );
@@ -49,9 +49,6 @@ export const topic = {
     },
     getTopicDetailSuccess(state, topic) {
       state.topicDetail = topic;
-    },
-    getTopicDetailError(state) {
-      state.topicDetail = {};
     },
     clearTopicDetail(state) {
       state.topicDetail = {};

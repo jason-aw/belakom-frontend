@@ -14,7 +14,7 @@ function uploadFile(file) {
     })
     .then((response) => {
       if (response.data.success) {
-        return Promise.resolve(response.data);
+        return Promise.resolve(response.data.value);
       }
     })
     .catch((error) => Promise.reject(error));

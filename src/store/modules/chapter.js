@@ -25,25 +25,13 @@ export const chapter = {
     getAllChapters({ commit }, payLoad) {
       return chapterService.getAllChapters(payLoad.topicId).then(
         (response) => {
-          commit("getAllChaptersSuccess", response.data);
+          commit("getAllChaptersSuccess", response.data.value);
           return Promise.resolve(response);
         },
         (error) => {
           commit("clearAllChapters");
           return Promise.reject(error);
         }
-      );
-    },
-    getAllChaptersAndCompletion({ commit }, payLoad) {
-      return chapterService.getAllChaptersByTopicIdUserId(payLoad.topicId).then(
-          (response) => {
-            commit("getAllChaptersSuccess", response.data);
-            return Promise.resolve(response);
-          },
-          (error) => {
-            commit("clearAllChapters");
-            return Promise.reject(error);
-          }
       );
     },
     getChapterDetailById({ commit }, chapterId) {
@@ -56,7 +44,7 @@ export const chapter = {
         })
         .catch((error) => {
           commit("clearChapterDetail");
-          if (!error){
+          if (!error) {
             console.log("Network Error")
             return Promise.reject("Network Error");
           }

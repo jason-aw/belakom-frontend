@@ -31,13 +31,13 @@
 
       <FormulateInput type="submit" label="Login" />
 
-      <p>
+      <v-responsive max-width="60%" class="mb-4">
         Atau kalau kamu punya e-mail google, kamu bisa log in dengan klik button
         dibawah ini
-      </p>
+      </v-responsive>
 
       <button type="button" class="googlebutton" @click="handleGoogleLogin">
-        <img src="../assets/google.png" />
+        <img src="@/assets/google.png" />
         <span> Google </span>
       </button>
     </FormulateForm>
@@ -110,8 +110,7 @@ export default {
 .googlebutton {
   border: 2px solid #1f3da1;
   width: 36%;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
   border-radius: 15px;
   position: relative;
   font-weight: bold;

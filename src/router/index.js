@@ -13,7 +13,6 @@ import EditChapterDetailPage from "@/views/EditChapterDetailPage";
 import ChapterDetailPage from "@/views/ChapterDetailPage";
 import ChapterPreviewPage from "@/views/ChapterPreviewPage";
 import QuizPage from "@/views/QuizPage";
-import CommentSection from "@/components/CommentSection";
 
 Vue.use(VueRouter);
 
@@ -76,10 +75,6 @@ const routes = [
     path: "/chapter-preview",
     component: ChapterPreviewPage,
   },
-  {
-    path: "/comment",
-    component: CommentSection,
-  }
 ];
 
 const router = new VueRouter({
@@ -91,6 +86,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   let isLoggedIn = store.getters["auth/loggedIn"];
   if (to.matched.some((record) => record.meta.requiresAuth)) {
+    console.log("to", to);
+    console.log(isLoggedIn);
     if (isLoggedIn) {
       next();
     } else {
@@ -98,7 +95,7 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some((record) => record.meta.guest)) {
     if (isLoggedIn) {
-      next("/home");
+      next("/");
     } else {
       next();
     }
