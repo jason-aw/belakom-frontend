@@ -1,30 +1,35 @@
 <template>
   <div class="mt-4">
-    <h1>Comments</h1>
-    <v-row no-gutters>
-      <v-textarea
-        placeholder="Add a comment..."
-        rows="2"
-        auto-grow
-        v-model="commentContent"
-      />
-    </v-row>
-    <v-row no-gutters>
-      <v-spacer />
-      <v-btn
-        plain
-        :disabled="commentContent ? false : true"
-        @click="commentContent = ''"
-        >cancel</v-btn
-      >
-      <v-btn
-        color="#1f3da1"
-        :disabled="commentContent ? false : true"
-        class="white--text"
-        @click="handleCreateComment"
-        >comment</v-btn
-      >
-    </v-row>
+    <h1>Komentar</h1>
+    <div v-if="loggedIn">
+      <v-row no-gutters>
+        <v-textarea
+          placeholder="Add a comment..."
+          rows="2"
+          auto-grow
+          v-model="commentContent"
+        />
+      </v-row>
+      <v-row no-gutters>
+        <v-spacer />
+        <v-btn
+          plain
+          :disabled="commentContent ? false : true"
+          @click="commentContent = ''"
+          >cancel</v-btn
+        >
+        <v-btn
+          color="#1f3da1"
+          :disabled="commentContent ? false : true"
+          class="white--text"
+          @click="handleComment"
+          >comment</v-btn
+        >
+      </v-row>
+    </div>
+    <div v-else class="d-flex justify-center font-italic">
+      Masuk untuk meninggalkan komentar!
+    </div>
     <v-divider class="my-4" />
     <div>
       <div v-for="comment in comments.mainComments" :key="comment.id">
@@ -57,6 +62,7 @@ export default {
   },
   computed: {
     ...mapGetters("comment", ["comments"]),
+    ...mapGetters("auth", ["loggedIn"]),
     userDetailMap() {
       return new Map(Object.entries(this.comments.usersMap));
     }
@@ -76,7 +82,6 @@ export default {
       }
     },
   },
-
 };
 </script>
 

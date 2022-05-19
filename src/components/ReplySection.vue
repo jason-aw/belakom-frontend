@@ -19,11 +19,13 @@
       <v-icon dense v-if="!replySection">mdi-menu-down</v-icon
       ><v-icon dense v-if="replySection">mdi-menu-up</v-icon></v-btn
     >
-    <div v-if="replySection && replies">
-      <div v-for="reply in replies" :key="reply.id">
-        <comment-card :comment="reply" :user-detail="userDetailMap"/>
+    <v-slide-y-transition hide-on-leave>
+      <div v-if="replySection && replies">
+        <div v-for="reply in replies" :key="reply.id">
+          <comment-card :comment="reply" :user-detail="userDetailMap"/>
+        </div>
       </div>
-    </div>
+    </v-slide-y-transition>
   </div>
 </template>
 
