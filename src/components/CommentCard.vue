@@ -14,9 +14,12 @@
           {{ comment.content }}
         </div>
       </v-row>
-      <v-btn class="menu-button" icon small v-if="hovered"
-        ><v-icon size="20">mdi-dots-vertical</v-icon></v-btn
-      >
+      <v-menu offset-y>
+        <v-btn class="menu-button" icon small v-if="this.showEdit"
+          ><v-icon size="20">mdi-dots-vertical</v-icon></v-btn
+        >
+      </v-menu>
+
     </div>
     <v-row no-gutters>
       <v-btn
@@ -58,6 +61,7 @@
 
 <script>
 import commentService from "@/services/comment.service";
+import {mapGetters} from "vuex";
 
 export default {
   name: "CommentCard",
@@ -69,6 +73,18 @@ export default {
       hovered: false,
       replyHovered: false,
     };
+  },
+  computed: {
+    ...mapGetters("auth", ["userId"]),
+    ...mapGetters("auth", ["role"]),
+    showEdit() {
+      if (this.role?.includes("ROLE_ADMIN")) {
+        return true;
+      } else if (this.role?.includes("ROLE_USER")) {
+        return this.hovered && this.userId === this.comment.userId;
+      }
+      return false;
+    }
   },
   methods: {
     async handleCreateComment() {

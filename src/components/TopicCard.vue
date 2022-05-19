@@ -5,23 +5,22 @@
     @mouseleave="hovered = false"
     @click.stop="goToTopicDetail(topic.topicName)"
   >
-    <div class="topicCardText">
-      {{ topic.topicName }}
+    <div class="topicCardTextArea pt-8" >
+      <span class="topicCardText"> {{topic.topicName}}</span>
     </div>
 
     <div class="progressBarArea" v-if="showProgressBar">
       <v-slide-x-transition>
         <v-progress-linear
-          width="1000px"
           color="#1f3da1"
           v-model="this.progressValue"
-          height="25"
+          height="15"
           dark
+          striped
           class="mt-6 rounded-pill"
-          background-color="none"
         >
           <template v-slot:default="{ value }">
-            <strong>{{ Math.ceil(value) }}%</strong>
+            <span class="progressText">{{ Math.ceil(value) }}%</span>
           </template>
         </v-progress-linear>
       </v-slide-x-transition>
@@ -57,21 +56,10 @@ export default {
   }),
   created() {
     this.showProgressBar = this.role?.includes(this.user_role);
+    this.progressValue = this.topic.topicCompletion !== 0 ? this.topic.topicCompletion * 100 : 0;
   },
   computed: {
     ...mapGetters("auth", ["role"]),
-  },
-  watch: {
-    hovered(value) {
-      if (value === true) {
-        this.progressValue =
-          this.topic.topicCompletion !== 0
-            ? this.topic.topicCompletion * 100
-            : 0;
-      } else {
-        this.progressValue = 0;
-      }
-    },
   },
   methods: {
     handleDeleteTopicSubmit(id) {
@@ -114,9 +102,21 @@ export default {
   outline: solid 1px #1f3da1;
 }
 
-.topicCardText {
+.topicCardTextArea {
+  position: relative;
+  display: flex;
+  height: 60%;
   font-weight: 500;
   font-size: 1.5em;
+  padding: 0;
+}
+
+.topicCardText {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 1em;
   padding: 0;
 }
 
@@ -139,9 +139,14 @@ export default {
 
 .progressBarArea {
   width: 50%;
+  height: 30%;
   position: relative;
   display: flex;
-  justify-content: flex-end;
-  justify-self: flex-end;
+  align-items: center;
+  justify-content: center;
+}
+.progressText {
+  font-size: 0.75em;
+  font-weight: 700;
 }
 </style>

@@ -4,7 +4,7 @@
     <div v-if="loggedIn">
       <v-row no-gutters>
         <v-textarea
-          placeholder="Add a comment..."
+          placeholder="Tambahkan komentar..."
           rows="2"
           auto-grow
           v-model="commentContent"
@@ -14,13 +14,13 @@
         <v-spacer />
         <v-btn
           plain
-          :disabled="commentContent ? false : true"
+          :disabled="!commentContent"
           @click="commentContent = ''"
           >cancel</v-btn
         >
         <v-btn
           color="#1f3da1"
-          :disabled="commentContent ? false : true"
+          :disabled="!commentContent"
           class="white--text"
           @click="handleComment"
           >comment</v-btn

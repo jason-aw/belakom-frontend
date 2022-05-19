@@ -11,7 +11,10 @@ export const auth = {
       return state.user !== null;
     },
     role(state) {
-      return state.user?.role;
+      return state.user?.roles;
+    },
+    userId(state) {
+      return state.user?.userId;
     }
   },
   actions: {
