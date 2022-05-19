@@ -21,7 +21,7 @@
         color="#1f3da1"
         :disabled="commentContent ? false : true"
         class="white--text"
-        @click="handleComment"
+        @click="handleCreateComment"
         >comment</v-btn
       >
     </v-row>
@@ -29,7 +29,7 @@
     <div>
       <div v-for="comment in comments.mainComments" :key="comment.id">
         <div class="mb-4">
-          <comment-card :comment="comment" />
+          <comment-card :comment="comment" :user-detail="userDetailMap"/>
           <reply-section :replies="comments.commentRepliesMap[comment.id]" />
         </div>
       </div>
@@ -57,9 +57,12 @@ export default {
   },
   computed: {
     ...mapGetters("comment", ["comments"]),
+    userDetailMap() {
+      return new Map(Object.entries(this.comments.usersMap));
+    }
   },
   methods: {
-    async handleComment() {
+    async handleCreateComment() {
       let req = {
         chapterId: this.chapterId,
         content: this.commentContent,
@@ -73,6 +76,7 @@ export default {
       }
     },
   },
+
 };
 </script>
 

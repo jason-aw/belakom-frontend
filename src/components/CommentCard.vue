@@ -8,7 +8,7 @@
     >
       <v-row no-gutters class="flex-column">
         <div class="font-weight-bold">
-          {{ comment.userId }}
+          {{this.userDetail.get(comment.userId).name}}
         </div>
         <div>
           {{ comment.content }}
@@ -46,7 +46,7 @@
             color="#1f3da1"
             :disabled="commentContent ? false : true"
             class="white--text ml-2"
-            @click="handleComment"
+            @click="handleCreateComment"
             small
             >Reply</v-btn
           >
@@ -61,7 +61,7 @@ import commentService from "@/services/comment.service";
 
 export default {
   name: "CommentCard",
-  props: ["comment"],
+  props: ["comment", "userDetail"],
   data() {
     return {
       showReplySection: false,
@@ -71,7 +71,7 @@ export default {
     };
   },
   methods: {
-    async handleComment() {
+    async handleCreateComment() {
       let req = {
         chapterId: this.comment.chapterId,
         content: this.commentContent,
