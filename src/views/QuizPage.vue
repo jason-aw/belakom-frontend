@@ -87,6 +87,28 @@
           </v-row>
         </v-card-text>
       </v-card>
+      <v-footer
+        padless
+        fixed
+        height="100px"
+        class="px-xl-10"
+        v-bind="this.localAttrs"
+      >
+        <v-row justify="center" no-gutters class="px-10">
+          <v-btn v-if="!showAnswer" text>skip</v-btn>
+          <v-spacer />
+          <v-btn
+            v-if="!showAnswer"
+            color="#1f3da1"
+            dark
+            @click="handleAnswerClick"
+            >Check Question</v-btn
+          >
+          <v-btn v-if="showAnswer" color="#1f3da1" dark @click="handleContinue"
+            >Continue</v-btn
+          >
+        </v-row>
+      </v-footer>
     </div>
   </v-container>
 </template>
@@ -109,13 +131,28 @@ export default {
       questionAnswers: null,
       score: 0,
       chapterDetail: {},
+      showAnswer: false,
+      correct: null,
     };
-  },
-  computed: {
-    ...mapGetters("auth", ["role"]),
   },
   created() {
     this.init(this.$route.params.chapterId);
+  },
+  computed: {
+    ...mapGetters("auth", ["role"]),
+    localAttrs() {
+      const attrs = {};
+      console.log(this.correct);
+      if (this.correct === null) {
+        attrs.color = "grey";
+      } else if (this.correct) {
+        attrs.color = "green";
+      } else {
+        attrs.color = "red";
+      }
+
+      return attrs;
+    },
   },
   methods: {
     init(chapterId) {
@@ -158,7 +195,8 @@ export default {
       progressService.updateChapterProgress(req);
     },
     handleAnswerClick() {
-      let nextQuestion = this.currentQuestion + 1;
+      this.showAnswer = true;
+
       let question = this.chapterDetail.questions[this.currentQuestion];
 
       let answer;
@@ -167,6 +205,9 @@ export default {
           answer = question.answers[this.toggledAnswer];
           if (answer.correct) {
             this.score = this.score + 1;
+            this.correct = true;
+          } else {
+            this.correct = false;
           }
           break;
         case "SHORT_ANSWER":
@@ -175,13 +216,19 @@ export default {
             return answer.answer;
           });
           for (let answer of answers) {
+            this.correct = false;
             if (answer === this.formValue.shortAnswerValue.toString()) {
               this.score = this.score + 1;
+              this.correct = true;
             }
           }
           break;
       }
-
+    },
+    handleContinue() {
+      this.showAnswer = false;
+      this.correct = null;
+      let nextQuestion = this.currentQuestion + 1;
       this.progressBarValue =
         (nextQuestion / this.chapterDetail.questions.length) * 100;
 
