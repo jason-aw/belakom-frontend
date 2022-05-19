@@ -16,6 +16,7 @@ export default {
   data() {
     return {
       navigation: null,
+      hideNavBar: ["Login", "Register", "ResetPassword", "ForgotPassword"],
     };
   },
   components: {
@@ -29,7 +30,7 @@ export default {
   },
   methods: {
     checkRoute() {
-      if (this.$route.name === "Login" || this.$route.name === "Register") {
+      if (this.hideNavBar.includes(this.$route.name)) {
         this.navigation = false;
       } else {
         this.navigation = true;
@@ -46,4 +47,5 @@ export default {
 
 <style lang="scss">
 @import "@/styles/variables.scss";
+@import "@/styles/LoginRegister.css";
 </style>

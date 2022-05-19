@@ -7,6 +7,8 @@ const LOGIN_URL = AUTH_PATH + "/login";
 const REGISTER_URL = AUTH_PATH + "/register";
 const LOGOUT_URL = AUTH_PATH + "/logout";
 const REFRESH_TOKEN_URL = AUTH_PATH + "/refreshToken";
+const FORGOT_PASSWORD_URL = AUTH_PATH + "/forgotPassword";
+const RESET_PASSWORD_URL = AUTH_PATH + "/resetPassword";
 
 const GOOGLE_AUTH_URL =
   API_BASE_URL +
@@ -58,6 +60,8 @@ export const ApiPath = {
   LOGOUT_URL,
   GOOGLE_AUTH_URL,
   REFRESH_TOKEN_URL,
+  FORGOT_PASSWORD_URL,
+  RESET_PASSWORD_URL,
   GET_ALL_TOPIC_URL,
   DELETE_TOPIC_URL,
   CREATE_TOPIC_URL,

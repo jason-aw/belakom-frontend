@@ -81,8 +81,6 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/LoginRegister.css";
-
 .container {
   text-align: center;
 }

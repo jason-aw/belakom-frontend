@@ -86,8 +86,6 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/LoginRegister.css";
-
 .titleform h1 {
   margin-top: 10%;
   font-weight: 1000;

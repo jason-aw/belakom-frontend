@@ -53,9 +53,23 @@ function refreshToken() {
     });
 }
 
+function forgotPassword(req) {
+  return axios.post(ApiPath.FORGOT_PASSWORD_URL, req)
+    .then(response => Promise.resolve(response))
+    .catch(error => Promise.reject(error));
+}
+
+function resetPassword(req) {
+  return axios.post(ApiPath.RESET_PASSWORD_URL, req)
+    .then(response => Promise.resolve(response))
+    .catch(error => Promise.reject(error));
+}
+
 export default {
   login,
   logout,
   register,
   refreshToken,
+  forgotPassword,
+  resetPassword,
 };

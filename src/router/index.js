@@ -13,6 +13,8 @@ import EditChapterDetailPage from "@/views/EditChapterDetailPage";
 import ChapterDetailPage from "@/views/ChapterDetailPage";
 import ChapterPreviewPage from "@/views/ChapterPreviewPage";
 import QuizPage from "@/views/QuizPage";
+import ForgotPasswordPage from "@/views/ForgotPasswordPage";
+import ResetPasswordPage from "@/views/ResetPasswordPage";
 
 Vue.use(VueRouter);
 
@@ -75,6 +77,16 @@ const routes = [
     path: "/chapter-preview",
     component: ChapterPreviewPage,
   },
+  {
+    name: "ForgotPassword",
+    path: "/forgot-password",
+    component: ForgotPasswordPage,
+  },
+  {
+    name: "ResetPassword",
+    path: "/reset-password",
+    component: ResetPasswordPage,
+  }
 ];
 
 const router = new VueRouter({
