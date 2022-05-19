@@ -7,6 +7,19 @@
 
       <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
         <FormulateInput
+            type="text"
+            name="name"
+            label="Nama"
+            placeholder="Nama"
+            validation="^required|min:5, length"
+            error-behavior="submit"
+            :validation-messages="{
+            required: 'E-mail harus ada',
+            min: 'Nama minimum 5 karakter'
+          }"
+        />
+
+        <FormulateInput
           type="text"
           name="email"
           label="E-mail"

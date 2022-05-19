@@ -1,6 +1,6 @@
 <template>
   <div class="mt-4">
-    <h1>Comments</h1>
+    <h1>Komentar</h1>
     <div v-if="loggedIn">
       <v-row no-gutters>
         <v-textarea
@@ -28,13 +28,13 @@
       </v-row>
     </div>
     <div v-else class="d-flex justify-center font-italic">
-      Login to leave a comment!
+      Masuk untuk meninggalkan komentar!
     </div>
     <v-divider class="my-4" />
     <div>
       <div v-for="comment in comments.mainComments" :key="comment.id">
         <div class="mb-4">
-          <comment-card :comment="comment" />
+          <comment-card :comment="comment" :user-detail="userDetailMap"/>
           <reply-section :replies="comments.commentRepliesMap[comment.id]" />
         </div>
       </div>
@@ -63,9 +63,12 @@ export default {
   computed: {
     ...mapGetters("comment", ["comments"]),
     ...mapGetters("auth", ["loggedIn"]),
+    userDetailMap() {
+      return new Map(Object.entries(this.comments.usersMap));
+    }
   },
   methods: {
-    async handleComment() {
+    async handleCreateComment() {
       let req = {
         chapterId: this.chapterId,
         content: this.commentContent,

@@ -32,6 +32,7 @@ function logout() {
 
 function register(user) {
   let req = {
+    name: user.name,
     email: user.email,
     password: user.password,
   };
