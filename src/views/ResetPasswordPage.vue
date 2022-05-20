@@ -48,6 +48,11 @@ export default {
       formValue: {},
     };
   },
+  created() {
+    if (!this.$route.query.token) {
+      this.$router.push("/login");
+    }
+  },
   methods: {
     handleSubmit() {
       let req = {
