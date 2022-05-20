@@ -11,7 +11,7 @@
         :value="progressBarValue"
         height="10px"
         class="mt-6 rounded-pill"
-        >defeat is tragic</v-progress-linear
+        ></v-progress-linear
       >
 
       <v-row v-if="showScore" justify="center" no-gutters>
@@ -20,13 +20,12 @@
           <v-btn @click="restartQuiz"> Restart Quiz </v-btn>
         </v-card>
       </v-row>
-      <v-card v-else class="mt-6 mx-auto" width="60%">
-        <v-card-text class="black--text">
+      <v-card v-else class="mt-6 mx-auto"  width="60%">
+        <v-card-text class="black--text" :class="this.getClass">
           <v-row class="text-h5" no-gutters>
             {{ chapterDetail.questions[currentQuestion].questionPrompt }}
           </v-row>
           <v-divider class="my-4" />
-          <div>
             <v-row
               no-gutters
               v-if="
@@ -77,25 +76,37 @@
                 />
               </FormulateForm>
             </v-row>
-          </div>
-          <v-row no-gutters class="mt-4">
-            <v-btn text>skip</v-btn>
-            <v-spacer />
-            <v-btn color="#1f3da1" dark @click="handleAnswerClick"
-              >Check Question</v-btn
-            >
-          </v-row>
+<!--          <v-row no-gutters class="mt-4">-->
+<!--            <v-btn text>skip</v-btn>-->
+<!--            <v-spacer />-->
+<!--            <v-btn color="#1f3da1" dark @click="handleAnswerClick"-->
+<!--              >Check Question</v-btn-->
+<!--            >-->
+<!--          </v-row>-->
         </v-card-text>
       </v-card>
       <v-footer
         padless
         fixed
-        height="100px"
+        height="180px"
         class="px-xl-10"
-        v-bind="this.localAttrs"
+        v-bind="this.footerAttrs"
       >
         <v-row justify="center" no-gutters class="px-10">
+          <v-spacer />
           <v-btn v-if="!showAnswer" text>skip</v-btn>
+          <div v-if="correct === null">
+
+          </div>
+          <div v-else-if="correct">
+            <h3>BENAR!</h3>
+          </div>
+          <div v-else>
+            <v-card>
+              <v-card-title> SALAH </v-card-title>
+              <v-card-text> Jawaban seharusnya </v-card-text>
+            </v-card>
+          </div>
           <v-spacer />
           <v-btn
             v-if="!showAnswer"
@@ -107,6 +118,7 @@
           <v-btn v-if="showAnswer" color="#1f3da1" dark @click="handleContinue"
             >Continue</v-btn
           >
+          <v-spacer />
         </v-row>
       </v-footer>
     </div>
@@ -140,19 +152,31 @@ export default {
   },
   computed: {
     ...mapGetters("auth", ["role"]),
-    localAttrs() {
+    footerAttrs() {
       const attrs = {};
       console.log(this.correct);
       if (this.correct === null) {
         attrs.color = "grey";
       } else if (this.correct) {
-        attrs.color = "green";
+        attrs.color = "#B2CF9C";
       } else {
-        attrs.color = "red";
+        attrs.color = "#ffb3b3";
       }
-
+      console.log(attrs)
       return attrs;
     },
+    getClass() {
+      console.log("dari card" + this.correct)
+
+      if (this.correct === null) {
+        return "quizNull"
+      } else if (this.correct) {
+        return "quizCorrect"
+      } else {
+        return "quizFalse"
+      }
+
+    }
   },
   methods: {
     init(chapterId) {
@@ -249,6 +273,21 @@ export default {
 .v-btn-toggle .v-btn--active {
   background-color: #ced4e8;
 }
+
+.quizNull {
+
+}
+
+.quizCorrect {
+  border: 2px solid #59CE02;
+  box-shadow: 0 0 8px #59CE02;
+}
+
+.quizFalse {
+  border: 2px solid #F51414;
+  box-shadow: 0 0 8px #F51414;
+}
+
 </style>
 
 
