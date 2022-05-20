@@ -9,7 +9,7 @@ function getCommentsByChapterId(chapterId) {
 }
 
 function deleteComment(id) {
-  return axios.get(ApiPath.COMMENT_PATH_URL + id, { headers: authHeader("accessToken") })
+  return axios.delete(ApiPath.COMMENT_PATH_URL + id, { headers: authHeader("accessToken") })
     .then(response => Promise.resolve(response))
     .catch(error => Promise.reject(error));;
 }

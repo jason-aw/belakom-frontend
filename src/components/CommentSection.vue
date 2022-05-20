@@ -22,7 +22,7 @@
           color="#1f3da1"
           :disabled="!commentContent"
           class="white--text"
-          @click="handleComment"
+          @click="handleCreateComment()"
           >comment</v-btn
         >
       </v-row>
