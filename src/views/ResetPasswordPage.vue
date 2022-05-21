@@ -6,7 +6,10 @@
       v-if="message"
       width="400px"
       :type="error ? 'error' : 'success'"
-      >{{ message }}</v-alert
+      >{{ message }}
+      <router-link to="/login" v-if="success"
+        >Go to login page.</router-link
+      ></v-alert
     >
     <FormulateForm v-model="formValue" @submit="handleSubmit" class="form">
       <FormulateInput
@@ -46,6 +49,9 @@ export default {
   data() {
     return {
       formValue: {},
+      message: "",
+      error: false,
+      success: false,
     };
   },
   created() {
@@ -64,10 +70,12 @@ export default {
         .then((response) => {
           this.message = response.data.message;
           this.error = false;
+          this.success = true;
         })
         .catch((error) => {
           this.message = error.response.data.message;
           this.error = true;
+          this.success = false;
         });
     },
   },

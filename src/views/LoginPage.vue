@@ -32,6 +32,10 @@
       <FormulateInput type="submit" label="Login" />
 
       <v-responsive max-width="60%" class="mb-4">
+        <router-link to="/forgot-password">Forgot Password?</router-link>
+      </v-responsive>
+
+      <v-responsive max-width="60%" class="mb-4">
         Atau kalau kamu punya e-mail google, kamu bisa log in dengan klik button
         dibawah ini
       </v-responsive>
