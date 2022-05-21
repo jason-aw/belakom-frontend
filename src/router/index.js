@@ -15,6 +15,7 @@ import ChapterPreviewPage from "@/views/ChapterPreviewPage";
 import QuizPage from "@/views/QuizPage";
 import ForgotPasswordPage from "@/views/ForgotPasswordPage";
 import ResetPasswordPage from "@/views/ResetPasswordPage";
+import ProfilePage from "../views/ProfilePage";
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,11 @@ const routes = [
   {
     path: "/home",
     component: HomePage,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/profile",
+    component: ProfilePage,
     meta: { requiresAuth: true },
   },
   {

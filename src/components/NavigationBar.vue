@@ -15,10 +15,31 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn text @click="logout" v-if="loggedIn">
-      <span class="mr-2">Logout</span>
-      <v-icon small>mdi-logout</v-icon>
-    </v-btn>
+    <div class="pr-5">
+      <v-menu offset-y v-if="loggedIn" left>
+        <template v-slot:activator="{ on }">
+          <v-btn class="menu-button" icon x-large v-on="on" >
+            <v-icon>
+              mdi-menu
+            </v-icon>
+          </v-btn>
+        </template>
+        <v-list dense>
+          <v-list-item v-if="!currentPathIsProfile" @click.prevent="goToProfile">
+            <v-icon class="pr-2">mdi-account-outline</v-icon>
+            <v-list-item-title>Profile</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-else @click.prevent="goToTopic">
+            <v-icon class="pr-2">mdi-home-outline</v-icon>
+            <v-list-item-title>Menu</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click.prevent="logout">
+            <v-icon class="pr-2">mdi-logout</v-icon>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
   </v-app-bar>
 </template>
 
@@ -26,6 +47,14 @@
 import { mapGetters } from "vuex";
 export default {
   name: "NavigationBar",
+  data() {
+    return {
+      currentPathIsProfile : null,
+    }
+  },
+  created() {
+    this.checkPath();
+  },
   methods: {
     logout() {
       this.$store.dispatch("auth/logout").then(
@@ -38,6 +67,26 @@ export default {
         }
       );
     },
+    checkPath() {
+      if (this.$router.currentRoute.path === "/profile") {
+        console.log("profile")
+        this.currentPathIsProfile = true;
+      } else {
+        console.log("topics")
+        this.currentPathIsProfile = false;
+      }
+    },
+    goToProfile() {
+      this.$router.push("/profile");
+    },
+    goToTopic() {
+      this.$router.push("/topics");
+    }
+  },
+  watch: {
+    $route (){
+      this.checkPath();
+    }
   },
   computed: {
     ...mapGetters("auth", ["loggedIn"]),

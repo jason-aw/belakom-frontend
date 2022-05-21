@@ -88,7 +88,7 @@
       <v-footer
         padless
         fixed
-        height="180px"
+        height="20%"
         class="px-xl-10"
         v-bind="this.footerAttrs"
       >
