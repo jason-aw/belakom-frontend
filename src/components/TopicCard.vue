@@ -5,8 +5,8 @@
     @mouseleave="hovered = false"
     @click.stop="goToTopicDetail(topic.topicName)"
   >
-    <div class="topicCardTextArea pt-8" >
-      <span class="topicCardText"> {{topic.topicName}}</span>
+    <div class="topicCardTextArea">
+      {{ topic.topicName }}
     </div>
 
     <div class="progressBarArea" v-if="showProgressBar">
@@ -56,7 +56,8 @@ export default {
   }),
   created() {
     this.showProgressBar = this.role?.includes(this.user_role);
-    this.progressValue = this.topic.topicCompletion !== 0 ? this.topic.topicCompletion * 100 : 0;
+    this.progressValue =
+      this.topic.topicCompletion !== 0 ? this.topic.topicCompletion * 100 : 0;
   },
   computed: {
     ...mapGetters("auth", ["role"]),
@@ -103,21 +104,8 @@ export default {
 }
 
 .topicCardTextArea {
-  position: relative;
-  display: flex;
-  height: 60%;
   font-weight: 500;
   font-size: 1.5em;
-  padding: 0;
-}
-
-.topicCardText {
-  position: relative;
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  font-size: 1em;
-  padding: 0;
 }
 
 .deleteButtonFade-enter-active,

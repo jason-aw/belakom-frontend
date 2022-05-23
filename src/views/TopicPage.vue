@@ -4,7 +4,7 @@
       <v-progress-circular color="#1f3da1" indeterminate size="64" width="6" />
     </v-overlay>
     <div v-if="!loading">
-      <div class="text-h4">Mau belajar apa hari ini?</div>
+      <div class="text-h4 mb-4">Mau belajar apa hari ini?</div>
 
       <div v-if="currentLearnTopic">
         <CurrentlyLearningTopicCard :topic="currentLearnTopic" />
@@ -111,13 +111,15 @@ export default {
     errorMessage: {},
     successCreateAlert: false,
     errorCreateAlert: false,
-    topicProgress: null,
     hovered: false,
     loading: true,
   }),
   async created() {
     try {
-      await Promise.all([this.getAllTopics(), this.getCurrentUserDetail()]);
+      await this.getAllTopics();
+      if (this.role.includes("ROLE_USER")) {
+        await this.getCurrentUserDetail();
+      }
     } catch (error) {
       // console.log(error);
     }

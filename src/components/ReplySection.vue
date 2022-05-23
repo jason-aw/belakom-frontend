@@ -22,7 +22,11 @@
     <v-slide-y-transition hide-on-leave>
       <div v-if="replySection && replies">
         <div v-for="reply in replies" :key="reply.id">
-          <comment-card :comment="reply" :user-detail="userDetailMap"/>
+          <comment-card
+            :comment="reply"
+            :user-detail="userDetailMap"
+            class="mb-2"
+          />
         </div>
       </div>
     </v-slide-y-transition>
@@ -31,7 +35,7 @@
 
 <script>
 import CommentCard from "./CommentCard.vue";
-import {mapGetters} from "vuex";
+import { mapGetters } from "vuex";
 export default {
   name: "ReplySection",
   props: ["replies"],
@@ -47,9 +51,8 @@ export default {
     ...mapGetters("comment", ["comments"]),
     userDetailMap() {
       return new Map(Object.entries(this.comments.usersMap));
-    }
+    },
   },
-
 };
 </script>
 

@@ -8,6 +8,7 @@ module.exports = defineConfig({
         'window.Quill': 'quill/dist/quill.js',
         Quill: 'quill/dist/quill.js'
       })
-    ]
+    ],
+    devtool: 'source-map'
   },
 });

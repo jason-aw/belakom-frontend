@@ -8,7 +8,7 @@
     >
       <v-row no-gutters class="flex-column">
         <div class="font-weight-bold">
-          {{this.userDetail.get(comment.userId).name}}
+          {{ this.userDetail.get(comment.userId).name }}
         </div>
         <div v-if="!this.editComment">
           {{ comment.content }}
@@ -16,32 +16,35 @@
         <div v-else-if="this.editComment">
           <v-row no-gutters>
             <v-textarea
-                placeholder=comment.content
-                rows="2"
-                auto-grow
-                v-model="editCommentContent"
+              placeholder="comment.content"
+              rows="2"
+              auto-grow
+              v-model="editCommentContent"
             />
           </v-row>
           <v-row no-gutters>
             <v-spacer />
+            <v-btn plain @click="handleCancelEdit()">cancel</v-btn>
             <v-btn
-                plain
-                @click="handleCancelEdit()"
-            >cancel</v-btn
-            >
-            <v-btn
-                color="#1f3da1"
-                :disabled="!editCommentContent"
-                class="white--text"
-                @click="handleEditComment()"
-            >Edit Comment</v-btn
+              color="#1f3da1"
+              :disabled="!editCommentContent"
+              class="white--text"
+              @click="handleEditComment()"
+              >Edit Comment</v-btn
             >
           </v-row>
         </div>
       </v-row>
       <v-menu offset-y v-if="this.showEditMenu">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn id="managecommentbutton" class="menu-button" icon small v-bind="attrs" v-on="on">
+          <v-btn
+            id="managecommentbutton"
+            class="menu-button"
+            icon
+            small
+            v-bind="attrs"
+            v-on="on"
+          >
             <v-icon size="20">mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
@@ -56,7 +59,6 @@
           </v-list-item>
         </v-list>
       </v-menu>
-
     </div>
     <v-row no-gutters>
       <v-btn
@@ -64,7 +66,7 @@
         small
         class="pl-0"
         :ripple="false"
-        v-if="!showReplySection"
+        v-if="!showReplySection && userId"
         @click="showReplySection = !showReplySection"
       >
         reply
@@ -98,7 +100,7 @@
 
 <script>
 import commentService from "@/services/comment.service";
-import {mapGetters} from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "CommentCard",
@@ -111,21 +113,18 @@ export default {
       replyHovered: false,
       editComment: false,
       editCommentContent: null,
-      item: [
-        { title: "Edit" },
-        { title: "Delete" },
-      ]
+      item: [{ title: "Edit" }, { title: "Delete" }],
     };
   },
   computed: {
     ...mapGetters("auth", ["userId"]),
     ...mapGetters("auth", ["role"]),
     showEditMenu() {
-        if (this.role?.includes("ROLE_ADMIN")) {
-          return true;
-        } else if (this.role?.includes("ROLE_USER")) {
-          return this.userId === this.comment.userId;
-        }
+      if (this.role?.includes("ROLE_ADMIN")) {
+        return true;
+      } else if (this.role?.includes("ROLE_USER")) {
+        return this.userId === this.comment.userId;
+      }
       return false;
     },
   },
@@ -156,8 +155,8 @@ export default {
         console.log("commentId ", this.comment.id);
         await commentService.deleteComment(this.comment.id);
         await this.$store.dispatch(
-            "comment/getComments",
-            this.comment.chapterId
+          "comment/getComments",
+          this.comment.chapterId
         );
         this.commentContent = "";
         this.showReplySection = false;
@@ -167,10 +166,10 @@ export default {
     },
     handleEdit() {
       this.editComment = true;
-      this.editCommentContent = this.comment.content
+      this.editCommentContent = this.comment.content;
     },
     async handleEditComment() {
-      console.log("edited")
+      console.log("edited");
       let req = {
         commentId: this.comment.id,
         content: this.editCommentContent,
@@ -178,21 +177,19 @@ export default {
       try {
         await commentService.editComment(req);
         await this.$store.dispatch(
-            "comment/getComments",
-            this.comment.chapterId
+          "comment/getComments",
+          this.comment.chapterId
         );
         this.editComment = false;
-        this.editCommentContent = '';
+        this.editCommentContent = "";
       } catch (error) {
         console.log("edit error", error);
       }
-
     },
     handleCancelEdit() {
       this.editComment = false;
-      this.editCommentContent = '';
-    }
+      this.editCommentContent = "";
+    },
   },
-
 };
 </script>
