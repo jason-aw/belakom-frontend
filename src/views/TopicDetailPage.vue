@@ -126,6 +126,7 @@ export default {
   async created() {
     await this.getTopicDetail(this.$route.params.topicName);
     this.updateCurrentlyLearningTopic();
+    document.title = `${this.topicDetail.topicName} | Belakom`;
     this.loading = false;
   },
   computed: {
