@@ -18,25 +18,29 @@
 
       <div class="editor" id="my-editor">
         <VueEditor
-            :editorOptions="editorSettings"
-            useCustomImageHandler
-            @image-added="imageHandler"
-            @image-removed="imageRemovedHandler"
-            v-model="chapterDetail.htmlContent"
+          :editorOptions="editorSettings"
+          useCustomImageHandler
+          @image-added="imageHandler"
+          @image-removed="imageRemovedHandler"
+          v-model="chapterDetail.htmlContent"
         />
       </div>
       <v-row no-gutters>
         <v-spacer />
         <v-btn color="#1f3da1" dark @click="handlePublish" class="mr-4"
-        >Publish Article</v-btn
+          >Publish Article</v-btn
         >
         <v-btn color="#1f3da1" dark to="/chapter-preview"
-        >See Article Preview</v-btn
+          >See Article Preview</v-btn
         >
       </v-row>
 
       <div>
-        <v-checkbox label="Enable Quiz" v-model="enableQuiz" @click="handleEnableQuiz()"/>
+        <v-checkbox
+          label="Enable Quiz"
+          v-model="enableQuiz"
+          @click="handleEnableQuiz()"
+        />
       </div>
 
       <div v-if="enableQuiz">
@@ -89,41 +93,86 @@ export default {
   },
   created() {
     this.getChapterDetail(this.$route.params.chapterId);
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
+  },
+  beforeDestroy() {
+    this.handlePublish();
+  },
+  destroyed() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
   },
   computed: {
     ...mapGetters("chapter", ["chapterDetail"]),
+    hasChanges() {
+      return !(
+        this.initialChapter.chapterName == this.chapterDetail.chapterName &&
+        this.initialChapter.description == this.chapterDetail.description &&
+        this.initialChapter.enableQuiz == this.chapterDetail.enableQuiz &&
+        this.initialChapter.htmlContent == this.chapterDetail.htmlContent &&
+        this.arraysEqual(
+          this.initialChapter.questions,
+          this.chapterDetail.questions
+        ) &&
+        this.arraysEqual(
+          this.initialChapter.imageAttachments,
+          this.chapterDetail.imageAttachments
+        )
+      );
+    },
   },
   watch: {
     $route() {
       this.$store.dispatch("chapter/clearChapterData");
     },
-    timedAlert(alertValue){
+    timedAlert(alertValue) {
       if (alertValue) {
-        setTimeout(()=>{this.timedAlert=false},3000)
+        setTimeout(() => {
+          this.timedAlert = false;
+        }, 3000);
       }
-    }
+    },
   },
   methods: {
+    objectsEqual(o1, o2) {
+      return typeof o1 === "object" && Object.keys(o1).length > 0
+        ? Object.keys(o1).length === Object.keys(o2).length &&
+            Object.keys(o1).every((p) => this.objectsEqual(o1[p], o2[p]))
+        : o1 === o2;
+    },
+    arraysEqual(a1, a2) {
+      return (
+        a1.length === a2.length &&
+        a1.every((o, idx) => this.objectsEqual(o, a2[idx]))
+      );
+    },
+    handleBeforeUnload(event) {
+      console.log("before unload", this.hasChanges);
+      if (!this.hasChanges) {
+        return;
+      } else {
+        event.returnValue = "";
+      }
+    },
     getChapterDetail(chapterId) {
       this.$store
         .dispatch("chapter/getChapterDetailById", chapterId)
         .then((response) => {
           this.initialChapter = Object.assign({}, response);
           this.enableQuiz = this.chapterDetail.enableQuiz;
-          this.loading = false
+          this.loading = false;
         })
         .catch((error) => {
-          (this.errorMsg = error)
-          this.loading = false
-          this.timedAlert = true
+          this.errorMsg = error;
+          this.loading = false;
+          this.timedAlert = true;
         });
     },
     imageHandler(file, Editor, cursorLocation, resetUploader) {
       fileService
         .uploadFile(file)
         .then((data) => {
-          Editor.insertEmbed(cursorLocation, "image", data.imageUrl);
-          this.chapterDetail.imageAttachments.push(data.filename);
+          Editor.insertEmbed(cursorLocation, "image", data.url);
+          this.chapterDetail.imageAttachments.push(data.name);
           resetUploader();
         })
         .catch((error) => console.log(error));
@@ -135,31 +184,31 @@ export default {
       });
     },
     handlePublish() {
-      if (this.initialChapter == this.chapterDetail) {
+      if (!this.hasChanges) {
         return;
       }
-
-      // this.chapterDetail.htmlContent = this.$sanitize(this.chapterDetail.htmlContent)
-      console.log(this.chapterDetail)
       chapterService
         .updateChapter(this.chapterDetail)
-        .then((response) => console.log(response))
+        .then((response) => {
+          this.initialChapter = Object.assign({}, response);
+          // TODO: PITER kasih alert kalo udah berhasil publish
+        })
         .catch((error) => (this.errorMsg = error));
     },
     handleAddQuestion() {
       this.$store.commit("chapter/addQuestion");
     },
     handleEnableQuiz() {
-      console.log(this.enableQuiz)
+      console.log(this.enableQuiz);
       this.$store.commit("chapter/updateEnableQuiz", this.enableQuiz);
-    }
+    },
   },
 };
 </script>
 
 <style lang="scss">
 .editor {
-  height: 60vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
@@ -172,6 +221,7 @@ export default {
   }
 
   .ql-container {
+    min-height: 60vh;
     display: flex;
     flex-direction: column;
     height: 100%;

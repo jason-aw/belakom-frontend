@@ -171,6 +171,7 @@ export default {
       );
     },
     handleCreateTopicSubmit() {
+      this.loading = true;
       topicServices.createTopic(this.createTopicFormValue).then(
         (response) => {
           this.successCreateAlert = true;
@@ -180,6 +181,7 @@ export default {
           }, 2000);
 
           this.getAllTopics();
+          this.loading = false;
           return response;
         },
         (error) => {
@@ -188,7 +190,7 @@ export default {
           setTimeout(() => {
             this.errorCreateAlert = false;
           }, 2000);
-
+          this.loading = false;
           this.errorMessage = error;
         }
       );

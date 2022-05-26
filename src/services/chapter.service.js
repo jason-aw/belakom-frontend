@@ -50,7 +50,7 @@ function updateChapter(chapter) {
     .put(ApiPath.UPDATE_CHAPTER_URL, chapter, {
       headers: authHeader("accessToken"),
     })
-    .then((response) => Promise.resolve(response))
+    .then((response) => Promise.resolve(response.data.value))
     .catch((error) => Promise.reject(error.response.data));
 }
 

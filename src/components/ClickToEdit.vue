@@ -22,24 +22,24 @@
         v-focus
         v-else
       />
+      <div class="error-msg">
+        {{ errorMsg }}
+      </div>
       <div class="edit-actions" v-if="textarea">
-        <v-btn @click.stop="handleSave">
+        <v-btn @click.stop="handleSave" text color="#1f3da1">
           <v-icon>mdi-check</v-icon>
         </v-btn>
-        <v-btn @click.stop="handleCancel">
+        <v-btn @click.stop="handleCancel" text color="red">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
     </div>
-    <div v-else>
+    <v-row v-else no-gutters>
       {{ valueLocal }}
-    </div>
-    <v-icon v-if="showIcon && !edit" color="grey darken-3" dense
-      >mdi-pencil-box</v-icon
-    >
-    <div class="error-msg">
-      {{ errorMsg }}
-    </div>
+      <v-icon v-if="showIcon && !edit" color="grey darken-3" dense
+        >mdi-pencil-box</v-icon
+      >
+    </v-row>
   </div>
 </template>
 
@@ -56,6 +56,9 @@ export default {
       showIcon: false,
       errorMsg: "",
     };
+  },
+  created() {
+    this.oldValue = `${this.valueLocal}`;
   },
   methods: {
     save(event) {
@@ -116,7 +119,8 @@ export default {
 <style lang="scss" scoped>
 .content {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-items: center;
   transition: 0.3s ease all;
   word-wrap: break-word;
   height: auto;
@@ -135,7 +139,10 @@ export default {
     max-width: 100%;
   }
   .error-msg {
-    font-size: 12px;
+    margin: 12px 0;
+    line-height: 1em;
+    font-size: 1rem;
+    font-weight: 700;
     color: rgb(230, 0, 0);
   }
 }
