@@ -60,6 +60,7 @@
 <script>
 import { VueEditor, Quill } from "vue2-editor";
 import ImageResize from "quill-image-resize-module";
+import VideoResize from "quill-video-resize-module";
 import fileService from "@/services/files.service";
 import { mapGetters } from "vuex";
 import chapterService from "@/services/chapter.service";
@@ -67,6 +68,7 @@ import ClickToEdit from "@/components/ClickToEdit.vue";
 import CreateQuizCard from "@/components/CreateQuizCard.vue";
 
 Quill.register("modules/imageResize", ImageResize);
+Quill.register("modules/VideoResize", VideoResize);
 export default {
   name: "EditChapterDetailPage",
   components: {
@@ -85,6 +87,7 @@ export default {
       editorSettings: {
         modules: {
           imageResize: {},
+          VideoResize: {},
         },
         bounds: ".editor",
       },
@@ -218,6 +221,9 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
+    iframe {
+      pointer-events: none;
+    }
   }
 
   .ql-container {
