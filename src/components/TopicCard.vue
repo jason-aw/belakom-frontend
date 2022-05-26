@@ -1,44 +1,95 @@
 <template>
   <div
     class="topicCard"
-    @mouseover="hovered = true"
-    @mouseleave="hovered = false"
     @click.stop="goToTopicDetail(topic.topicName)"
   >
-    <div class="topicCardTextArea">
-      {{ topic.topicName }}
-    </div>
 
-    <div class="progressBarArea" v-if="showProgressBar">
-      <v-slide-x-transition>
-        <v-progress-linear
-          color="#1f3da1"
-          v-model="this.progressValue"
-          height="15"
-          dark
-          striped
-          class="mt-6 rounded-pill"
-        >
-          <template v-slot:default="{ value }">
-            <span class="progressText">{{ Math.ceil(value) }}%</span>
-          </template>
-        </v-progress-linear>
-      </v-slide-x-transition>
-    </div>
-
-    <div class="deleteButtonArea" v-else>
-      <transition name="deleteButtonFade">
+    <v-dialog
+        transition="dialog-top-transition"
+        max-width="600"
+        persistent
+        v-model="dialog"
+    >
+      <template v-slot:activator="{ on, attrs }">
         <v-btn
-          width="100%"
-          color="error"
-          @click.stop="handleDeleteTopicSubmit(topic.id)"
-          v-if="hovered"
+            fab
+            x-small
+            color="#F51414"
+            dark
+            class="buttonDelete"
+            v-if="!showProgressBar"
+            v-bind="attrs"
+            v-on="on"
         >
-          <v-icon> mdi-trash-can </v-icon>
-          delete
+          <v-icon>mdi-trash-can</v-icon>
         </v-btn>
-      </transition>
-    </div>
+      </template>
+      <template v-slot:default="dialog">
+        <v-card>
+          <v-card-text class="justify-center">
+            <div class="text-center text-h5 pa-5">
+              Apakah anda yakin ingin menghapus topic
+              <span
+                  style="font-weight: bold"> {{ topic.topicName }}
+              </span>
+              ?
+            </div>
+          </v-card-text>
+          <v-card-actions class="justify-center">
+            <v-btn
+                @click="dialog.value = false"
+            >Cancel</v-btn>
+            <v-btn
+                color="#F51414"
+                dark
+                @click="handleDeleteTopicSubmit(topic.id)"
+            >Delete</v-btn>
+          </v-card-actions>
+          <v-row class="pa-3" no-gutters>
+            <v-col>
+              <v-alert
+                  transition="fade-transition"
+                  type="success"
+                  text
+                  v-model="successDeleteAlert"
+              >
+                Topic berhasil dihapus! Notifikasi akan ditutup dalam {{deleteAlertCounter}}!
+              </v-alert>
+              <v-alert
+                  transition="fade-transition"
+                  type="success"
+                  text
+                  v-model="errorDeleteAlert"
+              >
+                Topic gagal dihapus! {{errorMessage}} Notifikasi akan ditutup dalam {{deleteAlertCounter}}!
+              </v-alert>
+            </v-col>
+          </v-row>
+        </v-card>
+      </template>
+    </v-dialog>
+
+      <div class="topicCardTextArea">
+        {{ topic.topicName }}
+      </div>
+
+      <div class="progressBarArea" v-if="showProgressBar">
+        <v-slide-x-transition>
+          <v-progress-linear
+              color="#1f3da1"
+              v-model="this.progressValue"
+              height="15"
+              dark
+              striped
+              class="mt-6 rounded-pill"
+          >
+            <template v-slot:default="{ value }">
+              <span class="progressText">{{ Math.ceil(value) }}%</span>
+            </template>
+          </v-progress-linear>
+        </v-slide-x-transition>
+      </div>
+
   </div>
 </template>
 
@@ -49,10 +100,14 @@ export default {
   name: "TopicCard",
   props: ["topic"],
   data: () => ({
-    hovered: false,
     user_role: "ROLE_USER",
     progressValue: 0,
+    dialog: false,
     showProgressBar: false,
+    successDeleteAlert: false,
+    errorDeleteAlert: false,
+    deleteAlertCounter: 0,
+    disableDeleteDialogButton: false
   }),
   created() {
     this.showProgressBar = this.role?.includes(this.user_role);
@@ -66,11 +121,29 @@ export default {
     handleDeleteTopicSubmit(id) {
       topicServices.deleteTopic(id).then(
         (response) => {
-          this.$root.$emit("deleteTopicEvent");
+          console.log("deleted tpi tungu")
+          this.successDeleteAlert = true;
+          this.deleteAlertCounter = 5;
+          const x = setInterval(() => {
+            this.deleteAlertCounter  = this.deleteAlertCounter  - 1;
+            if (this.deleteAlertCounter === 0) {
+              clearInterval(x)
+              this.$root.$emit("deleteTopicEvent");
+            }
+          }, 1000)
           return response;
         },
         (error) => {
           this.errorMessage = error;
+
+          this.deleteAlertCounter = 5;
+          const x = setInterval(() => {
+            this.deleteAlertCounter  = this.deleteAlertCounter  - 1;
+            if (this.deleteAlertCounter === 0) {
+              clearInterval(x)
+              this.$root.$emit("deleteTopicEvent");
+            }
+          }, 1000)
         }
       );
     },
@@ -117,12 +190,10 @@ export default {
   opacity: 0;
 }
 
-.deleteButtonArea {
-  width: 50%;
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-  justify-self: flex-end;
+.buttonDelete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .progressBarArea {

@@ -11,10 +11,10 @@
       <div class="description">
         {{ topicDetail.description }}
       </div>
-      <draggable :list="chapters" ghost-class="ghost" @end="onEnd">
+      <draggable :list="chapters" ghost-class="ghost" @end="onEnd" :disabled="!adminRole">
         <transition-group type="transition" name="list">
           <div
-            class="col-12 mt-md-5 mb-md-5 chapterCardGhost"
+            class="col-12 ma-0 pa-0 chapterCardGhost"
             v-for="(chapter, index) in chapters"
             :key="chapter.id"
           >
@@ -122,11 +122,13 @@ export default {
     errorCreateAlert: false,
     hovered: false,
     loading: true,
+    adminRole: false
   }),
   async created() {
     await this.getTopicDetail(this.$route.params.topicName);
-    this.updateCurrentlyLearningTopic();
+    await this.updateCurrentlyLearningTopic();
     this.loading = false;
+    this.adminRole = (!this.role?.includes("ROLE_USER"));
   },
   computed: {
     ...mapGetters("topic", ["topicDetail"]),
@@ -228,7 +230,7 @@ export default {
 }
 
 .ghost {
-  border-left: 6px solid #1f3da1;
+  border-left: 5px solid #1f3da1;
   box-shadow: 10px 10px 5px -1px rgba(0, 0, 0, 0.14);
   opacity: 0.7;
   border-radius: 8px;

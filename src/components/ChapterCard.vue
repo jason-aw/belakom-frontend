@@ -1,18 +1,20 @@
 <template>
   <div
-    class="chapterCard px-3 py-3"
+    class="chapterCard px-3 py-3 my-7"
     @click.stop="goToChapterDetail(chapter.id)"
   >
     <div class="chapterTitle">
       {{ index }}. {{ chapter.chapterName }}
-      {{ chapter.chapterCompletion * 100 }}%
+      <template v-if="!adminRole">
+        {{ chapter.chapterCompletion * 100 }}%
+      </template>
     </div>
 
     <div class="chapterDescription">
       {{ chapter.description }}
     </div>
 
-    <div class="action-buttons">
+    <div class="action-buttons" v-if="this.adminRole">
       <v-btn
         fab
         x-small
@@ -38,11 +40,21 @@
 
 <script>
 import chapterService from "@/services/chapter.service";
+import {mapGetters} from "vuex";
 
 export default {
   name: "ChapterCard",
   props: ["chapter", "index"],
   components: {},
+  computed: {
+    ...mapGetters("auth", ["role"]),
+  },
+  data: () => ({
+    adminRole : null
+  }),
+  created() {
+    this.adminRole = (!this.role?.includes("ROLE_USER"));
+  },
   methods: {
     handleDeleteChapterSubmit(id) {
       chapterService.deleteChapter(id).then(
@@ -76,6 +88,11 @@ export default {
   height: 9em;
   letter-spacing: 1px;
   transition: 0.3s ease all;
+
+  &:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+    outline: solid 1px #1f3da1;
+  }
 
   .chapterTitle {
     font-size: 1.5em;
