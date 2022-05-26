@@ -12,10 +12,7 @@
       </v-row>
       <v-row no-gutters>
         <v-spacer />
-        <v-btn
-          plain
-          :disabled="!commentContent"
-          @click="commentContent = ''"
+        <v-btn plain :disabled="!commentContent" @click="commentContent = ''"
           >cancel</v-btn
         >
         <v-btn
@@ -31,13 +28,16 @@
       Masuk untuk meninggalkan komentar!
     </div>
     <v-divider class="my-4" />
-    <div>
+    <div v-if="comments.mainComments.length != 0">
       <div v-for="comment in comments.mainComments" :key="comment.id">
         <div class="mb-4">
-          <comment-card :comment="comment" :user-detail="userDetailMap"/>
+          <comment-card :comment="comment" :user-detail="userDetailMap" />
           <reply-section :replies="comments.commentRepliesMap[comment.id]" />
         </div>
       </div>
+    </div>
+    <div v-else class="d-flex justify-center font-italic">
+      Masih belum ada komentar...
     </div>
   </div>
 </template>
@@ -65,7 +65,7 @@ export default {
     ...mapGetters("auth", ["loggedIn"]),
     userDetailMap() {
       return new Map(Object.entries(this.comments.usersMap));
-    }
+    },
   },
   methods: {
     async handleCreateComment() {

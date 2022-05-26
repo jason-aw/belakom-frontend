@@ -28,13 +28,13 @@ const routes = [
     name: "Login",
     path: "/login",
     component: LoginPage,
-    meta: { guest: true },
+    meta: { guest: true, title: "Login" },
   },
   {
     name: "Register",
     path: "/register",
     component: RegisterPage,
-    meta: { guest: true },
+    meta: { guest: true, title: "Register" },
   },
   {
     path: "/mausignupdulu",
@@ -54,7 +54,7 @@ const routes = [
   {
     path: "/topics",
     component: TopicPage,
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: false, title: "Topics" },
   },
   {
     path: "/topics/:topicName",
@@ -87,11 +87,13 @@ const routes = [
     name: "ForgotPassword",
     path: "/forgot-password",
     component: ForgotPasswordPage,
+    meta: { guest: true, title: "Forget Password" }
   },
   {
     name: "ResetPassword",
     path: "/reset-password",
     component: ResetPasswordPage,
+    meta: { guest: true, title: "Reset Password" }
   }
 ];
 
@@ -100,6 +102,15 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = `${to.meta.title} | Belakom`;
+  } else {
+    document.title = "Belakom";
+  }
+  next();
+})
 
 router.beforeEach((to, from, next) => {
   let isLoggedIn = store.getters["auth/loggedIn"];

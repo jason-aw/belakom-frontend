@@ -51,6 +51,7 @@ export default {
     } catch (error) {
       // console.log(error);
     }
+    document.title = `${this.chapterDetail.chapterName} | Belakom`;
     this.loading = false;
   },
   methods: {

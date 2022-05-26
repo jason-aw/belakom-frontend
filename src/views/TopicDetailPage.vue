@@ -126,7 +126,8 @@ export default {
   }),
   async created() {
     await this.getTopicDetail(this.$route.params.topicName);
-    await this.updateCurrentlyLearningTopic();
+    this.updateCurrentlyLearningTopic();
+    document.title = `${this.topicDetail.topicName} | Belakom`;
     this.loading = false;
     this.adminRole = (!this.role?.includes("ROLE_USER"));
   },
