@@ -12,12 +12,11 @@ export default {
     if (token) {
       let user = {
         accessToken: token,
-        role: ["ROLE_USER"],
       };
-      this.$store.commit("auth/loginSuccess", user);
+      await this.$store.dispatch("auth/loginSuccess", user);
       this.$router.push("/home");
     } else if (error) {
-      this.$store.commit("auth/loginFailure");
+      this.$store.commit("auth/logout");
       this.$router.push("/login");
     }
   },
