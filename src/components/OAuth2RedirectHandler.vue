@@ -5,7 +5,7 @@
 <script>
 export default {
   name: "OAuth2RedirectHandler",
-  created() {
+  async created() {
     let urlParams = new URLSearchParams(window.location.search);
     let token = urlParams.get("token");
     let error = urlParams.get("error");
