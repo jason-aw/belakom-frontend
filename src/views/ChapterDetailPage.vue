@@ -36,7 +36,8 @@ export default {
     return {
       chapterDetail: {},
       loading: true,
-      articlePosition: null
+      articlePosition: null,
+      adminRole: false
     };
   },
   computed: {
@@ -54,6 +55,7 @@ export default {
     } catch (error) {
       // console.log(error);
     }
+    this.adminRole = this.role?.includes("ROLE_ADMIN")
     document.title = `${this.chapterDetail.chapterName} | Belakom`;
     this.loading = false;
   },
@@ -74,9 +76,6 @@ export default {
       this.$router.push("/chapters/" + id + "/quiz");
     },
     handleUpdateChapterProgress() {
-      if (!this.role?.includes("ROLE_USER")) {
-        return;
-      }
       let req = {
         quizCompleted: null,
         chapterId: this.chapterDetail.id,
@@ -89,6 +88,10 @@ export default {
     },
     endScroll() {
       //full page vs current height
+
+      if (this.adminRole) {
+        return;
+      }
 
       this.articlePosition = document.getElementById("articleContent").getBoundingClientRect()
 
