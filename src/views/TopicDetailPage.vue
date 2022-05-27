@@ -11,7 +11,7 @@
       <div class="description">
         {{ topicDetail.description }}
       </div>
-      <draggable :list="chapters" ghost-class="ghost" @end="onEnd" :disabled="!adminRole">
+      <draggable :list="chapters" ghost-class="ghost" @end="onEnd" :disabled="adminRole">
         <transition-group type="transition" name="list">
           <div
             class="col-12 ma-0 pa-0 chapterCardGhost"
@@ -22,82 +22,83 @@
           </div>
         </transition-group>
       </draggable>
-
-      <v-dialog v-model="dialog" width="70%">
-        <template #activator="{ on, attrs }">
-          <div class="col-12 mt-md-5 mb-md-5">
-            <v-card class="createNewTopicButton">
-              <v-btn height="100%" width="100%" v-bind="attrs" v-on="on">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </v-card>
-          </div>
-        </template>
-        <v-card>
-          <v-card-title class="text-h5"> Create New Chapter </v-card-title>
-          <v-divider />
-          <v-card-text class="black--text">
-            <v-container>
-              <FormulateForm
-                v-model="createChapterFormValue"
-                @submit="handleCreateChapterSubmit"
-              >
-                <FormulateInput
-                  type="text"
-                  name="chapterName"
-                  label="Chapter Name"
-                  placeholder="Chapter Name"
-                  validation="^required"
-                  error-behavior="submit"
-                  :validation-messages="{
+      <template v-if="adminRole">
+        <v-dialog v-model="dialog" width="70%">
+          <template #activator="{ on, attrs }">
+            <div class="col-12 mt-md-5 mb-md-5">
+              <v-card class="createNewTopicButton">
+                <v-btn height="100%" width="100%" v-bind="attrs" v-on="on">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </v-card>
+            </div>
+          </template>
+          <v-card>
+            <v-card-title class="text-h5"> Create New Chapter </v-card-title>
+            <v-divider />
+            <v-card-text class="black--text">
+              <v-container>
+                <FormulateForm
+                    v-model="createChapterFormValue"
+                    @submit="handleCreateChapterSubmit"
+                >
+                  <FormulateInput
+                      type="text"
+                      name="chapterName"
+                      label="Chapter Name"
+                      placeholder="Chapter Name"
+                      validation="^required"
+                      error-behavior="submit"
+                      :validation-messages="{
                     required: 'Nama Chapter harus ada',
                   }"
-                />
+                  />
 
-                <FormulateInput
-                  type="checkbox"
-                  label="Enable Quiz"
-                  name="enableQuiz"
-                />
+                  <FormulateInput
+                      type="checkbox"
+                      label="Enable Quiz"
+                      name="enableQuiz"
+                  />
 
-                <FormulateInput
-                  type="textarea"
-                  name="description"
-                  label="Description"
-                  placeholder="Description"
-                  validation="^required"
-                  error-behavior="submit"
-                  :validation-messages="{
+                  <FormulateInput
+                      type="textarea"
+                      name="description"
+                      label="Description"
+                      placeholder="Description"
+                      validation="^required"
+                      error-behavior="submit"
+                      :validation-messages="{
                     required: 'Deskripsi harus ada',
                   }"
-                />
+                  />
 
-                <FormulateInput
-                  align="center"
-                  type="submit"
-                  label="Create Chapter"
-                />
-                <v-alert
-                  transition="fade-transition"
-                  text
-                  type="success"
-                  v-model="successCreateAlert"
-                >
-                  Chapter successfully added!
-                </v-alert>
-                <v-alert
-                  transition="fade-transition"
-                  text
-                  type="error"
-                  v-model="errorCreateAlert"
-                >
-                  Chapter failed to add!
-                </v-alert>
-              </FormulateForm>
-            </v-container>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
+                  <FormulateInput
+                      align="center"
+                      type="submit"
+                      label="Create Chapter"
+                  />
+                  <v-alert
+                      transition="fade-transition"
+                      text
+                      type="success"
+                      v-model="successCreateAlert"
+                  >
+                    Chapter successfully added!
+                  </v-alert>
+                  <v-alert
+                      transition="fade-transition"
+                      text
+                      type="error"
+                      v-model="errorCreateAlert"
+                  >
+                    Chapter failed to add!
+                  </v-alert>
+                </FormulateForm>
+              </v-container>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </template>
     </div>
   </v-container>
 </template>
@@ -129,7 +130,7 @@ export default {
     this.updateCurrentlyLearningTopic();
     document.title = `${this.topicDetail.topicName} | Belakom`;
     this.loading = false;
-    this.adminRole = (!this.role?.includes("ROLE_USER"));
+    this.adminRole = (!this.role?.includes("ROLE_ADMIN"));
   },
   computed: {
     ...mapGetters("topic", ["topicDetail"]),
