@@ -1,4 +1,5 @@
 import authService from "@/services/auth.service";
+import userService from "@/services/user.service";
 
 const user = JSON.parse(localStorage.getItem("user"));
 const initialState = user ? { user } : { user: null };
@@ -29,6 +30,26 @@ export const auth = {
           return Promise.reject(error);
         }
       );
+    },
+    async googleLogin({ commit }, payload) {
+      commit("loginSuccess", payload);
+      try {
+        let res = await userService.getCurrentUserDetail();
+        let { name, email, roles, userId, imageUrl } = res.data.value;
+        let user = {
+          ...payload,
+          name,
+          email,
+          roles,
+          userId,
+          imageUrl
+        }
+        commit("loginSuccess", user);
+        return Promise.resolve();
+      } catch (error) {
+        commit("logout");
+        return Promise.reject();
+      }
     },
     logout({ commit }) {
       authService.logout();

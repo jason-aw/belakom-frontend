@@ -44,11 +44,9 @@ export default {
   },
   async created() {
     try {
-      await Promise.all([this.getUserDetail()]).then((values) => {
-        console.log(values);
-        this.userDetail = values[0].data;
-        this.showImage = !!this.userDetail.imageUrl
-      });
+      let response = await this.getUserDetail();
+      this.userDetail = response.data.value;
+      this.showImage = !!this.userDetail.imageUrl;
     } catch (error) {
       // console.log(error);
     }

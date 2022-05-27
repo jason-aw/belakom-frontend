@@ -260,7 +260,7 @@ export default {
       }
       return userService.getCurrentUserDetail().then(
         (response) => {
-          this.getCurrentLearnTopicById(response.data.currentlyLearningTopic);
+          this.getCurrentLearnTopicById(response.data.value.currentlyLearningTopic);
           return Promise.resolve();
         },
         (error) => {
