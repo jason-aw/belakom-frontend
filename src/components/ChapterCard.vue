@@ -15,31 +15,33 @@
     </div>
 
     <div class="action-buttons" v-if="this.adminRole">
+
       <v-btn
-        fab
-        x-small
-        color="#1f3da1"
-        dark
-        @click.stop="goToEditChapterDetail(chapter.id)"
+          fab
+          x-small
+          color="#1f3da1"
+          dark
+          @click.stop="goToEditChapterDetail(chapter.id)"
       >
         <v-icon>mdi-pencil-box</v-icon>
       </v-btn>
+
       <v-btn
-        fab
-        x-small
-        color="red darken-1"
-        class="ml-2"
-        dark
-        @click.stop="handleDeleteChapterSubmit(chapter.id)"
+          fab
+          x-small
+          color="#F51414"
+          class="ml-2"
+          dark
+          @click.stop="$emit('delete-chapter-event', {name: chapter.chapterName, id: chapter.id})"
       >
         <v-icon>mdi-trash-can</v-icon>
       </v-btn>
+
     </div>
   </div>
 </template>
 
 <script>
-import chapterService from "@/services/chapter.service";
 import {mapGetters} from "vuex";
 
 export default {
@@ -50,23 +52,16 @@ export default {
     ...mapGetters("auth", ["role"]),
   },
   data: () => ({
-    adminRole : null
+    adminRole : null,
+    successDeleteAlert : false,
+    errorDeleteAlert : false,
+    deleteAlertCounter : 0,
+    dialog : false
   }),
   created() {
     this.adminRole = (!this.role?.includes("ROLE_USER"));
   },
   methods: {
-    handleDeleteChapterSubmit(id) {
-      chapterService.deleteChapter(id).then(
-        (response) => {
-          this.$root.$emit("deleteChapterEvent");
-          return response;
-        },
-        (error) => {
-          return error;
-        }
-      );
-    },
     goToChapterDetail(id) {
       this.$router.push("/chapters/" + id);
     },

@@ -11,14 +11,14 @@
       <div class="description">
         {{ topicDetail.description }}
       </div>
-      <draggable :list="chapters" ghost-class="ghost" @end="onEnd" :disabled="adminRole">
+      <draggable :list="chapters" ghost-class="ghost" @end="onEnd" :disabled="!adminRole">
         <transition-group type="transition" name="list">
           <div
             class="col-12 ma-0 pa-0 chapterCardGhost"
             v-for="(chapter, index) in chapters"
             :key="chapter.id"
           >
-            <ChapterCard :chapter="chapter" :index="index + 1" />
+            <ChapterCard :chapter="chapter" :index="index + 1" v-on:delete-chapter-event="openDeleteDialog" />
           </div>
         </transition-group>
       </draggable>
@@ -100,6 +100,59 @@
         </v-dialog>
       </template>
     </div>
+
+    <v-dialog
+        transition="dialog-top-transition"
+        max-width="600"
+        v-model="deleteDialog"
+    >
+      <template>
+        <v-card>
+          <v-card-text class="justify-center">
+            <div class="text-center text-h5 pa-5">
+              Apakah anda yakin ingin menghapus chapter
+              <span
+                  style="font-weight: bold"> {{ deleteDialogName }}
+              </span>
+              ?
+            </div>
+          </v-card-text>
+          <v-card-actions class="justify-center">
+            <v-btn
+                :disabled="successDeleteAlert || errorDeleteAlert"
+                @click="deleteDialog = false"
+            >Cancel</v-btn>
+            <v-btn
+                color="#F51414"
+                :disabled="successDeleteAlert || errorDeleteAlert"
+                :dark="!successDeleteAlert && !errorDeleteAlert"
+                @click.stop="handleDeleteChapterSubmit"
+            >Delete</v-btn>
+          </v-card-actions>
+          <v-row class="pa-3" no-gutters>
+            <v-col>
+              <v-alert
+                  transition="fade-transition"
+                  type="success"
+                  text
+                  v-model="successDeleteAlert"
+              >
+                Chapter berhasil dihapus!
+              </v-alert>
+              <v-alert
+                  transition="fade-transition"
+                  type="success"
+                  text
+                  v-model="errorDeleteAlert"
+              >
+                Chapter gagal dihapus! {{errorMessage}}!
+              </v-alert>
+            </v-col>
+          </v-row>
+        </v-card>
+      </template>
+    </v-dialog>
+
   </v-container>
 </template>
 
@@ -119,8 +172,13 @@ export default {
     createChapterFormValue: {},
     errorMessage: {},
     dialog: false,
+    deleteDialog: false,
     successCreateAlert: false,
     errorCreateAlert: false,
+    deleteDialogName: null,
+    deleteDialogId: null,
+    successDeleteAlert: false,
+    errorDeleteAlert: false,
     hovered: false,
     loading: true,
     adminRole: false
@@ -130,7 +188,7 @@ export default {
     this.updateCurrentlyLearningTopic();
     document.title = `${this.topicDetail.topicName} | Belakom`;
     this.loading = false;
-    this.adminRole = (!this.role?.includes("ROLE_ADMIN"));
+    this.adminRole = (this.role?.includes("ROLE_ADMIN"));
   },
   computed: {
     ...mapGetters("topic", ["topicDetail"]),
@@ -178,6 +236,45 @@ export default {
         }
       );
     },
+    openDeleteDialog(payload) {
+      console.log("xxx")
+      this.deleteDialog = true;
+      this.deleteDialogName = payload.name;
+      this.deleteDialogId = payload.id;
+    },
+    handleDeleteChapterSubmit() {
+      console.log("delete")
+      chapterService.deleteChapter(this.deleteDialogId).then(
+          (response) => {
+            this.successDeleteAlert = true;
+            let deleteAlertCounter = 3;
+            const x = setInterval(() => {
+              deleteAlertCounter  = deleteAlertCounter  - 1;
+              if (deleteAlertCounter === 0) {
+                this.successDeleteAlert = false;
+                this.deleteDialog = false
+                clearInterval(x)
+              }
+            }, 1000)
+            return response;
+          },
+          (error) => {
+            this.errorDeleteAlert = true;
+            this.errorMessage = error;
+
+            let deleteAlertCounter = 3;
+            const x = setInterval(() => {
+              deleteAlertCounter  = deleteAlertCounter  - 1;
+              if (deleteAlertCounter === 0) {
+                this.errorDeleteAlert = false;
+                clearInterval(x)
+              }
+            }, 1000)
+
+            return error;
+          }
+      ).then(this.getAllChapters);
+    },
     onEnd() {
       topicService
         .updateTopicChapterOrder(this.$store.state.chapter.chapters)
@@ -213,11 +310,6 @@ export default {
       this.$store.commit("chapter/clearAllChapters");
       this.$store.commit("topic/clearTopicDetail");
     },
-  },
-  mounted() {
-    this.$root.$on("deleteChapterEvent", () => {
-      this.getAllChapters();
-    });
   },
 };
 </script>

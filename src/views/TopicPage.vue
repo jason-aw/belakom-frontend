@@ -16,7 +16,7 @@
           v-for="topic in topicData"
           :key="topic.id"
         >
-          <TopicCard :topic="topic" />
+          <TopicCard :topic="topic" v-on:delete-event-topic="openDeleteDialog"/>
         </div>
 
         <v-dialog v-model="dialog" width="70%">
@@ -88,6 +88,60 @@
             </v-card-text>
           </v-card>
         </v-dialog>
+
+
+        <v-dialog
+            transition="dialog-top-transition"
+            max-width="600"
+            v-model="deleteDialog"
+        >
+          <template>
+            <v-card>
+              <v-card-text class="justify-center">
+                <div class="text-center text-h5 pa-5">
+                  Apakah anda yakin ingin menghapus topic
+                  <span
+                      style="font-weight: bold"> {{ deleteDialogName }}
+              </span>
+                  ?
+                </div>
+              </v-card-text>
+              <v-card-actions class="justify-center">
+                <v-btn
+                    :disabled="successDeleteAlert || errorDeleteAlert"
+                    @click="deleteDialog = false"
+                >Cancel</v-btn>
+                <v-btn
+                    color="#F51414"
+                    :dark="!successDeleteAlert && !errorDeleteAlert"
+                    :disabled="successDeleteAlert || errorDeleteAlert"
+                    @click="handleDeleteTopicSubmit(deleteDialogId)"
+                >Delete</v-btn>
+              </v-card-actions>
+              <v-row class="pa-3" no-gutters>
+                <v-col>
+                  <v-alert
+                      transition="fade-transition"
+                      type="success"
+                      text
+                      v-model="successDeleteAlert"
+                  >
+                    Topic berhasil dihapus!
+                  </v-alert>
+                  <v-alert
+                      transition="fade-transition"
+                      type="success"
+                      text
+                      v-model="errorDeleteAlert"
+                  >
+                    Topic gagal dihapus!
+                  </v-alert>
+                </v-col>
+              </v-row>
+            </v-card>
+          </template>
+        </v-dialog>
+
       </div>
     </div>
   </v-container>
@@ -111,6 +165,11 @@ export default {
     errorMessage: {},
     successCreateAlert: false,
     errorCreateAlert: false,
+    successDeleteAlert: false,
+    errorDeleteAlert: false,
+    deleteDialog: false,
+    deleteDialogName: null,
+    deleteDialogId: null,
     hovered: false,
     loading: true,
     adminRole: false
@@ -132,9 +191,11 @@ export default {
     ...mapGetters("auth", ["role"]),
   },
   mounted() {
-    this.$root.$on("deleteTopicEvent", () => {
-      this.getAllTopics();
-    });
+    // this.$on("deleteTopicEvent", (payload) => {
+    //   this.deleteDialogName = payload.name;
+    //   this.deleteDialogId = payload.id;
+    //   this.deleteDialog = true;
+    // });
   },
   methods: {
     async getAllTopics() {
@@ -157,6 +218,41 @@ export default {
           console.log(this.currentLearnTopic);
         }
       }
+    },
+    openDeleteDialog(payload) {
+      this.deleteDialog = true;
+      this.deleteDialogName = payload.name;
+      this.deleteDialogId = payload.id;
+    },
+    handleDeleteTopicSubmit() {
+      topicServices.deleteTopic(this.deleteDialogId).then(
+          (response) => {
+            this.successDeleteAlert = true;
+            let deleteAlertCounter = 3;
+            const x = setInterval(() => {
+              deleteAlertCounter  = deleteAlertCounter  - 1;
+              if (deleteAlertCounter === 0) {
+                this.successDeleteAlert = false;
+                this.deleteDialog = false
+                clearInterval(x)
+              }
+            }, 1000)
+            return response;
+          },
+          (error) => {
+            this.errorDeleteAlert = true;
+            this.errorMessage = error;
+
+            let deleteAlertCounter = 3;
+            const x = setInterval(() => {
+              deleteAlertCounter  = deleteAlertCounter  - 1;
+              if (deleteAlertCounter === 0) {
+                this.errorDeleteAlert = false;
+                clearInterval(x)
+              }
+            }, 1000)
+          }
+      ).then(this.getAllTopics);
     },
     async getCurrentUserDetail() {
       if (!this.role?.includes("ROLE_USER")) {
