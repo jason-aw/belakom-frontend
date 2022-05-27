@@ -4,14 +4,16 @@
       <v-progress-circular color="#1f3da1" indeterminate size="64" width="6" />
     </v-overlay>
     <div v-if="!loading">
-      <h1>{{ chapterDetail.chapterName }}</h1>
-      <p>{{ chapterDetail.description }}</p>
-      <div class="content" v-html="chapterDetail.htmlContent"></div>
+      <div id="articleContent">
+        <h1>{{ chapterDetail.chapterName }}</h1>
+        <p>{{ chapterDetail.description }}</p>
+        <div class="content" v-html="chapterDetail.htmlContent"></div>
 
-      <div v-if="chapterDetail.enableQuiz">
-        <v-btn color="#1f3da1" dark @click="goToQuizPage(chapterDetail.id)"
-          >Access Quiz</v-btn
-        >
+        <div v-if="chapterDetail.enableQuiz">
+          <v-btn color="#1f3da1" dark @click="goToQuizPage(chapterDetail.id)"
+            >Access Quiz</v-btn
+          >
+        </div>
       </div>
 
       <comment-section :chapterId="chapterDetail.id" />
@@ -34,6 +36,8 @@ export default {
     return {
       chapterDetail: {},
       loading: true,
+      articlePosition: null,
+      adminRole: false
     };
   },
   computed: {
@@ -51,6 +55,7 @@ export default {
     } catch (error) {
       // console.log(error);
     }
+    this.adminRole = this.role?.includes("ROLE_ADMIN")
     document.title = `${this.chapterDetail.chapterName} | Belakom`;
     this.loading = false;
   },
@@ -71,9 +76,6 @@ export default {
       this.$router.push("/chapters/" + id + "/quiz");
     },
     handleUpdateChapterProgress() {
-      if (!this.role?.includes("ROLE_USER")) {
-        return;
-      }
       let req = {
         quizCompleted: null,
         chapterId: this.chapterDetail.id,
@@ -86,6 +88,13 @@ export default {
     },
     endScroll() {
       //full page vs current height
+
+      if (this.adminRole) {
+        return;
+      }
+
+      this.articlePosition = document.getElementById("articleContent").getBoundingClientRect()
+
       let unscrollablePage =
         document.documentElement.scrollHeight ===
         Math.max(
@@ -101,15 +110,16 @@ export default {
       }
     },
     checkEndOfScroll() {
-      let bottomOfWindow =
+      let bottomOfArticle =
         Math.max(
           window.pageYOffset,
           document.documentElement.scrollTop,
           document.body.scrollTop
         ) +
-          window.innerHeight ===
-        document.documentElement.offsetHeight;
-      if (bottomOfWindow) {
+          window.innerHeight >=
+        this.articlePosition.bottom;
+
+      if (bottomOfArticle) {
         this.handleUpdateChapterProgress();
       }
     },

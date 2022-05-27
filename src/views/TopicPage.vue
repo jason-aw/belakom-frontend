@@ -22,7 +22,7 @@
         <v-dialog v-model="dialog" width="70%">
           <template #activator="{ on, attrs }">
             <div class="col-3 mt-md-5 mb-md-5">
-              <v-card class="createNewTopicButton">
+              <v-card class="createNewTopicButton" v-if="adminRole">
                 <v-btn height="100%" width="100%" v-bind="attrs" v-on="on">
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
@@ -113,11 +113,13 @@ export default {
     errorCreateAlert: false,
     hovered: false,
     loading: true,
+    adminRole: false
   }),
   async created() {
     try {
       await this.getAllTopics();
-      if (this.role.includes("ROLE_USER")) {
+      this.adminRole = this.role?.includes("ROLE_ADMIN");
+      if (!this.adminRole) {
         await this.getCurrentUserDetail();
       }
     } catch (error) {
