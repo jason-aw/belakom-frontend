@@ -59,11 +59,6 @@
 
         <FormulateInput type="submit" label="Register" />
       </FormulateForm>
-      <h1>values:</h1>
-      <h2>{{ formValues }}</h2>
-
-      <h1>reponse from backend</h1>
-      <h2>{{ responseValue }}</h2>
     </v-container>
   </div>
 </template>

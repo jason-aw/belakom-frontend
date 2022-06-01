@@ -3,24 +3,37 @@
     <v-overlay :value="loading">
       <v-progress-circular color="#1f3da1" indeterminate size="64" width="6" />
     </v-overlay>
-    <div v-if="!loading">
+    <template v-if="!loading">
       <div class="text-h2">{{ chapterDetail.chapterName }} Quiz</div>
 
       <v-progress-linear
         color="#1f3da1"
         :value="progressBarValue"
-        height="10px"
+        height="35px"
+        dark
         class="mt-6 rounded-pill"
-        ></v-progress-linear
+        > {{this.currentQuestion}} / {{this.chapterDetail.questions.length}} </v-progress-linear
       >
 
-      <v-row v-if="showScore" justify="center" no-gutters>
-        <v-card title="Results" style="max-width: 20rem">
-          You Scored {{ score }} of {{ chapterDetail.questions.length }}
-          <v-btn @click="restartQuiz"> Restart Quiz </v-btn>
-        </v-card>
-      </v-row>
-      <v-card v-else class="mt-6 mx-auto"  width="60%">
+      <div v-if="showScore">
+        <v-row justify="center" class="mt-5" no-gutters>
+          <h3>Kamu berhasil menjawab benar {{ score }} dari {{ chapterDetail.questions.length }} pertanyaan!</h3>
+        </v-row>
+        <v-row justify="center" no-gutters>
+          <v-img
+              src="../assets/Quiz/Done-rafiki.png"
+              width="50%"
+              height="50%"
+              max-height="50%"
+              max-width="50%"
+          ></v-img>
+        </v-row>
+        <v-row justify="center" no-gutters>
+          <v-btn  @click="restartQuiz" color="#1f3da1" dark large> Ulang Quiz </v-btn>
+        </v-row>
+      </div>
+
+      <v-card v-else class="mx-auto quizCard" elevation="0"  width="60%" >
         <v-card-text class="black--text" :class="this.getClass">
           <v-row class="text-h5" no-gutters>
             {{ chapterDetail.questions[currentQuestion].questionPrompt }}
@@ -84,44 +97,47 @@
 <!--            >-->
 <!--          </v-row>-->
         </v-card-text>
+        <v-card-actions v-if="correct === false">
+          <h3>Jawaban yang benar adalah {{this.correctAnswer}}</h3>
+        </v-card-actions>
       </v-card>
       <v-footer
         padless
-        fixed
-        height="20%"
+        absolute
+        height="100"
         class="px-xl-10"
         v-bind="this.footerAttrs"
+        
       >
-        <v-row justify="center" no-gutters class="px-10">
-          <v-spacer />
-          <v-btn v-if="!showAnswer" text>skip</v-btn>
-          <div v-if="correct === null">
+        <template v-if="!showScore">
+          <v-row justify="center" no-gutters class="px-10">
+            <v-spacer />
+            <v-btn v-if="!showAnswer" text>skip</v-btn>
+            <div v-if="correct === null">
 
-          </div>
-          <div v-else-if="correct">
-            <h3>BENAR!</h3>
-          </div>
-          <div v-else>
-            <v-card>
-              <v-card-title> SALAH </v-card-title>
-              <v-card-text> Jawaban seharusnya </v-card-text>
-            </v-card>
-          </div>
-          <v-spacer />
-          <v-btn
-            v-if="!showAnswer"
-            color="#1f3da1"
-            dark
-            @click="handleAnswerClick"
+            </div>
+            <div v-else-if="correct">
+              <h3>BENAR!</h3>
+            </div>
+            <div v-else>
+              <h3>SALAH!</h3>
+            </div>
+            <v-spacer />
+            <v-btn
+                v-if="!showAnswer"
+                color="#1f3da1"
+                dark
+                @click="handleAnswerClick"
             >Check Question</v-btn
-          >
-          <v-btn v-if="showAnswer" color="#1f3da1" dark @click="handleContinue"
+            >
+            <v-btn v-if="showAnswer" color="#1f3da1" dark @click="handleContinue"
             >Continue</v-btn
-          >
-          <v-spacer />
-        </v-row>
+            >
+            <v-spacer />
+          </v-row>
+        </template>
       </v-footer>
-    </div>
+    </template>
   </v-container>
 </template>
 
@@ -139,12 +155,13 @@ export default {
       progressBarValue: 0,
       formValue: {},
       loading: true,
-      showScore: false,
+      showScore: true,
       questionAnswers: null,
       score: 0,
       chapterDetail: {},
       showAnswer: false,
       correct: null,
+      correctAnswer: null,
     };
   },
   created() {
@@ -204,6 +221,9 @@ export default {
       this.progressBarValue = 0;
       this.score = 0;
       this.showScore = false;
+      this.chapterDetail.questions.forEach((question) => {
+        this.shuffleArray(question.answers);
+      });
     },
     handleUpdateChapterProgress() {
       if (!this.role?.includes("ROLE_USER")) {
@@ -223,11 +243,21 @@ export default {
 
       let question = this.chapterDetail.questions[this.currentQuestion];
 
-      let answer;
+
       switch (question.questionType) {
         case "MULTIPLE_CHOICE":
-          answer = question.answers[this.toggledAnswer];
-          if (answer.correct) {
+          // eslint-disable-next-line no-case-declarations
+          let chosenAnswer;
+          chosenAnswer = question.answers[this.toggledAnswer];
+
+          for (let answer of question.answers) {
+            if (answer.correct) {
+              this.correctAnswer = answer.answer;
+              break;
+            }
+          }
+
+          if (chosenAnswer.correct) {
             this.score = this.score + 1;
             this.correct = true;
           } else {
@@ -239,11 +269,14 @@ export default {
           let answers = Array.from(question.answers).map((answer) => {
             return answer.answer;
           });
+          this.correctAnswer = []
           for (let answer of answers) {
             this.correct = false;
+            this.correctAnswer.push(answer)
             if (answer === this.formValue.shortAnswerValue.toString()) {
               this.score = this.score + 1;
               this.correct = true;
+              break;
             }
           }
           break;
@@ -252,13 +285,13 @@ export default {
     handleContinue() {
       this.showAnswer = false;
       this.correct = null;
+      this.correctAnswer = null;
       let nextQuestion = this.currentQuestion + 1;
       this.progressBarValue =
         (nextQuestion / this.chapterDetail.questions.length) * 100;
 
-      if (nextQuestion < this.chapterDetail.questions.length) {
-        this.currentQuestion = nextQuestion;
-      } else {
+      this.currentQuestion = nextQuestion;
+      if (nextQuestion >= this.chapterDetail.questions.length) {
         this.handleUpdateChapterProgress();
         this.showScore = true;
       }
@@ -274,8 +307,14 @@ export default {
   background-color: #ced4e8;
 }
 
-.quizNull {
+.quizCard {
+  margin-top: 13%;
+  margin-bottom: 25%;
+}
 
+.endQuiz {
+  margin-top: 13%;
+  margin-bottom: 25%;
 }
 
 .quizCorrect {
