@@ -93,6 +93,7 @@
                     type="submit"
                     label="Create Chapter"
                   />
+                  <!-- TODO: PITER alert not showing -->
                   <v-alert
                     transition="fade-transition"
                     text

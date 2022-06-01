@@ -202,7 +202,7 @@ export default {
       this.$store.commit("chapter/addQuestion");
     },
     handleEnableQuiz() {
-      console.log(this.enableQuiz);
+      // console.log(this.enableQuiz);
       this.$store.commit("chapter/updateEnableQuiz", this.enableQuiz);
     },
   },

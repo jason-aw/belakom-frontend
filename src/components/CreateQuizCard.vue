@@ -128,7 +128,6 @@ export default {
         questionIndex: this.questionIndex,
         questionPrompt: value,
       };
-      console.log("update question payload", payload);
       this.$store.commit("chapter/updateQuestion", payload);
     },
     updateQuestionType(value) {

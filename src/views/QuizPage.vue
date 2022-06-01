@@ -12,93 +12,99 @@
         height="35px"
         dark
         class="mt-6 rounded-pill"
-        > {{this.currentQuestion}} / {{this.chapterDetail.questions.length}} </v-progress-linear
       >
+        {{ this.currentQuestion }} / {{ this.chapterDetail.questions.length }}
+      </v-progress-linear>
 
       <div v-if="showScore">
         <v-row justify="center" class="mt-5" no-gutters>
-          <h3>Kamu berhasil menjawab benar {{ score }} dari {{ chapterDetail.questions.length }} pertanyaan!</h3>
+          <h3>
+            Kamu berhasil menjawab benar {{ score }} dari
+            {{ chapterDetail.questions.length }} pertanyaan!
+          </h3>
         </v-row>
         <v-row justify="center" no-gutters>
           <v-img
-              src="../assets/Quiz/Done-rafiki.png"
-              width="50%"
-              height="50%"
-              max-height="50%"
-              max-width="50%"
+            src="../assets/Quiz/Done-rafiki.png"
+            width="50%"
+            height="50%"
+            max-height="50%"
+            max-width="50%"
           ></v-img>
         </v-row>
         <v-row justify="center" no-gutters>
-          <v-btn  @click="restartQuiz" color="#1f3da1" dark large> Ulang Quiz </v-btn>
+          <v-btn @click="restartQuiz" color="#1f3da1" dark large>
+            Ulang Quiz
+          </v-btn>
         </v-row>
       </div>
 
-      <v-card v-else class="mx-auto quizCard" elevation="0"  width="60%" >
+      <v-card v-else class="mx-auto quizCard" elevation="0" width="60%">
         <v-card-text class="black--text" :class="this.getClass">
           <v-row class="text-h5" no-gutters>
             {{ chapterDetail.questions[currentQuestion].questionPrompt }}
           </v-row>
           <v-divider class="my-4" />
-            <v-row
-              no-gutters
-              v-if="
-                chapterDetail.questions[currentQuestion].questionType ===
-                'MULTIPLE_CHOICE'
-              "
-              class="justify-center py-5"
-            >
-              <v-btn-toggle v-model="toggledAnswer">
-                <v-row>
-                  <v-col
-                    cols="6"
-                    class="px-5 justify-center py-3"
-                    :key="index"
-                    v-for="(answer, index) in chapterDetail.questions[
-                      currentQuestion
-                    ].answers"
-                  >
-                    <v-btn block outlined class="mx-2" variant="primary">
-                      {{ answer.answer }}
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-btn-toggle>
-            </v-row>
+          <v-row
+            no-gutters
+            v-if="
+              chapterDetail.questions[currentQuestion].questionType ===
+              'MULTIPLE_CHOICE'
+            "
+            class="justify-center py-5"
+          >
+            <v-btn-toggle v-model="toggledAnswer">
+              <v-row>
+                <v-col
+                  cols="6"
+                  class="px-5 justify-center py-3"
+                  :key="index"
+                  v-for="(answer, index) in chapterDetail.questions[
+                    currentQuestion
+                  ].answers"
+                >
+                  <v-btn block outlined class="mx-2" variant="primary">
+                    {{ answer.answer }}
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-btn-toggle>
+          </v-row>
 
-            <v-row
-              no-gutters
-              v-if="
-                chapterDetail.questions[currentQuestion].questionType ===
-                'SHORT_ANSWER'
-              "
+          <v-row
+            no-gutters
+            v-if="
+              chapterDetail.questions[currentQuestion].questionType ===
+              'SHORT_ANSWER'
+            "
+          >
+            <FormulateForm
+              v-model="formValue"
+              @submit="handleAnswerClick"
+              class="form"
             >
-              <FormulateForm
-                v-model="formValue"
-                @submit="handleAnswerClick"
-                class="form"
-              >
-                <FormulateInput
-                  type="text"
-                  name="shortAnswerValue"
-                  placeholder="Jawaban"
-                  validation="^required"
-                  error-behavior="submit"
-                  :validation-messages="{
-                    required: 'Jawaban harus ada',
-                  }"
-                />
-              </FormulateForm>
-            </v-row>
-<!--          <v-row no-gutters class="mt-4">-->
-<!--            <v-btn text>skip</v-btn>-->
-<!--            <v-spacer />-->
-<!--            <v-btn color="#1f3da1" dark @click="handleAnswerClick"-->
-<!--              >Check Question</v-btn-->
-<!--            >-->
-<!--          </v-row>-->
+              <FormulateInput
+                type="text"
+                name="shortAnswerValue"
+                placeholder="Jawaban"
+                validation="^required"
+                error-behavior="submit"
+                :validation-messages="{
+                  required: 'Jawaban harus ada',
+                }"
+              />
+            </FormulateForm>
+          </v-row>
+          <!--          <v-row no-gutters class="mt-4">-->
+          <!--            <v-btn text>skip</v-btn>-->
+          <!--            <v-spacer />-->
+          <!--            <v-btn color="#1f3da1" dark @click="handleAnswerClick"-->
+          <!--              >Check Question</v-btn-->
+          <!--            >-->
+          <!--          </v-row>-->
         </v-card-text>
         <v-card-actions v-if="correct === false">
-          <h3>Jawaban yang benar adalah {{this.correctAnswer}}</h3>
+          <h3>Jawaban yang benar adalah {{ this.correctAnswer }}</h3>
         </v-card-actions>
       </v-card>
         <template v-if="!showScore">
@@ -165,7 +171,7 @@ export default {
       } else {
         attrs.color = "#ffb3b3";
       }
-      console.log(attrs)
+      console.log(attrs);
       return attrs;
     },
     selectedAnswer() {
@@ -191,17 +197,16 @@ export default {
       return true;
     },
     getClass() {
-      console.log("dari card" + this.correct)
+      console.log("dari card" + this.correct);
 
       if (this.correct === null) {
-        return "quizNull"
+        return "quizNull";
       } else if (this.correct) {
-        return "quizCorrect"
+        return "quizCorrect";
       } else {
-        return "quizFalse"
+        return "quizFalse";
       }
-
-    }
+    },
   },
   methods: {
     init(chapterId) {
@@ -276,10 +281,10 @@ export default {
           let answers = Array.from(question.answers).map((answer) => {
             return answer.answer;
           });
-          this.correctAnswer = []
+          this.correctAnswer = [];
           for (let answer of answers) {
             this.correct = false;
-            this.correctAnswer.push(answer)
+            this.correctAnswer.push(answer);
             if (answer === this.formValue.shortAnswerValue.toString()) {
               this.score = this.score + 1;
               this.correct = true;
@@ -325,15 +330,14 @@ export default {
 }
 
 .quizCorrect {
-  border: 2px solid #59CE02;
-  box-shadow: 0 0 8px #59CE02;
+  border: 2px solid #59ce02;
+  box-shadow: 0 0 8px #59ce02;
 }
 
 .quizFalse {
-  border: 2px solid #F51414;
-  box-shadow: 0 0 8px #F51414;
+  border: 2px solid #f51414;
+  box-shadow: 0 0 8px #f51414;
 }
-
 </style>
 
 
