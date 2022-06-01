@@ -100,14 +100,14 @@ export const chapter = {
     updateQuestion(state, payload) {
       let question = state.chapterDetail.questions[payload.questionIndex];
       question.questionPrompt = payload.questionPrompt;
-      question.questionType = payload.questionType;
-      if (payload.questionType === "SHORT_ANSWER") {
-        question.answers = [
-          { answer: "Correct Answer 1", correct: true }
-        ];
+      if (question.questionType === payload.questionType) {
+        question.answers = payload.answers;
       } else {
-        if (payload.answers) {
-          question.answers = payload.answers;
+        question.questionType = payload.questionType;
+        if (payload.questionType === "SHORT_ANSWER") {
+          question.answers = [
+            { answer: "Correct Answer 1", correct: true }
+          ];
         } else {
           question.answers = [
             { answer: "Option 1", correct: false, }
