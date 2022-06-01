@@ -10,9 +10,6 @@
             @input="updateQuestionPrompt($event)"
           />
         </v-col>
-        <v-col class="flex-grow-0">
-          <v-file-input prepend-icon="mdi-image" hide-input />
-        </v-col>
         <v-col class="flex-shrink-0 col-3">
           <v-select
             :items="questionTypeSelection"

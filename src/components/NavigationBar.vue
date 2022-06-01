@@ -18,14 +18,15 @@
     <div class="pr-5">
       <v-menu offset-y v-if="loggedIn" left>
         <template v-slot:activator="{ on }">
-          <v-btn class="menu-button" icon x-large v-on="on" >
-            <v-icon>
-              mdi-menu
-            </v-icon>
+          <v-btn class="menu-button" icon x-large v-on="on">
+            <v-icon> mdi-menu </v-icon>
           </v-btn>
         </template>
         <v-list dense>
-          <v-list-item v-if="!currentPathIsProfile" @click.prevent="goToProfile">
+          <v-list-item
+            v-if="!currentPathIsProfile"
+            @click.prevent="goToProfile"
+          >
             <v-icon class="pr-2">mdi-account-outline</v-icon>
             <v-list-item-title>Profile</v-list-item-title>
           </v-list-item>
@@ -49,8 +50,8 @@ export default {
   name: "NavigationBar",
   data() {
     return {
-      currentPathIsProfile : null,
-    }
+      currentPathIsProfile: null,
+    };
   },
   created() {
     this.checkPath();
@@ -58,21 +59,21 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("auth/logout").then(
-        (response) => {
-          console.log(response);
+        () => {
+          // console.log(response);
           this.$router.push("/login");
         },
-        (error) => {
-          console.log(error);
+        () => {
+          // console.log(error);
         }
       );
     },
     checkPath() {
       if (this.$router.currentRoute.path === "/profile") {
-        console.log("profile")
+        // console.log("profile")
         this.currentPathIsProfile = true;
       } else {
-        console.log("topics")
+        // console.log("topics")
         this.currentPathIsProfile = false;
       }
     },
@@ -81,12 +82,12 @@ export default {
     },
     goToTopic() {
       this.$router.push("/topics");
-    }
+    },
   },
   watch: {
-    $route (){
+    $route() {
       this.checkPath();
-    }
+    },
   },
   computed: {
     ...mapGetters("auth", ["loggedIn"]),

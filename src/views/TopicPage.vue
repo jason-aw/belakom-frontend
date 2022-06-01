@@ -188,7 +188,7 @@ export default {
   },
   computed: {
     ...mapGetters("topic", ["topicData"]),
-    ...mapGetters("auth", ["role"]),
+    ...mapGetters("auth", ["role", "loggedIn"]),
   },
   mounted() {
     // this.$on("deleteTopicEvent", (payload) => {
@@ -199,11 +199,19 @@ export default {
   },
   methods: {
     async getAllTopics() {
+      if (this.loggedIn) {
+        return this.$store
+        .dispatch("topic/getAllTopicsByUserId")
+        .then(() => Promise.resolve())
+        .catch((error) => {
+          Promise.reject(error);
+        });
+      }
       return this.$store
         .dispatch("topic/getAllTopics")
         .then(() => Promise.resolve())
         .catch((error) => {
-          console.log("getAllTopics", error);
+          // console.log("getAllTopics", error);
           Promise.reject(error);
         });
     },

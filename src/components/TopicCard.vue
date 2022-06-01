@@ -1,41 +1,37 @@
 <template>
-  <div
-    class="topicCard"
-    @click.stop="goToTopicDetail(topic.topicName)"
-  >
-      <v-btn
-          fab
-          x-small
-          color="#F51414"
+  <div class="topicCard" @click.stop="goToTopicDetail(topic.id)">
+    <v-btn
+      fab
+      x-small
+      color="#F51414"
+      dark
+      class="buttonDelete"
+      v-if="!showProgressBar"
+      @click.stop="emitDeleteEvent()"
+    >
+      <v-icon>mdi-trash-can</v-icon>
+    </v-btn>
+
+    <div class="topicCardTextArea">
+      {{ topic.topicName }}
+    </div>
+
+    <div class="progressBarArea" v-if="showProgressBar">
+      <v-slide-x-transition>
+        <v-progress-linear
+          color="#1f3da1"
+          v-model="this.progressValue"
+          height="15"
           dark
-          class="buttonDelete"
-          v-if="!showProgressBar"
-          @click.stop="emitDeleteEvent()"
-      >
-        <v-icon>mdi-trash-can</v-icon>
-      </v-btn>
-
-      <div class="topicCardTextArea">
-        {{ topic.topicName }}
-      </div>
-
-      <div class="progressBarArea" v-if="showProgressBar">
-        <v-slide-x-transition>
-          <v-progress-linear
-              color="#1f3da1"
-              v-model="this.progressValue"
-              height="15"
-              dark
-              striped
-              class="mt-6 rounded-pill"
-          >
-            <template v-slot:default="{ value }">
-              <span class="progressText">{{ Math.ceil(value) }}%</span>
-            </template>
-          </v-progress-linear>
-        </v-slide-x-transition>
-      </div>
-
+          striped
+          class="mt-6 rounded-pill"
+        >
+          <template v-slot:default="{ value }">
+            <span class="progressText">{{ Math.ceil(value) }}%</span>
+          </template>
+        </v-progress-linear>
+      </v-slide-x-transition>
+    </div>
   </div>
 </template>
 
@@ -60,7 +56,10 @@ export default {
   },
   methods: {
     emitDeleteEvent() {
-      this.$emit("delete-event-topic", {name: this.topic.topicName, id: this.topic.id});
+      this.$emit("delete-event-topic", {
+        name: this.topic.topicName,
+        id: this.topic.id,
+      });
     },
     goToTopicDetail(topicName) {
       this.$router.push("/topics/" + topicName);
