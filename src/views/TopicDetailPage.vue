@@ -93,14 +93,14 @@
                     type="submit"
                     label="Create Chapter"
                   />
-                  <!-- TODO: PITER alert not showing -->
+
                   <v-alert
                     transition="fade-transition"
                     text
                     type="success"
                     v-model="successCreateAlert"
                   >
-                    Chapter successfully added!
+                    Chapter berhasil dibuat!
                   </v-alert>
                   <v-alert
                     transition="fade-transition"
@@ -108,7 +108,7 @@
                     type="error"
                     v-model="errorCreateAlert"
                   >
-                    Chapter failed to add!
+                    Chapter gagal dibuat!
                   </v-alert>
                 </FormulateForm>
               </v-container>
@@ -128,8 +128,7 @@
           <v-card-text class="justify-center">
             <div class="text-center text-h5 pa-5">
               Apakah anda yakin ingin menghapus chapter
-              <span style="font-weight: bold"> {{ deleteDialogName }} </span>
-              ?
+              <span style="font-weight: bold"> {{ deleteDialogName }} </span> ?
             </div>
           </v-card-text>
           <v-card-actions class="justify-center">
@@ -259,10 +258,23 @@ export default {
 
       chapterService.createChapter(this.createChapterFormValue).then(
         (response) => {
+          this.successCreateAlert = true;
+
+          setTimeout(() => {
+            this.successCreateAlert = false;
+          }, 2000);
+
           this.getAllChapters();
           return response;
         },
         (error) => {
+          this.errorMessage = error
+          this.errorCreateAlert = true;
+
+          setTimeout(() => {
+            this.errorCreateAlert = false;
+          }, 2000);
+
           return error;
         }
       );

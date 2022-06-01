@@ -28,10 +28,10 @@
       <v-row no-gutters>
         <v-spacer />
         <v-btn color="#1f3da1" dark @click="handlePublish" class="mr-4"
-          >Publish Article</v-btn
+          >Simpan Article</v-btn
         >
         <v-btn color="#1f3da1" dark to="/chapter-preview"
-          >See Article Preview</v-btn
+          >Lihat Hasil Artikel</v-btn
         >
       </v-row>
 
@@ -54,6 +54,45 @@
         </div>
       </div>
     </div>
+
+    <v-dialog
+        transition="dialog-top-transition"
+        max-width="600"
+        v-model="publishDialog"
+    >
+      <template>
+        <v-card>
+          <v-row class="pa-3" no-gutters>
+            <v-col>
+              <v-alert
+                  transition="fade-transition"
+                  type="success"
+                  text
+                  v-model="successPublishAlert"
+              >
+                Artikel berhasil disimpan!
+              </v-alert>
+              <v-alert
+                  transition="fade-transition"
+                  type="success"
+                  text
+                  v-model="errorPublishAlert"
+              >
+                Artikel gagal disimpan! {{ errorMessage }}!
+              </v-alert>
+              <v-alert
+                  transition="fade-transition"
+                  type="warning"
+                  text
+                  v-model="notChangedAlert"
+              >
+                Artikel belum berubah!
+              </v-alert>
+            </v-col>
+          </v-row>
+        </v-card>
+      </template>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -84,6 +123,11 @@ export default {
       questionTypeValue: "",
       timedAlert: false,
       loading: true,
+      successPublishAlert: false,
+      errorPublishAlert: false,
+      notChangedAlert:false,
+      errorMessage: null,
+      publishDialog: false,
       editorSettings: {
         modules: {
           imageResize: {},
@@ -108,10 +152,10 @@ export default {
     ...mapGetters("chapter", ["chapterDetail"]),
     hasChanges() {
       return !(
-        this.initialChapter.chapterName == this.chapterDetail.chapterName &&
-        this.initialChapter.description == this.chapterDetail.description &&
-        this.initialChapter.enableQuiz == this.chapterDetail.enableQuiz &&
-        this.initialChapter.htmlContent == this.chapterDetail.htmlContent &&
+        this.initialChapter.chapterName === this.chapterDetail.chapterName &&
+        this.initialChapter.description === this.chapterDetail.description &&
+        this.initialChapter.enableQuiz === this.chapterDetail.enableQuiz &&
+        this.initialChapter.htmlContent === this.chapterDetail.htmlContent &&
         this.arraysEqual(
           this.initialChapter.questions,
           this.chapterDetail.questions
@@ -188,15 +232,40 @@ export default {
     },
     handlePublish() {
       if (!this.hasChanges) {
+
+        this.notChangedAlert = true;
+        this.publishDialog = true;
+
+        setTimeout(() => {
+          this.notChangedAlert = false;
+          this.publishDialog = false;
+        }, 2000);
+
         return;
       }
       chapterService
         .updateChapter(this.chapterDetail)
         .then((response) => {
           this.initialChapter = Object.assign({}, response);
-          // TODO: PITER kasih alert kalo udah berhasil publish
+          this.successPublishAlert = true;
+          this.publishDialog = true;
+
+          setTimeout(() => {
+            this.successPublishAlert = false;
+            this.publishDialog = false;
+          }, 2000);
+
         })
-        .catch((error) => (this.errorMsg = error));
+        .catch((error) => {
+          this.errorMsg = error
+          this.errorPublishAlert = true;
+          this.publishDialog = true;
+
+          setTimeout(() => {
+            this.errorPublishAlert = false;
+            this.publishDialog = false;
+          }, 2000);
+        })
     },
     handleAddQuestion() {
       this.$store.commit("chapter/addQuestion");
