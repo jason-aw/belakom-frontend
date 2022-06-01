@@ -106,9 +106,13 @@ export const chapter = {
           { answer: "Correct Answer 1", correct: true }
         ];
       } else {
-        question.answers = [
-          { answer: "Option 1", correct: false, }
-        ];
+        if (payload.answers) {
+          question.answers = payload.answers;
+        } else {
+          question.answers = [
+            { answer: "Option 1", correct: false, }
+          ];
+        }
       }
     },
     removeQuestion(state, questionIndex) {
