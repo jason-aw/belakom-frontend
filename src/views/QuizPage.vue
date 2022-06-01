@@ -101,42 +101,28 @@
           <h3>Jawaban yang benar adalah {{this.correctAnswer}}</h3>
         </v-card-actions>
       </v-card>
-      <v-footer
-        padless
-        absolute
-        height="100"
-        class="px-xl-10"
-        v-bind="this.footerAttrs"
-        
-      >
         <template v-if="!showScore">
-          <v-row justify="center" no-gutters class="px-10">
+          <v-row no-gutters class="px-5">
             <v-spacer />
-            <v-btn v-if="!showAnswer" text>skip</v-btn>
+<!--            <v-btn v-if="!showAnswer" text>skip</v-btn>-->
             <div v-if="correct === null">
 
             </div>
-            <div v-else-if="correct">
-              <h3>BENAR!</h3>
-            </div>
-            <div v-else>
-              <h3>SALAH!</h3>
-            </div>
-            <v-spacer />
+
             <v-btn
                 v-if="!showAnswer"
                 color="#1f3da1"
                 dark
                 @click="handleAnswerClick"
+                x-large
+                :disabled=selectedAnswer
             >Check Question</v-btn
             >
-            <v-btn v-if="showAnswer" color="#1f3da1" dark @click="handleContinue"
+            <v-btn v-if="showAnswer" color="#1f3da1" dark @click="handleContinue" x-large
             >Continue</v-btn
             >
-            <v-spacer />
           </v-row>
         </template>
-      </v-footer>
     </template>
   </v-container>
 </template>
@@ -155,7 +141,7 @@ export default {
       progressBarValue: 0,
       formValue: {},
       loading: true,
-      showScore: true,
+      showScore: false,
       questionAnswers: null,
       score: 0,
       chapterDetail: {},
@@ -181,6 +167,28 @@ export default {
       }
       console.log(attrs)
       return attrs;
+    },
+    selectedAnswer() {
+      let question = this.chapterDetail.questions[this.currentQuestion];
+
+      switch (question.questionType) {
+        case "MULTIPLE_CHOICE":
+          // eslint-disable-next-line no-case-declarations
+          let chosenAnswer = question.answers[this.toggledAnswer];
+          if (chosenAnswer) {
+            console.log("njirs")
+            return false;
+          }
+          break;
+        case "SHORT_ANSWER":
+          // eslint-disable-next-line no-case-declarations
+          if (this.formValue.shortAnswerValue) {
+            return false;
+          }
+          break;
+      }
+      console.log("blum jawab")
+      return true;
     },
     getClass() {
       console.log("dari card" + this.correct)
@@ -242,7 +250,6 @@ export default {
       this.showAnswer = true;
 
       let question = this.chapterDetail.questions[this.currentQuestion];
-
 
       switch (question.questionType) {
         case "MULTIPLE_CHOICE":
@@ -308,13 +315,13 @@ export default {
 }
 
 .quizCard {
-  margin-top: 13%;
-  margin-bottom: 25%;
+  margin-top: 10%;
+  margin-bottom: 10%;
 }
 
 .endQuiz {
   margin-top: 13%;
-  margin-bottom: 25%;
+  margin-bottom: 15%;
 }
 
 .quizCorrect {
