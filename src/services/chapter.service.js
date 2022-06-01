@@ -5,6 +5,15 @@ import authHeader from "./auth-header";
 function getAllChapters(topicId) {
   return axios
     .get(ApiPath.GET_ALL_CHAPTERS_URL, {
+      params: { topicId: topicId },
+    })
+    .then((response) => Promise.resolve(response))
+    .catch((error) => Promise.reject(error.response.data));
+}
+
+function getAllChaptersByUserId(topicId) {
+  return axios
+    .get(ApiPath.GET_ALL_CHAPTERS_BY_USERID_URL, {
       headers: authHeader("accessToken"),
       params: { topicId: topicId },
     })
@@ -56,6 +65,7 @@ function updateChapter(chapter) {
 
 export default {
   getAllChapters,
+  getAllChaptersByUserId,
   createChapter,
   deleteChapter,
   getChapterById,

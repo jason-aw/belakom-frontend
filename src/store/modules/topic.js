@@ -27,6 +27,18 @@ export const topic = {
         }
       );
     },
+    getAllTopicsByUserId({ commit }) {
+      return topicService.getAllTopicsByUserId().then(
+        (response) => {
+          commit("getAllTopicSuccess", response.data.value);
+          return Promise.resolve(response);
+        },
+        (error) => {
+          commit("getAllTopicError");
+          return Promise.resolve(error);
+        }
+      );
+    },
     getTopicByName({ commit }, payLoad) {
       return topicService.getTopicByName(payLoad.topicName).then(
         (response) => {

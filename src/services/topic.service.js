@@ -4,7 +4,14 @@ import authHeader from "./auth-header";
 
 function getAllTopics() {
   return axios
-    .get(ApiPath.GET_ALL_TOPIC_URL, { headers: authHeader("accessToken") })
+    .get(ApiPath.GET_ALL_TOPIC_URL)
+    .then((response) => Promise.resolve(response))
+    .catch((error) => Promise.reject(error.response.data));
+}
+
+function getAllTopicsByUserId() {
+  return axios
+    .get(ApiPath.GET_ALL_TOPIC_BY_USERID_URL, { headers: authHeader("accessToken") })
     .then((response) => Promise.resolve(response))
     .catch((error) => Promise.reject(error.response.data));
 }
@@ -78,6 +85,7 @@ function deleteTopic(id) {
 
 export default {
   getAllTopics,
+  getAllTopicsByUserId,
   createTopic,
   updateTopic,
   deleteTopic,

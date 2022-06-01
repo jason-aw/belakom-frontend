@@ -4,6 +4,9 @@
       <v-progress-circular color="#1f3da1" indeterminate size="64" width="6" />
     </v-overlay>
     <div v-if="!loading">
+      <v-btn @click="goToTopicPage" class="mb-4 mt-1" color="#1f3da1" dark
+        ><v-icon dense>mdi-arrow-left</v-icon> Ke Halaman Chapters</v-btn
+      >
       <div id="articleContent">
         <h1>{{ chapterDetail.chapterName }}</h1>
         <p>{{ chapterDetail.description }}</p>
@@ -37,7 +40,7 @@ export default {
       chapterDetail: {},
       loading: true,
       articlePosition: null,
-      adminRole: false
+      adminRole: false,
     };
   },
   computed: {
@@ -55,11 +58,14 @@ export default {
     } catch (error) {
       // console.log(error);
     }
-    this.adminRole = this.role?.includes("ROLE_ADMIN")
+    this.adminRole = this.role?.includes("ROLE_ADMIN");
     document.title = `${this.chapterDetail.chapterName} | Belakom`;
     this.loading = false;
   },
   methods: {
+    goToTopicPage() {
+      this.$router.push(`/topics/${this.chapterDetail.topicId}`);
+    },
     async getChapterDetail(chapterId) {
       return chapterService
         .getChapterById(chapterId)
@@ -93,7 +99,9 @@ export default {
         return;
       }
 
-      this.articlePosition = document.getElementById("articleContent").getBoundingClientRect()
+      this.articlePosition = document
+        .getElementById("articleContent")
+        .getBoundingClientRect();
 
       let unscrollablePage =
         document.documentElement.scrollHeight ===
