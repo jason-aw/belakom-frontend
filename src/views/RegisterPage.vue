@@ -1,66 +1,79 @@
 <template>
-  <div>
-    <v-container class="text-center">
-      <div class="titleform">
-        <h1>Halaman Daftar</h1>
-      </div>
+  <v-container
+    class="text-center d-flex flex-column justify-center align-center"
+  >
+    <div class="titleform mb-4">
+      <h1>Halaman Daftar</h1>
+    </div>
 
-      <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
-        <FormulateInput
-            type="text"
-            name="name"
-            label="Nama"
-            placeholder="Nama"
-            validation="^required|min:5, length"
-            error-behavior="submit"
-            :validation-messages="{
-            required: 'E-mail harus ada',
-            min: 'Nama minimum 5 karakter'
-          }"
-        />
+    <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
+      <v-alert
+        class="alert"
+        text
+        border="left"
+        v-if="alertMessage"
+        type="error"
+        >{{ alertMessage }}</v-alert
+      >
+      <FormulateInput
+        type="text"
+        name="name"
+        label="Nama"
+        placeholder="Nama"
+        validation="^required|min:5, length"
+        error-behavior="submit"
+        :validation-messages="{
+          required: 'E-mail harus ada',
+          min: 'Nama minimum 5 karakter',
+        }"
+      />
 
-        <FormulateInput
-          type="text"
-          name="email"
-          label="E-mail"
-          placeholder="E-mail"
-          validation="^required|email"
-          error-behavior="submit"
-          :validation-messages="{
-            required: 'E-mail harus ada',
-            email: ({ value }) => `'${value}' bukan e-mail yang valid`,
-          }"
-        />
+      <FormulateInput
+        type="text"
+        name="email"
+        label="E-mail"
+        placeholder="E-mail"
+        validation="^required|email"
+        error-behavior="submit"
+        :validation-messages="{
+          required: 'E-mail harus ada',
+          email: ({ value }) => `'${value}' bukan e-mail yang valid`,
+        }"
+      />
 
-        <FormulateInput
-          type="password"
-          name="password"
-          label="Password"
-          placeholder="Password"
-          validation="required"
-          error-behavior="submit"
-          :validation-messages="{
-            required: 'Password harus ada',
-          }"
-        />
+      <FormulateInput
+        type="password"
+        name="password"
+        label="Password"
+        placeholder="Password"
+        validation="required"
+        error-behavior="submit"
+        :validation-messages="{
+          required: 'Password harus ada',
+        }"
+      />
 
-        <FormulateInput
-          type="password"
-          name="password_confirm"
-          label="Konfirmasi Password"
-          placeholder="Konfirmasi Password"
-          validation="^required|confirm"
-          error-behavior="submit"
-          :validation-messages="{
-            required: 'Konfirmasi Password harus ada',
-            confirm: 'Konfirmasi Password harus sama dengan Password',
-          }"
-        />
+      <FormulateInput
+        type="password"
+        name="password_confirm"
+        label="Konfirmasi Password"
+        placeholder="Konfirmasi Password"
+        validation="^required|confirm"
+        error-behavior="submit"
+        :validation-messages="{
+          required: 'Konfirmasi Password harus ada',
+          confirm: 'Konfirmasi Password harus sama dengan Password',
+        }"
+      />
 
-        <FormulateInput type="submit" label="Register" />
-      </FormulateForm>
-    </v-container>
-  </div>
+      <FormulateInput type="submit" label="Register" />
+
+      <v-responsive max-width="60%" class="mt-4">
+        Sudah punya akun?
+        <router-link to="/login">Login disini</router-link>
+      </v-responsive>
+    </FormulateForm>
+  </v-container>
 </template>
 
 <script>
@@ -72,6 +85,7 @@ export default {
   data: () => ({
     formValues: {},
     responseValue: {},
+    alertMessage: "",
   }),
   computed: {
     ...mapGetters("auth", ["loggedIn"]),
@@ -81,11 +95,15 @@ export default {
       authService.register(this.formValues).then(
         (response) => {
           this.responseValue = response;
-          alert("registered successfully");
+          alert("Registered Successfully!");
           this.$router.push("/login");
         },
         (error) => {
           this.responseValue = error;
+          this.alertMessage = error.message;
+          setTimeout(() => {
+            this.alertMessage = "";
+          }, 5000);
         }
       );
     },
@@ -94,8 +112,16 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  height: 100%;
+}
+
+.alert {
+  width: 60%;
+  text-align: left;
+}
+
 .titleform h1 {
-  margin-top: 10%;
   font-weight: 1000;
   font-size: 2.7em;
 }
@@ -107,9 +133,7 @@ export default {
   flex-direction: column;
   align-items: center;
   background: #ffffff;
-  margin-top: 5%;
-  margin-left: 20%;
-  margin-right: 20%;
+  width: 60%;
   padding-top: 4%;
   padding-bottom: 4%;
   border: solid 2px #1f3da1;

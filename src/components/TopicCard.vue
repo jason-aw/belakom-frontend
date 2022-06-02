@@ -6,7 +6,7 @@
       color="#F51414"
       dark
       class="buttonDelete"
-      v-if="!showProgressBar"
+      v-if="showDelete"
       @click.stop="emitDeleteEvent()"
     >
       <v-icon>mdi-trash-can</v-icon>
@@ -42,6 +42,7 @@ export default {
   props: ["topic"],
   data: () => ({
     user_role: "ROLE_USER",
+    admin_role: "ROLE_ADMIN",
     progressValue: 0,
     dialog: false,
     showProgressBar: false,
@@ -50,6 +51,7 @@ export default {
     this.showProgressBar = this.role?.includes(this.user_role);
     this.progressValue =
       this.topic.topicCompletion !== 0 ? this.topic.topicCompletion * 100 : 0;
+    this.showDelete = this.role?.includes(this.admin_role);
   },
   computed: {
     ...mapGetters("auth", ["role"]),

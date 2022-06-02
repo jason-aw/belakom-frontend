@@ -157,7 +157,7 @@
               </v-alert>
               <v-alert
                 transition="fade-transition"
-                type="success"
+                type="error"
                 text
                 v-model="errorDeleteAlert"
               >
@@ -268,7 +268,7 @@ export default {
           return response;
         },
         (error) => {
-          this.errorMessage = error
+          this.errorMessage = error;
           this.errorCreateAlert = true;
 
           setTimeout(() => {
