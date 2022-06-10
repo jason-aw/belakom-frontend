@@ -1,9 +1,17 @@
 <template>
-  <v-container>
-    <div class="titleform">
+  <v-container class="d-flex flex-column justify-center align-center">
+    <div class="titleform mb-4">
       <h1>Halaman Masuk</h1>
     </div>
     <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
+      <v-alert
+        class="alert"
+        text
+        border="left"
+        v-if="errorMessage"
+        type="error"
+        >{{ errorMessage }}</v-alert
+      >
       <FormulateInput
         type="text"
         name="email"
@@ -32,10 +40,6 @@
       <FormulateInput type="submit" label="Login" />
 
       <v-responsive max-width="60%" class="mb-4">
-        <router-link to="/forgot-password">Forgot Password?</router-link>
-      </v-responsive>
-
-      <v-responsive max-width="60%" class="mb-4">
         Atau kalau kamu punya e-mail google, kamu bisa log in dengan klik button
         dibawah ini
       </v-responsive>
@@ -44,6 +48,12 @@
         <img src="@/assets/google.png" />
         <span> Google </span>
       </button>
+
+      <v-responsive max-width="60%" class="mt-4">
+        <router-link to="/forgot-password">Forgot Password?</router-link><br />
+        Belum punya akun?
+        <router-link to="/register">Daftar disini</router-link>
+      </v-responsive>
     </FormulateForm>
   </v-container>
 </template>
@@ -68,7 +78,11 @@ export default {
           this.$router.push("/topics");
         },
         (error) => {
-          console.log(error);
+          // console.log(error);
+          this.errorMessage = error.response.data.message;
+          setTimeout(() => {
+            this.errorMessage = "";
+          }, 5000);
         }
       );
     },
@@ -82,11 +96,16 @@ export default {
 <style scoped>
 .container {
   text-align: center;
+  height: 100%;
+}
+
+.alert {
+  width: 60%;
+  text-align: left;
 }
 
 .titleform h1 {
-  margin-top: 10%;
-  font-weight: 1000;
+  font-weight: 900;
   font-size: 2.7em;
 }
 
@@ -97,14 +116,15 @@ export default {
   flex-direction: column;
   align-items: center;
   background: #ffffff;
-  margin-top: 5%;
-  margin-left: 20%;
-  margin-right: 20%;
+  width: 60%;
   padding-top: 4%;
   padding-bottom: 4%;
 }
 
 .googlebutton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 2px solid #1f3da1;
   width: 36%;
   padding: 10px;
@@ -125,8 +145,8 @@ export default {
 
 .googlebutton img {
   display: block;
-  width: 10%;
+  width: 30px;
+  margin-right: 10px;
   height: auto;
-  float: left;
 }
 </style>
