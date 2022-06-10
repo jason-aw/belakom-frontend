@@ -4,6 +4,23 @@
 
     <v-main>
       <router-view />
+
+      <v-snackbar
+          v-model="snackbar"
+          :timeout="5000"
+      >
+        {{snackbarText}}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+              text
+              v-bind="attrs"
+              @click="snackbar = false"
+          >
+            Tutup
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -17,6 +34,8 @@ export default {
     return {
       navigation: null,
       hideNavBar: ["Login", "Register", "ResetPassword", "ForgotPassword"],
+      snackbar: false,
+      snackbarText: null,
     };
   },
   components: {
@@ -28,6 +47,9 @@ export default {
   computed: {
     ...mapGetters("auth", ["loggedIn"]),
   },
+  mounted(){
+    this.$root.$on("global-snackbar-notification", this.successRegistrationEvent)
+  },
   methods: {
     checkRoute() {
       if (this.hideNavBar.includes(this.$route.name)) {
@@ -36,6 +58,10 @@ export default {
         this.navigation = true;
       }
     },
+    successRegistrationEvent(payload) {
+      this.snackbar = true;
+      this.snackbarText = payload;
+    }
   },
   watch: {
     $route() {

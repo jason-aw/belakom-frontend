@@ -6,7 +6,7 @@
       color="#F51414"
       dark
       class="buttonDelete"
-      v-if="!showProgressBar"
+      v-if="adminRole"
       @click.stop="emitDeleteEvent()"
     >
       <v-icon>mdi-trash-can</v-icon>
@@ -16,7 +16,7 @@
       {{ topic.topicName }}
     </div>
 
-    <div class="progressBarArea" v-if="showProgressBar">
+    <div class="progressBarArea" v-if="userRole">
       <v-slide-x-transition>
         <v-progress-linear
           color="#1f3da1"
@@ -41,13 +41,15 @@ export default {
   name: "TopicCard",
   props: ["topic"],
   data: () => ({
-    user_role: "ROLE_USER",
+    userRole: null,
+    adminRole: null,
     progressValue: 0,
     dialog: false,
     showProgressBar: false,
   }),
   created() {
-    this.showProgressBar = this.role?.includes(this.user_role);
+    this.userRole = this.role?.includes("ROLE_USER");
+    this.adminRole = this.role?.includes("ROLE_ADMIN");
     this.progressValue =
       this.topic.topicCompletion !== 0 ? this.topic.topicCompletion * 100 : 0;
   },

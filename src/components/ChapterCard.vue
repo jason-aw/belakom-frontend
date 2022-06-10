@@ -5,7 +5,7 @@
   >
     <div class="chapterTitle">
       {{ index }}. {{ chapter.chapterName }}
-      <template v-if="!adminRole">
+      <template v-if="userRole">
         {{ chapter.chapterCompletion * 100 }}%
       </template>
     </div>
@@ -53,13 +53,15 @@ export default {
   },
   data: () => ({
     adminRole : null,
+    userRole: null,
     successDeleteAlert : false,
     errorDeleteAlert : false,
     deleteAlertCounter : 0,
     dialog : false
   }),
   created() {
-    this.adminRole = (!this.role?.includes("ROLE_USER"));
+    this.adminRole = this.role?.includes("ROLE_ADMIN");
+    this.userRole = this.role?.includes("ROLE_USER");
   },
   methods: {
     goToChapterDetail(id) {

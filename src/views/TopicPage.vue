@@ -7,6 +7,7 @@
       <div class="text-h4 mb-4">Mau belajar apa hari ini?</div>
 
       <div v-if="currentLearnTopic">
+        <span> Terakhir kali kamu sedang belajar ini! </span>
         <CurrentlyLearningTopicCard :topic="currentLearnTopic" />
       </div>
 

@@ -65,7 +65,7 @@ export default {
     handleSubmit() {
       this.$store.dispatch("auth/login", this.formValues).then(
         () => {
-          this.$router.push("/home");
+          this.$router.push("/topics");
         },
         (error) => {
           console.log(error);

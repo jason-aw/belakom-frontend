@@ -16,7 +16,7 @@
             </button>
           </router-link>
 
-          <router-link to="/login" v-slot="{ navigate }">
+          <router-link to="/topics" v-slot="{ navigate }">
             <button
               @click="navigate"
               class="pilihan"
@@ -27,7 +27,7 @@
             </button>
           </router-link>
 
-          <router-link to="/login" v-slot="{ navigate }">
+          <router-link to="/topics/email" v-slot="{ navigate }">
             <button
               @click="navigate"
               class="pilihan"

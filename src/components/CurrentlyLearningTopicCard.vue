@@ -3,7 +3,7 @@
       class="topicCard"
       @mouseover="hovered = true"
       @mouseleave="hovered = false"
-      @click.stop="goToTopicDetail(topic.topicName)"
+      @click.stop="goToTopicDetail()"
   >
     <div class="topicCardText">
       {{ topic.topicName }}
@@ -20,8 +20,8 @@ export default {
     hovered: false,
   }),
   methods: {
-    goToTopicDetail(topicName) {
-      this.$router.push("/topics/" + topicName);
+    goToTopicDetail() {
+      this.$router.push("/topics/" + this.topic.id);
     },
   },
 }

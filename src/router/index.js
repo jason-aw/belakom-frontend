@@ -23,6 +23,7 @@ const routes = [
   {
     path: "/",
     component: LandingPage,
+    meta: { guest: true },
   },
   {
     name: "Login",
@@ -124,7 +125,7 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some((record) => record.meta.guest)) {
     if (isLoggedIn) {
-      next("/");
+      next("/topics");
     } else {
       next();
     }

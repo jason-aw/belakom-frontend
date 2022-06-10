@@ -6,15 +6,34 @@
     <template v-if="!loading">
       <div class="text-h2">{{ chapterDetail.chapterName }} Quiz</div>
 
-      <v-progress-linear
-        color="#1f3da1"
-        :value="progressBarValue"
-        height="35px"
-        dark
-        class="mt-6 rounded-pill"
-      >
-        {{ this.currentQuestion }} / {{ this.chapterDetail.questions.length }}
-      </v-progress-linear>
+      <v-row justify="center" align="center" class="mt-6">
+        <v-col cols="1" justify="center" align="center">
+          <v-btn
+              class="mx-2"
+              dark
+              width="auto"
+              height="35px"
+              color="#BFBBBB"
+              @click="backToChapterDetail()"
+          >
+            <v-icon>
+              mdi-arrow-left
+            </v-icon>
+          </v-btn>
+        </v-col>
+
+        <v-col cols="11">
+          <v-progress-linear
+              color="#1f3da1"
+              :value="progressBarValue"
+              height="35px"
+              dark
+              class="rounded-pill progressBar"
+          >
+            {{ this.currentQuestion }} / {{ this.chapterDetail.questions.length }}
+          </v-progress-linear>
+        </v-col>
+      </v-row>
 
       <div v-if="showScore">
         <v-row justify="center" class="mt-5" no-gutters>
@@ -104,7 +123,7 @@
           <!--          </v-row>-->
         </v-card-text>
         <v-card-actions v-if="correct === false">
-          <h3>Jawaban yang benar adalah {{ this.correctAnswer }}</h3>
+          <h3 style="color: #960505">Jawaban yang benar adalah {{ this.correctAnswer }}</h3>
         </v-card-actions>
       </v-card>
         <template v-if="!showScore">
@@ -193,7 +212,6 @@ export default {
           }
           break;
       }
-      console.log("blum jawab")
       return true;
     },
     getClass() {
@@ -237,6 +255,9 @@ export default {
       this.chapterDetail.questions.forEach((question) => {
         this.shuffleArray(question.answers);
       });
+    },
+    backToChapterDetail() {
+      this.$router.push("/chapters/" + this.$route.params.chapterId);
     },
     handleUpdateChapterProgress() {
       if (!this.role?.includes("ROLE_USER")) {
@@ -337,6 +358,11 @@ export default {
 .quizFalse {
   border: 2px solid #f51414;
   box-shadow: 0 0 8px #f51414;
+}
+
+.progressBar{
+  display: block;
+  width: auto;
 }
 </style>
 

@@ -28,6 +28,7 @@
 import chapterService from "@/services/chapter.service";
 import progressService from "@/services/progress.service";
 import CommentSection from "@/components/CommentSection.vue";
+import userService from "@/services/user.service";
 import { mapGetters } from "vuex";
 
 export default {
@@ -58,6 +59,7 @@ export default {
     } catch (error) {
       // console.log(error);
     }
+    this.updateCurrentlyLearningTopic();
     this.adminRole = this.role?.includes("ROLE_ADMIN");
     document.title = `${this.chapterDetail.chapterName} | Belakom`;
     this.loading = false;
@@ -91,6 +93,23 @@ export default {
       console.log(this.chapterDetail);
       console.log(req);
       progressService.updateChapterProgress(req);
+    },
+    updateCurrentlyLearningTopic() {
+      if (!this.role?.includes("ROLE_USER")) {
+        return;
+      }
+      let req = {
+        lastSeenChapterId: this.chapterDetail.id,
+      };
+      console.log(req)
+      userService.updateUserData(req).then(
+          (response) => {
+            console.log(response);
+          },
+          (error) => {
+            console.log(error);
+          }
+      );
     },
     endScroll() {
       //full page vs current height

@@ -32,7 +32,7 @@ function createTopic(topic) {
 
 function updateTopic(topic) {
   let topicReq = {
-    topicId: topic.id,
+    id: topic.id,
     topicName: topic.topicName,
     description: topic.description,
   };

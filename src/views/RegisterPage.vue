@@ -58,6 +58,15 @@
         />
 
         <FormulateInput type="submit" label="Register" />
+
+        <v-alert
+            transition="fade-transition"
+            type="success"
+            text
+            v-model="errorRegister"
+        >
+          Registrasi gagal! {{responseValue}}!
+        </v-alert>
       </FormulateForm>
     </v-container>
   </div>
@@ -72,20 +81,24 @@ export default {
   data: () => ({
     formValues: {},
     responseValue: {},
+    errorRegister: false
   }),
   computed: {
     ...mapGetters("auth", ["loggedIn"]),
   },
   methods: {
     handleSubmit() {
+      this.errorRegister = false;
+
       authService.register(this.formValues).then(
         (response) => {
           this.responseValue = response;
-          alert("registered successfully");
+          this.$root.$emit("global-snackbar-notification", "Registrasi Berhasil")
           this.$router.push("/login");
         },
         (error) => {
           this.responseValue = error;
+          this.errorRegister = true;
         }
       );
     },

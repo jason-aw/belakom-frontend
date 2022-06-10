@@ -11,13 +11,26 @@
         dark
         ><v-icon dense>mdi-arrow-left</v-icon> Ke Halaman Topics</v-btn
       >
-      <div class="title">
-        <h1>{{ topicDetail.topicName }}</h1>
+
+      <div class="mb-8" v-if="adminRole">
+        <div class="text-h2">
+          <click-to-edit v-model="topicDetail.topicName" />
+        </div>
+        <div class="text-h5">
+          <click-to-edit v-model="topicDetail.description" />
+        </div>
       </div>
 
-      <div class="description">
-        {{ topicDetail.description }}
+      <div v-if="!adminRole">
+        <div class="title">
+          <h1>{{ topicDetail.topicName }}</h1>
+        </div>
+
+        <div class="description">
+          {{ topicDetail.description }}
+        </div>
       </div>
+
       <draggable
         :list="chapters"
         ghost-class="ghost"
@@ -178,9 +191,10 @@ import ChapterCard from "@/components/ChapterCard";
 import userService from "@/services/user.service";
 import { mapGetters } from "vuex";
 import draggable from "vuedraggable";
+import ClickToEdit from "../components/ClickToEdit";
 
 export default {
-  components: { ChapterCard, draggable },
+  components: { ChapterCard, draggable, ClickToEdit },
   name: "TopicDetailPage",
 
   data: () => ({
@@ -216,6 +230,13 @@ export default {
         this.$store.commit("chapter/setChapters", value);
       },
     },
+    topicName() {
+      return this.topicDetail.topicName;
+    },
+    topicDesc() {
+      return this.topicDetail.description;
+    }
+
   },
   methods: {
     async getTopicDetail(topicName) {
@@ -356,6 +377,12 @@ export default {
       this.$store.commit("chapter/clearAllChapters");
       this.$store.commit("topic/clearTopicDetail");
     },
+    topicName(newValue) {
+      topicService.updateTopic({id: this.topicDetail.id, topicName: newValue})
+    },
+    topicDesc(newValue) {
+      topicService.updateTopic({id: this.topicDetail.id, description: newValue})
+    }
   },
 };
 </script>
