@@ -8,10 +8,15 @@
 
       <div v-if="lastSeenChapter">
         <v-row no-gutters class="align-center">
-          <span class="pr-3"> Terakhir kali kamu sedang belajar ini! </span>
-          <v-btn-toggle v-model="showHistory">
-            <v-btn>
-              <v-icon>mdi-format-align-left</v-icon>
+          <v-btn-toggle v-model="showHistory" borderless color="deep-purple accent-3">
+            <v-btn large
+                   plain
+                   :ripple="false"
+                   class="pa-0"
+                   >
+              Terakhir kali kamu sedang belajar ini!
+              <v-icon dense v-if="showHistory === undefined">mdi-menu-down</v-icon>
+              <v-icon dense v-if="showHistory === 0">mdi-menu-up</v-icon>
             </v-btn>
           </v-btn-toggle>
         </v-row>
@@ -229,7 +234,7 @@ export default {
 
   data: () => ({
     indexCarousel: null,
-    showHistory: null,
+    showHistory: undefined,
     dialog: false,
     currentLearnTopic: null,
     lastSeenChapter: null,
