@@ -301,7 +301,6 @@ export default {
       );
     },
     openDeleteDialog(payload) {
-      console.log("xxx");
       this.deleteDialog = true;
       this.deleteDialogName = payload.name;
       this.deleteDialogId = payload.id;
@@ -387,7 +386,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .title {
   font-size: 3em;
   font-weight: bold;

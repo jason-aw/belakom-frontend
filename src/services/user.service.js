@@ -15,6 +15,13 @@ function updateUserData(req) {
 		.catch((error) => Promise.reject(error.response.data));
 }
 
+function getCurrentUserChapterHistory() {
+	return axios.get(ApiPath.GET_CURRENT_USER_CHAPTER_HISTORY, { headers: authHeader("accessToken") })
+		.then((response) => Promise.resolve(response.data.value))
+		.catch((error) => Promise.reject(error.response.data));
+}
+
+
 export default {
-	updateUserData, getCurrentUserDetail
+	updateUserData, getCurrentUserDetail, getCurrentUserChapterHistory
 };

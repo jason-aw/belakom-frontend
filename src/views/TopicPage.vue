@@ -6,9 +6,78 @@
     <div v-if="!loading">
       <div class="text-h4 mb-4">Mau belajar apa hari ini?</div>
 
-      <div v-if="currentLearnTopic">
-        <span> Terakhir kali kamu sedang belajar ini! </span>
-        <CurrentlyLearningTopicCard :topic="currentLearnTopic" />
+      <div v-if="lastSeenChapter">
+        <v-row no-gutters class="align-center">
+          <span class="pr-3"> Terakhir kali kamu sedang belajar ini! </span>
+          <v-btn-toggle v-model="showHistory">
+            <v-btn>
+              <v-icon>mdi-format-align-left</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+        </v-row>
+        <v-expand-transition>
+          <v-sheet
+              v-if="showHistory === 0"
+              class="mx-auto"
+          >
+            <v-slide-group
+                v-model="indexCarousel"
+                center-active
+                show-arrows
+            >
+              <v-slide-item v-for="chapter in lastSeenChapter" :key="chapter.id" v-slot="{ active, toggle }">
+                <v-card
+                    :color="active ? '#1f3da1' : '#ced4e8'"
+                    @click="toggle"
+                    class="chapterCard ma-4"
+                >
+                  <v-row
+                      class="fill-height chapterCardTextArea"
+                      align="center"
+                      justify="center"
+                  >
+                    <template v-if="active">
+                      <p class="ma-0" style="color: #FFFFFF"> Chapter : {{chapter.chapterName}} </p>
+                      <p class="ma-0" style="color: #FFFFFF"> Topic : {{chapter.topicName}} </p>
+                    </template>
+                    <template v-else>
+                      <p class="ma-0" style="color: #000000"> Chapter : {{chapter.chapterName}} </p>
+                      <p class="ma-0" style="color: #000000"> Topic : {{chapter.topicName}} </p>
+                    </template>
+                  </v-row>
+                </v-card>
+              </v-slide-item>
+            </v-slide-group>
+          </v-sheet>
+
+        </v-expand-transition>
+
+        <v-expand-transition>
+          <v-sheet
+              v-if="indexCarousel != null"
+              height="100"
+          >
+            <h3 class="text-h6">
+              Topic : {{ lastSeenChapter[indexCarousel].topicName  }}
+            </h3>
+
+            <v-btn
+                color="#1f3da1"
+                dark
+                @click="goToTopic(lastSeenChapter[indexCarousel].topicId)"
+            >Masuk ke Topic</v-btn>
+
+            <h3 class="text-h6">
+              Chapter : {{ lastSeenChapter[indexCarousel].chapterName  }}
+            </h3>
+
+            <v-btn
+                color="#1f3da1"
+                dark
+                @click="goToChapter(lastSeenChapter[indexCarousel].chapterId)"
+            >Masuk ke Chapter</v-btn>
+          </v-sheet>
+        </v-expand-transition>
       </div>
 
       <div class="row mt-md-5">
@@ -153,15 +222,17 @@ import topicServices from "@/services/topic.service";
 import userService from "@/services/user.service";
 import TopicCard from "@/components/TopicCard";
 import { mapGetters } from "vuex";
-import CurrentlyLearningTopicCard from "@/components/CurrentlyLearningTopicCard";
 
 export default {
-  components: { CurrentlyLearningTopicCard, TopicCard },
+  components: { TopicCard },
   name: "TopicPage",
 
   data: () => ({
+    indexCarousel: null,
+    showHistory: null,
     dialog: false,
     currentLearnTopic: null,
+    lastSeenChapter: null,
     createTopicFormValue: {},
     errorMessage: {},
     successCreateAlert: false,
@@ -233,6 +304,12 @@ export default {
       this.deleteDialogName = payload.name;
       this.deleteDialogId = payload.id;
     },
+    goToChapter(chapterId) {
+      this.$router.push("/chapters/"+chapterId)
+    },
+    goToTopic(topicId) {
+      this.$router.push("/topics/"+topicId)
+    },
     handleDeleteTopicSubmit() {
       topicServices.deleteTopic(this.deleteDialogId).then(
           (response) => {
@@ -267,9 +344,11 @@ export default {
       if (!this.role?.includes("ROLE_USER")) {
         return Promise.resolve();
       }
-      return userService.getCurrentUserDetail().then(
+      return userService.getCurrentUserChapterHistory().then(
         (response) => {
-          this.getCurrentLearnTopicById(response.data.value.currentlyLearningTopic);
+          // this.getCurrentLearnTopicById(response.data.value.currentlyLearningTopic);
+          this.lastSeenChapter = response;
+          console.log(this.lastSeenChapter);
           return Promise.resolve();
         },
         (error) => {
@@ -303,10 +382,17 @@ export default {
       );
     },
   },
+  watch: {
+    showHistory(newValue) {
+      if (newValue === undefined) {
+        this.indexCarousel = null;
+      }
+    },
+  }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .createNewTopicButton {
   position: relative;
   cursor: pointer;
@@ -320,6 +406,35 @@ export default {
   transition: 0.3s ease all;
   align-items: center;
   justify-content: center;
+}
+
+.chapterCard {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: #ced4e8;
+  letter-spacing: 1px;
+  transition: 0.3s ease all;
+  width: 250px;
+  height: 100px;
+}
+
+.chapterCard:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+  outline: solid 1px #1f3da1;
+}
+
+.chapterCardTextArea {
+  font-weight: 500;
+  font-size: 0.85em;
+  display: block;
+  overflow: hidden;
+  white-space: initial;
+  text-overflow: ellipsis;
+  margin: 10px;
 }
 
 .modal-container {

@@ -12,7 +12,7 @@
       dark
       @click="goToQuizPage(chapterDetail.id)"
       v-if="chapterDetail.enableQuiz"
-      >Access Quiz</v-btn
+      >Akses Quiz</v-btn
     >
   </v-container>
 </template>

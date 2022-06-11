@@ -49,7 +49,7 @@
           </v-btn>
         </template>
         <v-list dense>
-          <v-list-item @click.prevent="handleDelete()">
+          <v-list-item @click.stop="$emit('delete-comment-event', { id: comment.id})">
             <v-icon class="pr-2">mdi-delete-empty-outline</v-icon>
             <v-list-item-title>Delete</v-list-item-title>
           </v-list-item>
