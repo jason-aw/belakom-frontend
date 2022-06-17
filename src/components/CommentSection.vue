@@ -138,7 +138,6 @@ export default {
       }
     },
     openDeleteCommentDialog(payload) {
-      console.log(payload)
       this.deleteDialog = true;
       this.deleteDialogId = payload.id;
     },

@@ -300,7 +300,6 @@ export default {
       for (let topic of topics) {
         if (topicId === topic.id) {
           this.currentLearnTopic = Object.assign({}, topic);
-          console.log(this.currentLearnTopic);
         }
       }
     },
@@ -353,7 +352,7 @@ export default {
         (response) => {
           // this.getCurrentLearnTopicById(response.data.value.currentlyLearningTopic);
           this.lastSeenChapter = response;
-          console.log(this.lastSeenChapter);
+          // console.log(this.lastSeenChapter);
           return Promise.resolve();
         },
         (error) => {

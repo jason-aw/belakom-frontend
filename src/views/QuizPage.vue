@@ -182,7 +182,6 @@ export default {
     ...mapGetters("auth", ["role"]),
     footerAttrs() {
       const attrs = {};
-      console.log(this.correct);
       if (this.correct === null) {
         attrs.color = "grey";
       } else if (this.correct) {
@@ -190,7 +189,6 @@ export default {
       } else {
         attrs.color = "#ffb3b3";
       }
-      console.log(attrs);
       return attrs;
     },
     selectedAnswer() {
@@ -201,7 +199,6 @@ export default {
           // eslint-disable-next-line no-case-declarations
           let chosenAnswer = question.answers[this.toggledAnswer];
           if (chosenAnswer) {
-            console.log("njirs")
             return false;
           }
           break;
@@ -215,8 +212,6 @@ export default {
       return true;
     },
     getClass() {
-      console.log("dari card" + this.correct);
-
       if (this.correct === null) {
         return "quizNull";
       } else if (this.correct) {

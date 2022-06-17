@@ -46,11 +46,8 @@ function updateTopic(topic) {
 }
 
 function updateTopicChapterOrder(chapters) {
-  console.log(chapters);
   let chapterOrder = [];
   chapters.forEach((chapter) => chapterOrder.push(chapter.id));
-
-  console.log(chapterOrder);
 
   let updateChapterOrderReq = {
     chapterOrder: chapterOrder,

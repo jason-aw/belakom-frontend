@@ -138,7 +138,6 @@ export default {
           : this.comment.id,
       };
       try {
-        console.log("comment:", this.comment);
         await commentService.createComment(req);
         await this.$store.dispatch(
           "comment/getComments",
@@ -152,7 +151,6 @@ export default {
     },
     async handleDelete() {
       try {
-        console.log("commentId ", this.comment.id);
         await commentService.deleteComment(this.comment.id);
         await this.$store.dispatch(
           "comment/getComments",
@@ -169,7 +167,6 @@ export default {
       this.editCommentContent = this.comment.content;
     },
     async handleEditComment() {
-      console.log("edited");
       let req = {
         commentId: this.comment.id,
         content: this.editCommentContent,
