@@ -64,7 +64,7 @@ export default {
         () => {
           this.$router.push("/login");
         },
-        () => {
+        (error) => {
           console.log(error);
         }
       );

@@ -9,28 +9,27 @@
       <v-row justify="center" align="center" class="mt-6">
         <v-col cols="1" justify="center" align="center">
           <v-btn
-              class="mx-2"
-              dark
-              width="auto"
-              height="35px"
-              color="#BFBBBB"
-              @click="backToChapterDetail()"
+            class="mx-2"
+            dark
+            width="auto"
+            height="35px"
+            color="#BFBBBB"
+            @click="backToChapterDetail()"
           >
-            <v-icon>
-              mdi-arrow-left
-            </v-icon>
+            <v-icon> mdi-arrow-left </v-icon>
           </v-btn>
         </v-col>
 
         <v-col cols="11">
           <v-progress-linear
-              color="#1f3da1"
-              :value="progressBarValue"
-              height="35px"
-              dark
-              class="rounded-pill progressBar"
+            color="#1f3da1"
+            :value="progressBarValue"
+            height="35px"
+            dark
+            class="rounded-pill progressBar"
           >
-            {{ this.currentQuestion }} / {{ this.chapterDetail.questions.length }}
+            {{ this.currentQuestion }} /
+            {{ this.chapterDetail.questions.length }}
           </v-progress-linear>
         </v-col>
       </v-row>
@@ -123,31 +122,36 @@
           <!--          </v-row>-->
         </v-card-text>
         <v-card-actions v-if="correct === false">
-          <h3 style="color: #960505">Jawaban yang benar adalah {{ this.correctAnswer }}</h3>
+          <h3 style="color: #960505">
+            Jawaban yang benar adalah {{ this.correctAnswer }}
+          </h3>
         </v-card-actions>
       </v-card>
-        <template v-if="!showScore">
-          <v-row no-gutters class="px-5">
-            <v-spacer />
-<!--            <v-btn v-if="!showAnswer" text>skip</v-btn>-->
-            <div v-if="correct === null">
+      <template v-if="!showScore">
+        <v-row no-gutters class="px-5">
+          <v-spacer />
+          <!--            <v-btn v-if="!showAnswer" text>skip</v-btn>-->
+          <div v-if="correct === null"></div>
 
-            </div>
-
-            <v-btn
-                v-if="!showAnswer"
-                color="#1f3da1"
-                dark
-                @click="handleAnswerClick"
-                x-large
-                :disabled=selectedAnswer
+          <v-btn
+            v-if="!showAnswer"
+            color="#1f3da1"
+            dark
+            @click="handleAnswerClick"
+            x-large
+            :disabled="selectedAnswer"
             >Check Question</v-btn
-            >
-            <v-btn v-if="showAnswer" color="#1f3da1" dark @click="handleContinue" x-large
+          >
+          <v-btn
+            v-if="showAnswer"
+            color="#1f3da1"
+            dark
+            @click="handleContinue"
+            x-large
             >Continue</v-btn
-            >
-          </v-row>
-        </template>
+          >
+        </v-row>
+      </template>
     </template>
   </v-container>
 </template>
@@ -195,19 +199,19 @@ export default {
       let question = this.chapterDetail.questions[this.currentQuestion];
 
       switch (question.questionType) {
-        case "MULTIPLE_CHOICE":
-          // eslint-disable-next-line no-case-declarations
+        case "MULTIPLE_CHOICE": {
           let chosenAnswer = question.answers[this.toggledAnswer];
           if (chosenAnswer) {
             return false;
           }
           break;
-        case "SHORT_ANSWER":
-          // eslint-disable-next-line no-case-declarations
+        }
+        case "SHORT_ANSWER": {
           if (this.formValue.shortAnswerValue) {
             return false;
           }
           break;
+        }
       }
       return true;
     },
@@ -273,8 +277,7 @@ export default {
       let question = this.chapterDetail.questions[this.currentQuestion];
 
       switch (question.questionType) {
-        case "MULTIPLE_CHOICE":
-          // eslint-disable-next-line no-case-declarations
+        case "MULTIPLE_CHOICE": {
           let chosenAnswer;
           chosenAnswer = question.answers[this.toggledAnswer];
 
@@ -292,8 +295,8 @@ export default {
             this.correct = false;
           }
           break;
-        case "SHORT_ANSWER":
-          // eslint-disable-next-line no-case-declarations
+        }
+        case "SHORT_ANSWER": {
           let answers = Array.from(question.answers).map((answer) => {
             return answer.answer;
           });
@@ -308,6 +311,7 @@ export default {
             }
           }
           break;
+        }
       }
     },
     handleContinue() {
@@ -355,7 +359,7 @@ export default {
   box-shadow: 0 0 8px #f51414;
 }
 
-.progressBar{
+.progressBar {
   display: block;
   width: auto;
 }
