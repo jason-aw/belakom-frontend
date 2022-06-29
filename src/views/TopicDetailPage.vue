@@ -201,6 +201,7 @@ export default {
     createChapterFormValue: {},
     errorMessage: {},
     dialog: false,
+    initialTopic: {},
     deleteDialog: false,
     successCreateAlert: false,
     errorCreateAlert: false,
@@ -218,6 +219,7 @@ export default {
     document.title = `${this.topicDetail.topicName} | Belakom`;
     this.loading = false;
     this.adminRole = this.role?.includes("ROLE_ADMIN");
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
   },
   computed: {
     ...mapGetters("topic", ["topicDetail"]),
@@ -235,8 +237,13 @@ export default {
     },
     topicDesc() {
       return this.topicDetail.description;
-    }
-
+    },
+    hasChanges() {
+      return !(
+          this.initialTopic.topicName === this.topicDetail.topicName &&
+          this.initialTopic.description === this.topicDetail.description
+      );
+    },
   },
   methods: {
     async getTopicDetail(topicName) {
@@ -244,7 +251,8 @@ export default {
       return this.$store
         .dispatch("topic/getTopicByName", { topicName: topicName })
         .then(
-          () => {
+          (response) => {
+            this.initialTopic = Object.assign({}, response.data.value);
             this.getAllChapters();
             return Promise.resolve();
           },
@@ -299,6 +307,14 @@ export default {
           return error;
         }
       );
+    },
+    handleBeforeUnload(event) {
+      console.log("before unload", this.hasChanges);
+      if (!this.hasChanges) {
+        return;
+      } else {
+        event.returnValue = "";
+      }
     },
     openDeleteDialog(payload) {
       this.deleteDialog = true;
@@ -371,16 +387,22 @@ export default {
       );
     },
   },
+  beforeDestroy() {
+    this.handlePublish();
+  },
+  destroyed() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
+  },
   watch: {
     $route() {
       this.$store.commit("chapter/clearAllChapters");
       this.$store.commit("topic/clearTopicDetail");
     },
     topicName(newValue) {
-      topicService.updateTopic({id: this.topicDetail.id, topicName: newValue})
+      topicService.updateTopic({id: this.topicDetail.id, topicName: newValue, description: this.topicDetail.description})
     },
     topicDesc(newValue) {
-      topicService.updateTopic({id: this.topicDetail.id, description: newValue})
+      topicService.updateTopic({id: this.topicDetail.id, topicName: this.topicDetail.topicName, description: newValue})
     }
   },
 };
