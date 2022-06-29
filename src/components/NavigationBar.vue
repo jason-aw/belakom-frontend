@@ -62,11 +62,10 @@ export default {
     logout() {
       this.$store.dispatch("auth/logout").then(
         () => {
-          // console.log(response);
           this.$router.push("/login");
         },
-        () => {
-          // console.log(error);
+        (error) => {
+          console.log(error);
         }
       );
     },

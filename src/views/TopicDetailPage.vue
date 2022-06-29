@@ -322,7 +322,6 @@ export default {
       this.deleteDialogId = payload.id;
     },
     handleDeleteChapterSubmit() {
-      console.log("delete");
       chapterService
         .deleteChapter(this.deleteDialogId)
         .then(
@@ -362,7 +361,7 @@ export default {
         .updateTopicChapterOrder(this.$store.state.chapter.chapters)
         .then(
           (response) => {
-            console.log("updated");
+            // console.log("updated");
             return response;
           },
           (error) => {
@@ -378,8 +377,8 @@ export default {
         currentlyLearningTopic: this.topicDetail.id,
       };
       userService.updateUserData(req).then(
-        (response) => {
-          console.log(response);
+        () => {
+          // console.log(response);
         },
         (error) => {
           console.log(error);

@@ -57,7 +57,7 @@ export default {
         this.getComments(this.$route.params.chapterId),
       ]);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
     this.updateCurrentlyLearningTopic();
     this.adminRole = this.role?.includes("ROLE_ADMIN");
@@ -90,8 +90,6 @@ export default {
         articleCompleted: true,
         score: null,
       };
-      console.log(this.chapterDetail);
-      console.log(req);
       progressService.updateChapterProgress(req);
     },
     updateCurrentlyLearningTopic() {
@@ -101,10 +99,9 @@ export default {
       let req = {
         lastSeenChapterId: this.chapterDetail.id,
       };
-      console.log(req)
       userService.updateUserData(req).then(
-          (response) => {
-            console.log(response);
+          () => {
+            // console.log(response);
           },
           (error) => {
             console.log(error);

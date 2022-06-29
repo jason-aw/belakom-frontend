@@ -288,7 +288,7 @@ export default {
         .dispatch("topic/getAllTopics")
         .then(() => Promise.resolve())
         .catch((error) => {
-          // console.log("getAllTopics", error);
+          console.log("getAllTopics", error);
           Promise.reject(error);
         });
     },
@@ -300,7 +300,6 @@ export default {
       for (let topic of topics) {
         if (topicId === topic.id) {
           this.currentLearnTopic = Object.assign({}, topic);
-          console.log(this.currentLearnTopic);
         }
       }
     },
@@ -351,9 +350,7 @@ export default {
       }
       return userService.getCurrentUserChapterHistory().then(
         (response) => {
-          // this.getCurrentLearnTopicById(response.data.value.currentlyLearningTopic);
           this.lastSeenChapter = response;
-          console.log(this.lastSeenChapter);
           return Promise.resolve();
         },
         (error) => {

@@ -116,8 +116,6 @@ router.beforeEach((to, from, next) => {
 router.beforeEach((to, from, next) => {
   let isLoggedIn = store.getters["auth/loggedIn"];
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    console.log("to", to);
-    console.log(isLoggedIn);
     if (isLoggedIn) {
       next();
     } else {

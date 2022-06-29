@@ -193,7 +193,6 @@ export default {
       );
     },
     handleBeforeUnload(event) {
-      console.log("before unload", this.hasChanges);
       if (!this.hasChanges) {
         return;
       } else {
