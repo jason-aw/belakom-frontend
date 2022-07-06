@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://d2ec-61-247-38-33.ap.ngrok.io/";
+const API_BASE_URL = "https://671a-61-247-38-33.ap.ngrok.io/";
 
 // AUTH CONTROLLER
 const AUTH_PATH = API_BASE_URL + "/api/auth";

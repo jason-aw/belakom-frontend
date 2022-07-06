@@ -76,11 +76,6 @@ export default {
       this.$router.push("/topics");
     },
   },
-  watch: {
-    $route() {
-      this.checkPath();
-    },
-  },
   computed: {
     ...mapGetters("auth", ["loggedIn"]),
   },
