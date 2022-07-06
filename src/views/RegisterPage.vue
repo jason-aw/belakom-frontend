@@ -7,14 +7,6 @@
     </div>
 
     <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
-      <v-alert
-        class="alert"
-        text
-        border="left"
-        v-if="alertMessage"
-        type="error"
-        >{{ alertMessage }}</v-alert
-      >
       <FormulateInput
         type="text"
         name="name"
@@ -74,12 +66,12 @@
       </v-responsive>
 
       <v-alert
-          transition="fade-transition"
-          type="success"
-          text
-          v-model="errorRegister"
+        transition="fade-transition"
+        type="success"
+        text
+        v-model="errorRegister"
       >
-        Registrasi gagal! {{responseValue}}!
+        Registrasi gagal! {{ responseValue }}!
       </v-alert>
     </FormulateForm>
   </v-container>
@@ -94,7 +86,7 @@ export default {
   data: () => ({
     formValues: {},
     responseValue: {},
-    errorRegister: false
+    errorRegister: false,
   }),
   computed: {
     ...mapGetters("auth", ["loggedIn"]),
@@ -106,7 +98,10 @@ export default {
       authService.register(this.formValues).then(
         (response) => {
           this.responseValue = response;
-          this.$root.$emit("global-snackbar-notification", "Registrasi Berhasil")
+          this.$root.$emit(
+            "global-snackbar-notification",
+            "Registrasi Berhasil"
+          );
           this.$router.push("/login");
         },
         (error) => {
