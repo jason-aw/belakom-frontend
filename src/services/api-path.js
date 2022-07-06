@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "https://d2ec-61-247-38-33.ap.ngrok.io/";
 
 // AUTH CONTROLLER
 const AUTH_PATH = API_BASE_URL + "/api/auth";
@@ -12,7 +12,7 @@ const RESET_PASSWORD_URL = AUTH_PATH + "/resetPassword";
 
 const GOOGLE_AUTH_URL =
   API_BASE_URL +
-  "/oauth2/authorize/google?redirect_uri=http://localhost:8081/oauth2/redirect";
+  "/oauth2/authorize/google?redirect_uri=http://kobel.netlify.app/oauth2/redirect";
 
 // TOPIC CONTROLLER
 const TOPIC_PATH_URL = API_BASE_URL + "/api/topic";
