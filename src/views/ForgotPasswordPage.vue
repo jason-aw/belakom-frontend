@@ -1,6 +1,6 @@
 <template>
   <v-container class="d-flex flex-column align-center justify-center">
-    <h1 class="mb-4">Forgot Password</h1>
+    <h1 class="mb-4">Lupa Password</h1>
     <v-alert
       text
       v-if="message"

@@ -69,6 +69,7 @@ const routes = [
   {
     path: "/chapters/:chapterId/quiz",
     component: QuizPage,
+    meta: { requiresAuth: true },
   },
   {
     path: "/chapters/:chapterId/edit",
@@ -115,6 +116,7 @@ router.beforeEach((to, from, next) => {
 
 router.beforeEach((to, from, next) => {
   let isLoggedIn = store.getters["auth/loggedIn"];
+  let isAdmin = false;
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (isLoggedIn) {
       next();
@@ -123,11 +125,18 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some((record) => record.meta.guest)) {
     if (isLoggedIn) {
-      next("/topics");
+      next("/login");
     } else {
       next();
     }
-  } else {
+  } else if (to.matched.some((record) => record.meta.requiresAdmin)) {
+    if (isLoggedIn && isAdmin) {
+      next();
+    } else {
+      next("/login");
+    }
+  }
+  else {
     next();
   }
 });

@@ -64,7 +64,7 @@
         <v-card>
           <v-row class="pa-3" no-gutters>
             <v-col>
-              <v-alert
+              <v-alert class="ma-0"
                   transition="fade-transition"
                   type="success"
                   text
@@ -72,7 +72,7 @@
               >
                 Artikel berhasil disimpan!
               </v-alert>
-              <v-alert
+              <v-alert class="ma-0"
                   transition="fade-transition"
                   type="success"
                   text
@@ -80,7 +80,7 @@
               >
                 Artikel gagal disimpan! {{ errorMessage }}!
               </v-alert>
-              <v-alert
+              <v-alert class="ma-0"
                   transition="fade-transition"
                   type="warning"
                   text
@@ -120,6 +120,7 @@ export default {
       errorMsg: "",
       enableQuiz: false,
       initialChapter: {},
+      initialQuestion: {},
       questionTypeValue: "",
       timedAlert: false,
       loading: true,
@@ -151,13 +152,15 @@ export default {
   computed: {
     ...mapGetters("chapter", ["chapterDetail"]),
     hasChanges() {
+      console.log(this.initialQuestion)
+      console.log(this.chapterDetail.questions)
       return !(
         this.initialChapter.chapterName === this.chapterDetail.chapterName &&
         this.initialChapter.description === this.chapterDetail.description &&
         this.initialChapter.enableQuiz === this.chapterDetail.enableQuiz &&
         this.initialChapter.htmlContent === this.chapterDetail.htmlContent &&
         this.arraysEqual(
-          this.initialChapter.questions,
+          this.initialQuestion,
           this.chapterDetail.questions
         ) &&
         this.arraysEqual(
@@ -204,6 +207,7 @@ export default {
         .dispatch("chapter/getChapterDetailById", chapterId)
         .then((response) => {
           this.initialChapter = Object.assign({}, response);
+          this.initialQuestion = Object.assign([], this.initialChapter.questions)
           this.enableQuiz = this.chapterDetail.enableQuiz;
           this.loading = false;
         })
@@ -238,7 +242,7 @@ export default {
         setTimeout(() => {
           this.notChangedAlert = false;
           this.publishDialog = false;
-        }, 2000);
+        }, 3000);
 
         return;
       }

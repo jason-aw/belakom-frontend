@@ -81,7 +81,7 @@
                     currentQuestion
                   ].answers"
                 >
-                  <v-btn block outlined class="mx-2" variant="primary">
+                  <v-btn block outlined class="mx-2 no-uppercase" variant="primary" :disabled="showAnswer">
                     {{ answer.answer }}
                   </v-btn>
                 </v-col>
@@ -140,7 +140,7 @@
             @click="handleAnswerClick"
             x-large
             :disabled="selectedAnswer"
-            >Check Question</v-btn
+            >Cek Jawaban</v-btn
           >
           <v-btn
             v-if="showAnswer"
@@ -148,7 +148,7 @@
             dark
             @click="handleContinue"
             x-large
-            >Continue</v-btn
+            >Lanjutkan</v-btn
           >
         </v-row>
       </template>
@@ -260,6 +260,7 @@ export default {
     },
     handleUpdateChapterProgress() {
       if (!this.role?.includes("ROLE_USER")) {
+        console.log("anjay")
         return;
       }
       let req = {
@@ -269,7 +270,13 @@ export default {
         correct: this.score,
       };
 
-      progressService.updateChapterProgress(req);
+      console.log(req)
+      progressService.updateChapterProgress(req).then(
+          (response) => {
+            console.log("berhasil")
+            console.log(response)
+          })
+          .catch((error) => console.log(error));
     },
     handleAnswerClick() {
       this.showAnswer = true;
@@ -359,9 +366,24 @@ export default {
   box-shadow: 0 0 8px #f51414;
 }
 
+.no-uppercase {
+  text-transform: unset !important;
+}
+
 .progressBar {
   display: block;
   width: auto;
+}
+
+.form {
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  width: 100%;
+  padding-top: 4%;
+  padding-bottom: 4%;
 }
 </style>
 

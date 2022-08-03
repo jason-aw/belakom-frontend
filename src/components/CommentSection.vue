@@ -32,7 +32,7 @@
       <div v-for="comment in comments.mainComments" :key="comment.id">
         <div class="mb-4">
           <comment-card :comment="comment" :user-detail="userDetailMap" v-on:delete-comment-event="openDeleteCommentDialog"/>
-          <reply-section :replies="comments.commentRepliesMap[comment.id]" />
+          <reply-section :replies="comments.commentRepliesMap[comment.id]" :chapterId=chapterId />
         </div>
       </div>
     </div>
@@ -143,7 +143,6 @@ export default {
     },
     async handleDelete() {
       try {
-        console.log("commentId ", this.deleteDialog);
         await commentService.deleteComment(this.deleteDialogId)
             .then((response) => {
                   this.successDeleteAlert = true;

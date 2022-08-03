@@ -4,7 +4,7 @@ import authHeader from "./auth-header";
 
 function getAllTopics() {
   return axios
-    .get(ApiPath.GET_ALL_TOPIC_URL)
+    .get(ApiPath.GET_ALL_TOPIC_URL, {"Access-Control-Allow-Origin": "*"})
     .then((response) => Promise.resolve(response))
     .catch((error) => Promise.reject(error.response.data));
 }

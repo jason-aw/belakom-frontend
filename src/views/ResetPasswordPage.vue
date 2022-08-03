@@ -8,7 +8,7 @@
       :type="error ? 'error' : 'success'"
       >{{ message }}
       <router-link to="/login" v-if="success"
-        >Go to login page.</router-link
+        >Masuk ke Login Page.</router-link
       ></v-alert
     >
     <FormulateForm v-model="formValue" @submit="handleSubmit" class="form">

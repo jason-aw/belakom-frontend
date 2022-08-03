@@ -105,23 +105,39 @@
             </div>
           </template>
           <v-card>
-            <v-card-title class="text-h5"> Create New Topic </v-card-title>
+            <v-toolbar
+                dark
+                color="#1f3da1"
+            >
+              <v-toolbar-title>Buat Topik Baru</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-btn
+                  icon
+                  dark
+                  @click="dialog = false"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-toolbar>
+
             <v-divider />
             <v-card-text class="black--text">
-              <v-container>
+              <v-container class="align-center justify-center">
                 <FormulateForm
                   v-model="createTopicFormValue"
                   @submit="handleCreateTopicSubmit"
+                  class="form"
                 >
                   <FormulateInput
                     type="text"
                     name="topicName"
-                    label="Topic Name"
-                    placeholder="Topic Name"
-                    validation="^required"
+                    label="Nama Topic"
+                    placeholder="Nama Topik"
+                    validation="^required|min:3, length"
                     error-behavior="submit"
                     :validation-messages="{
                       required: 'Topic harus ada',
+                      min: 'Panjang nama minimal 3 karakter'
                     }"
                   />
 
@@ -130,25 +146,26 @@
                     name="description"
                     label="Description"
                     placeholder="Description"
-                    validation="^required"
+                    validation="^required|min:3, length"
                     error-behavior="submit"
                     :validation-messages="{
                       required: 'Deskripsi harus ada',
+                      min: 'Panjang deskripsi minimal 10 karakter'
                     }"
                   />
 
                   <FormulateInput
-                    align="center"
-                    type="submit"
-                    label="Create Topic"
+                      type="submit"
+                      label="Buat Topik"
                   />
+
                   <v-alert
                     transition="fade-transition"
                     type="success"
                     v-model="successCreateAlert"
                     text
                   >
-                    Topic successfully added!
+                    Topic berhasil ditambahkan!
                   </v-alert>
                   <v-alert
                     transition="fade-transition"
@@ -156,7 +173,7 @@
                     v-model="errorCreateAlert"
                     text
                   >
-                    Topic failed to add!
+                    Topic gagal ditambahkan! {{this.errorMessage}}
                   </v-alert>
                 </FormulateForm>
               </v-container>
@@ -249,7 +266,8 @@ export default {
     deleteDialogId: null,
     hovered: false,
     loading: true,
-    adminRole: false
+    adminRole: false,
+    deleteDialogueInterval: null
   }),
   async created() {
     try {
@@ -304,7 +322,9 @@ export default {
       }
     },
     openDeleteDialog(payload) {
+      clearInterval(this.deleteDialogueInterval);
       this.deleteDialog = true;
+      this.successDeleteAlert = false;
       this.deleteDialogName = payload.name;
       this.deleteDialogId = payload.id;
     },
@@ -319,12 +339,12 @@ export default {
           (response) => {
             this.successDeleteAlert = true;
             let deleteAlertCounter = 3;
-            const x = setInterval(() => {
+            this.deleteDialogueInterval = setInterval(() => {
               deleteAlertCounter  = deleteAlertCounter  - 1;
               if (deleteAlertCounter === 0) {
                 this.successDeleteAlert = false;
                 this.deleteDialog = false
-                clearInterval(x)
+                clearInterval(this.deleteDialogueInterval)
               }
             }, 1000)
             return response;
@@ -334,11 +354,11 @@ export default {
             this.errorMessage = error;
 
             let deleteAlertCounter = 3;
-            const x = setInterval(() => {
+            this.deleteDialogueInterval = setInterval(() => {
               deleteAlertCounter  = deleteAlertCounter  - 1;
               if (deleteAlertCounter === 0) {
                 this.errorDeleteAlert = false;
-                clearInterval(x)
+                clearInterval(this.deleteDialogueInterval)
               }
             }, 1000)
           }
@@ -374,12 +394,13 @@ export default {
         },
         (error) => {
           this.errorCreateAlert = true;
-
+          this.errorMessage = error.message;
           setTimeout(() => {
             this.errorCreateAlert = false;
+            this.errorMessage = null;
           }, 2000);
           this.loading = false;
-          this.errorMessage = error;
+
         }
       );
     },
@@ -439,8 +460,22 @@ export default {
   margin: 10px;
 }
 
-.modal-container {
-  font-family: "Plus Jakarta Sans", Helvetica, Arial, sans-serif;
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4%;
+  padding-bottom: 4%;
+}
+
+.formulate-input .formulate-input-element {
+  margin-bottom: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-container {s
   .modal-header {
     h5 {
       margin-bottom: 0;

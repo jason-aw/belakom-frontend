@@ -18,6 +18,9 @@
 }
 
 .formulate-input .formulate-input-element {
+    display: flex;
+    align-content: center;
+    justify-content: center;
     margin-bottom: .1em;
 }
 
@@ -254,7 +257,8 @@
     min-width: 0;
     font-weight: bold;
     cursor: pointer;
-    display: inline-flex;
+    display: flex;
+    align-items: center;
     justify-content: center;
     position: relative;
     transition: all 0.3s ease;

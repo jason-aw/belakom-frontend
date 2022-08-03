@@ -89,7 +89,7 @@ export const chapter = {
     },
     addQuestion(state) {
       state.chapterDetail.questions.push({
-        questionPrompt: "Question...",
+        questionPrompt: "",
         questionType: "MULTIPLE_CHOICE",
         answers: [{
           answer: "Option 1",

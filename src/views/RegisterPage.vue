@@ -23,7 +23,7 @@
         validation="^required|min:5, length"
         error-behavior="submit"
         :validation-messages="{
-          required: 'E-mail harus ada',
+          required: 'Nama harus ada',
           min: 'Nama minimum 5 karakter',
         }"
       />
@@ -75,11 +75,12 @@
 
       <v-alert
           transition="fade-transition"
-          type="success"
+          type="error"
           text
           v-model="errorRegister"
+          class="mt-3 my-3"
       >
-        Registrasi gagal! {{responseValue}}!
+        Registrasi gagal! {{responseValue.message}}!
       </v-alert>
     </FormulateForm>
   </v-container>

@@ -4,14 +4,6 @@
       <h1>Halaman Masuk</h1>
     </div>
     <FormulateForm v-model="formValues" @submit="handleSubmit" class="form">
-      <v-alert
-        class="alert"
-        text
-        border="left"
-        v-if="errorMessage"
-        type="error"
-        >{{ errorMessage }}</v-alert
-      >
       <FormulateInput
         type="text"
         name="email"
@@ -50,10 +42,20 @@
       </button>
 
       <v-responsive max-width="60%" class="mt-4">
-        <router-link to="/forgot-password">Forgot Password?</router-link><br />
+        <router-link to="/forgot-password">Lupa Password?</router-link><br />
         Belum punya akun?
         <router-link to="/register">Daftar disini</router-link>
       </v-responsive>
+
+      <v-alert
+          transition="fade-transition"
+          type="error"
+          text
+          v-if="errorMessage"
+          class="mt-3 my-3"
+      >
+        Login gagal! {{ errorMessage }}!
+      </v-alert>
     </FormulateForm>
   </v-container>
 </template>
@@ -78,8 +80,11 @@ export default {
           this.$router.push("/topics");
         },
         (error) => {
-          // console.log(error);
-          this.errorMessage = error.response.data.message;
+          if (error.response.data.message === "Bad credentials") {
+            this.errorMessage = "E-mail/Password tidak valid"
+          } else {
+            this.errorMessage = error.response.data.message;
+          }
           setTimeout(() => {
             this.errorMessage = "";
           }, 5000);

@@ -17,7 +17,7 @@
           <click-to-edit v-model="topicDetail.topicName" />
         </div>
         <div class="text-h5">
-          <click-to-edit v-model="topicDetail.description" />
+          <click-to-edit v-model="topicDetail.description" textarea="true"/>
         </div>
       </div>
 
@@ -63,48 +63,51 @@
             </div>
           </template>
           <v-card>
-            <v-card-title class="text-h5"> Create New Chapter </v-card-title>
+            <v-card-title class="text-h5"> Buat Chapter Baru </v-card-title>
             <v-divider />
             <v-card-text class="black--text">
-              <v-container>
+              <v-container class="align-center justify-center">
                 <FormulateForm
                   v-model="createChapterFormValue"
                   @submit="handleCreateChapterSubmit"
+                  class="form"
                 >
                   <FormulateInput
                     type="text"
                     name="chapterName"
-                    label="Chapter Name"
-                    placeholder="Chapter Name"
-                    validation="^required"
+                    label="Nama Chapter"
+                    placeholder="Nama Chapter"
+                    validation="^required|min:5, length"
                     error-behavior="submit"
                     :validation-messages="{
                       required: 'Nama Chapter harus ada',
+                      min: 'Panjang nama minimal 5 karakter'
                     }"
                   />
 
                   <FormulateInput
                     type="checkbox"
-                    label="Enable Quiz"
+                    label="Nyalakan Quiz"
                     name="enableQuiz"
                   />
 
                   <FormulateInput
                     type="textarea"
                     name="description"
-                    label="Description"
-                    placeholder="Description"
-                    validation="^required"
+                    label="Deskripsi"
+                    placeholder="Deskripsi"
+                    validation="^required|min:10, length"
                     error-behavior="submit"
                     :validation-messages="{
                       required: 'Deskripsi harus ada',
+                      min: 'Panjang deskripsi minimal 10 karakter'
                     }"
                   />
 
                   <FormulateInput
                     align="center"
                     type="submit"
-                    label="Create Chapter"
+                    label="Buat Chapter"
                   />
 
                   <v-alert
@@ -436,6 +439,21 @@ export default {
 
 .chapterCardGhost-drag {
   opacity: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4%;
+  padding-bottom: 4%;
+}
+
+.formulate-input .formulate-input-element {
+  margin-bottom: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-container {

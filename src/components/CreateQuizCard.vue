@@ -7,6 +7,7 @@
             auto-grow
             rows="1"
             :value="question.questionPrompt"
+            label="Pertanyaan"
             @input="updateQuestionPrompt($event)"
           />
         </v-col>

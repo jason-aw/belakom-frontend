@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app absolute>
     <div class="d-flex align-center">
-      <router-link to="/" class="d-flex align-center text-decoration-none">
+      <router-link to="/topics" class="d-flex align-center text-decoration-none">
         <v-img
           class="mx-2"
           src="@/assets/Navbar/logo-01.png"
@@ -23,11 +23,11 @@
           </v-btn>
         </template>
         <v-list dense v-if="loggedIn">
-          <v-list-item @click.prevent="goToProfile">
-            <v-icon class="pr-2">mdi-account-outline</v-icon>
-            <v-list-item-title>Profile</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click.prevent="goToTopic">
+<!--          <v-list-item @click.prevent="goToProfile">-->
+<!--            <v-icon class="pr-2">mdi-account-outline</v-icon>-->
+<!--            <v-list-item-title>Profile</v-list-item-title>-->
+<!--          </v-list-item>-->
+          <v-list-item v-if="!topicPath" @click.prevent="goToTopic">
             <v-icon class="pr-2">mdi-file-document</v-icon>
             <v-list-item-title>Topics</v-list-item-title>
           </v-list-item>
@@ -37,7 +37,7 @@
           </v-list-item>
         </v-list>
         <v-list dense v-else>
-          <v-list-item @click.prevent="goToTopic">
+          <v-list-item v-if="!topicPath" @click.prevent="goToTopic">
             <v-icon class="pr-2">mdi-file-document</v-icon>
             <v-list-item-title>Topics</v-list-item-title>
           </v-list-item>
@@ -56,7 +56,9 @@ import { mapGetters } from "vuex";
 export default {
   name: "NavigationBar",
   data() {
-    return {};
+    return {
+      topicPath : false
+    };
   },
   methods: {
     logout() {
@@ -77,8 +79,13 @@ export default {
     },
   },
   watch: {
-    $route() {
-      this.checkPath();
+    $route(to, from) {
+      console.log(from)
+      if (to.fullPath === "/topics") {
+        this.topicPath = true
+      } else {
+        this.topicPath = false
+      }
     },
   },
   computed: {

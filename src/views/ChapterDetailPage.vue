@@ -14,10 +14,45 @@
 
         <div v-if="chapterDetail.enableQuiz">
           <v-btn color="#1f3da1" dark @click="goToQuizPage(chapterDetail.id)"
-            >Access Quiz</v-btn
+            >Akses Quiz</v-btn
           >
         </div>
       </div>
+
+      <v-dialog
+          transition="dialog-top-transition"
+          max-width="600"
+          v-model="quizAlert"
+      >
+        <template>
+          <v-card>
+            <v-row class="pa-3" no-gutters>
+              <v-col>
+                <v-alert
+                    transition="fade-transition"
+                    type="warning"
+                    text
+                    class="ma-0"
+                >
+                  Masuk untuk dapat akses ke Quiz!
+                </v-alert>
+              </v-col>
+            </v-row>
+            <v-card-actions class="justify-center">
+              <v-btn
+                  @click="quizAlert = false"
+              >Cancel</v-btn
+              >
+              <v-btn
+                  color="#1f3da1"
+                  :dark="!successDeleteAlert && !errorDeleteAlert"
+                  @click="goToLogin"
+              >Masuk</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
 
       <comment-section :chapterId="chapterDetail.id" />
     </div>
@@ -42,6 +77,8 @@ export default {
       loading: true,
       articlePosition: null,
       adminRole: false,
+      quizAlert: false,
+      update: false,
     };
   },
   computed: {
@@ -68,6 +105,9 @@ export default {
     goToTopicPage() {
       this.$router.push(`/topics/${this.chapterDetail.topicId}`);
     },
+    goToLogin() {
+      this.$router.push(`/login`);
+    },
     async getChapterDetail(chapterId) {
       return chapterService
         .getChapterById(chapterId)
@@ -81,9 +121,17 @@ export default {
         });
     },
     goToQuizPage(id) {
-      this.$router.push("/chapters/" + id + "/quiz");
+      console.log(this.role?.includes("ROLE_USER"))
+
+      if (this.role?.includes("ROLE_ADMIN") || this.role?.includes("ROLE_USER")) {
+        this.$router.push("/chapters/" + id + "/quiz");
+      } else {
+        this.quizAlert = true;
+      }
     },
     handleUpdateChapterProgress() {
+      console.log("update")
+
       let req = {
         quizCompleted: null,
         chapterId: this.chapterDetail.id,
@@ -143,7 +191,10 @@ export default {
           window.innerHeight >=
         this.articlePosition.bottom;
 
-      if (bottomOfArticle) {
+      console.log(this.update)
+
+      if (bottomOfArticle && this.update === false) {
+        this.update = true;
         this.handleUpdateChapterProgress();
       }
     },

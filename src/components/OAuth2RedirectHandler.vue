@@ -14,7 +14,7 @@ export default {
         accessToken: token,
       };
       await this.$store.dispatch("auth/googleLogin", user);
-      this.$router.push("/home");
+      this.$router.push("/topics");
     } else if (error) {
       this.$store.commit("auth/logout");
       this.$router.push("/login");

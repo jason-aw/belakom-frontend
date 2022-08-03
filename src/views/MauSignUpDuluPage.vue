@@ -27,7 +27,7 @@
             </button>
           </router-link>
 
-          <router-link to="/topics/email" v-slot="{ navigate }">
+          <router-link to="/topics/62bd4b8e282ad27b88a27eb6" v-slot="{ navigate }">
             <button
               @click="navigate"
               class="pilihan"
