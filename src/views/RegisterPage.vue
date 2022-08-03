@@ -95,7 +95,7 @@ export default {
   data: () => ({
     formValues: {},
     responseValue: {},
-    errorRegister: false
+    errorRegister: false,
   }),
   computed: {
     ...mapGetters("auth", ["loggedIn"]),
@@ -107,7 +107,10 @@ export default {
       authService.register(this.formValues).then(
         (response) => {
           this.responseValue = response;
-          this.$root.$emit("global-snackbar-notification", "Registrasi Berhasil")
+          this.$root.$emit(
+            "global-snackbar-notification",
+            "Registrasi Berhasil"
+          );
           this.$router.push("/login");
         },
         (error) => {
